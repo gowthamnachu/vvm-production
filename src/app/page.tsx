@@ -48,8 +48,20 @@ export default function Home() {
       <Header activeSection={activeSection} />
       
       {/* Hero Section - Half Layout */}
-      <section id="home" className="min-h-screen w-full bg-[#3e4e3b]">
-        <div className="flex flex-col md:flex-row min-h-screen">
+      <section
+        id="home"
+        className="relative min-h-screen w-full bg-[#3e4e3b]"
+        style={{
+          backgroundImage: "url('/hello%20(5).png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Transparent green overlay ("transparenvy") */}
+        <div className="absolute inset-0 bg-[#3e4e3b]/40 pointer-events-none z-10" />
+
+        <div className="flex flex-col md:flex-row min-h-screen z-30">
           
           {/* Left Side - Text Content */}
           <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start px-8 md:px-16 lg:px-20 py-24 md:py-0">
@@ -86,28 +98,18 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Side - Saraswati Image with Shade */}
-          <div className="w-full md:w-1/2 relative min-h-[500px] md:min-h-screen flex items-end justify-center overflow-hidden">
-            {/* Gradient Shade Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#3e4e3b] via-[#3e4e3b]/40 to-transparent z-10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#3e4e3b]/70 via-transparent to-[#3e4e3b]/20 z-10" />
-            
-            {/* Saraswati Image Container */}
-            <div className="relative w-full h-full flex items-end justify-center p-8 pb-0">
-              <div className="relative w-[350px] h-[450px] md:w-[450px] md:h-[580px] lg:w-[520px] lg:h-[680px]">
+          {/* Right Side - Saraswati Image (top layer) */}
+          <div className="w-full md:w-1/2 relative min-h-[500px] md:min-h-screen flex items-end justify-center overflow-visible">
+            <div className="relative w-full h-full flex items-end justify-center p-8 pb-0 z-30 pointer-events-none">
+              <div className="relative w-[350px] h-[450px] md:w-[450px] md:h-[580px] lg:w-[520px] lg:h-[680px] z-30">
                 <Image
                   src="/god_image.png"
                   alt="Goddess Saraswati - Divine Symbol of Knowledge"
                   fill
-                  className="object-contain object-bottom z-20 drop-shadow-2xl"
+                  className="object-contain object-bottom z-30"
                   priority
                 />
               </div>
-            </div>
-
-            {/* Decorative glow behind image */}
-            <div className="absolute inset-0 flex items-end justify-center pointer-events-none pb-20">
-              <div className="w-[350px] h-[350px] md:w-[450px] md:h-[450px] rounded-full bg-gradient-radial from-white/15 via-white/5 to-transparent blur-3xl" />
             </div>
           </div>
 
