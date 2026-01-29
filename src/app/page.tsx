@@ -68,7 +68,7 @@ export default function Home() {
             <div className="relative w-full h-full flex items-end justify-center p-8 pb-0">
               <div className="relative w-[400px] h-[520px] md:w-[520px] md:h-[680px] lg:w-[600px] lg:h-[800px]">
                 <Image
-                  src="/god-sketch2.png"
+                  src="/god_image.png"
                   alt="Goddess Saraswati - Divine Symbol of Knowledge"
                   fill
                   className="object-contain object-bottom z-20 drop-shadow-2xl"
