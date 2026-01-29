@@ -1,0 +1,208 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Box,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import Image from "next/image";
+import { Archivo_Black } from "next/font/google";
+
+const archivoBlack = Archivo_Black({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Academics", href: "/academics" },
+  { label: "Admissions", href: "/admissions" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Contact", href: "/contact" },
+];
+
+const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <Box
+      sx={{
+        width: 280,
+        height: "100%",
+        backgroundColor: "rgba(62, 78, 59, 0.98)",
+        color: "white",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          p: 1,
+        }}
+      >
+        <IconButton onClick={handleDrawerToggle} sx={{ color: "white" }}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item.label} disablePadding>
+            <ListItemButton
+              component="a"
+              href={item.href}
+              onClick={handleDrawerToggle}
+              sx={{
+                py: 2,
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                },
+              }}
+            >
+              <ListItemText
+                primary={item.label}
+                sx={{
+                  textAlign: "center",
+                  "& .MuiTypography-root": {
+                    fontWeight: 500,
+                    fontSize: "1.1rem",
+                    letterSpacing: "0.05em",
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  return (
+    <>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: "transparent",
+          backdropFilter: "blur(10px)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            px: { xs: 2, md: 4 },
+            py: 1,
+          }}
+        >
+          {/* Logo / School Name */}
+          <Box
+            component="a"
+            href="/"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              gap: 1.5,
+            }}
+          >
+            <Image
+              src="/vvvm_logo.jpg"
+              alt="Vagdevi Vidya Mandir Logo"
+              width={45}
+              height={45}
+              priority
+            />
+            <Typography
+              className={archivoBlack.className}
+              sx={{
+                color: "rgba(255,255,255,0.9)",
+                fontSize: { xs: "1.8rem", md: "2rem" },
+                letterSpacing: "0.05em",
+              }}
+            >
+              VVM
+            </Typography>
+          </Box>
+
+          {/* Desktop Navigation */}
+          {!isMobile && (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {navItems.map((item) => (
+                <Button
+                  key={item.label}
+                  href={item.href}
+                  sx={{
+                    color: "white",
+                    fontWeight: 500,
+                    fontSize: "0.9rem",
+                    letterSpacing: "0.05em",
+                    px: 2,
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
+                  }}
+                >
+                  {item.label}
+                </Button>
+              ))}
+            </Box>
+          )}
+
+          {/* Mobile Menu Button */}
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="end"
+              onClick={handleDrawerToggle}
+              sx={{ color: "white" }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+        </Toolbar>
+      </AppBar>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="right"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: 280,
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
+    </>
+  );
+};
+
+export default Header;
