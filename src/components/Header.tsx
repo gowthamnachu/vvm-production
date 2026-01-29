@@ -28,18 +28,36 @@ const archivoBlack = Archivo_Black({
 });
 
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Academics", href: "/academics" },
-  { label: "Admissions", href: "/admissions" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Academics", href: "#academics" },
+  { label: "Admissions", href: "#admissions" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Contact", href: "#contact" },
 ];
 
-const Header = () => {
+interface HeaderProps {
+  activeSection?: string;
+}
+
+const sectionColors: Record<string, { bg: string; text: string; altBg: string; altText: string }> = {
+  home: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  about: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
+  academics: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
+  gallery: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  contact: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
+};
+
+const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const current = sectionColors[activeSection] || sectionColors.home;
+  const headerBgColor = current.bg;
+  const textColor = current.text;
+  const logoTextColor = current.text;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -103,9 +121,10 @@ const Header = () => {
         position="fixed"
         elevation={0}
         sx={{
-          backgroundColor: "transparent",
+          backgroundColor: headerBgColor,
           backdropFilter: "blur(10px)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          borderBottom: `1px solid ${current.altText === 'white' ? 'rgba(255,255,255,0.2)' : 'rgba(62,78,59,0.2)'}`,
+          transition: "background-color 0.3s ease, border-color 0.3s ease",
         }}
       >
         <Toolbar
@@ -136,9 +155,12 @@ const Header = () => {
             <Typography
               className={archivoBlack.className}
               sx={{
-                color: "rgba(255,255,255,0.9)",
+                color: logoTextColor,
                 fontSize: { xs: "1.8rem", md: "2rem" },
                 letterSpacing: "0.05em",
+                fontWeight: 900,
+                textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                transition: "color 0.3s ease",
               }}
             >
               VVM
@@ -153,13 +175,14 @@ const Header = () => {
                   key={item.label}
                   href={item.href}
                   sx={{
-                    color: "white",
+                    color: textColor,
                     fontWeight: 500,
                     fontSize: "0.9rem",
                     letterSpacing: "0.05em",
                     px: 2,
+                    transition: "color 0.3s ease",
                     "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      backgroundColor: current.altText === 'white' ? 'rgba(255,255,255,0.1)' : 'rgba(62,78,59,0.08)',
                     },
                   }}
                 >
@@ -176,7 +199,7 @@ const Header = () => {
               aria-label="open drawer"
               edge="end"
               onClick={handleDrawerToggle}
-              sx={{ color: "white" }}
+              sx={{ color: textColor, transition: "color 0.3s ease" }}
             >
               <MenuIcon />
             </IconButton>
