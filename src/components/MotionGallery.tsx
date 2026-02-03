@@ -196,12 +196,14 @@ function GalleryCard({
 
   // Scale based on distance from center
   const scale = useTransform(x, (latest: number) => {
+    if (containerWidth === 0) return 1;
     const distance = Math.abs(latest) / (containerWidth / 2);
     return Math.max(0.75, 1 - distance * 0.15);
   });
 
   // Opacity based on distance from center
   const opacity = useTransform(x, (latest: number) => {
+    if (containerWidth === 0) return 1;
     const distance = Math.abs(latest) / (containerWidth / 2);
     return Math.max(0.4, 1 - distance * 0.4);
   });
@@ -213,6 +215,7 @@ function GalleryCard({
 
   // Slight rotation for 3D effect
   const rotateY = useTransform(x, (latest: number) => {
+    if (containerWidth === 0) return 0;
     return (latest / containerWidth) * -15;
   });
 

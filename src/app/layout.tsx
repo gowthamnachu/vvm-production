@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,10 +9,18 @@ const inter = Inter({
   display: "swap",
 });
 
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+const epilogue = localFont({
+  src: [
+    {
+      path: "../fonts/Epilogue-Variable.ttf",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Epilogue-VariableItalic.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-epilogue",
   display: "swap",
 });
 
@@ -28,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
+        className={`${inter.variable} ${epilogue.variable} font-sans antialiased`}
       >
         {children}
       </body>

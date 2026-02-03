@@ -19,17 +19,26 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-import { Archivo_Black } from "next/font/google";
+import localFont from "next/font/local";
 
-const archivoBlack = Archivo_Black({
-  weight: "400",
-  subsets: ["latin"],
+const epilogue = localFont({
+  src: [
+    {
+      path: "../fonts/Epilogue-Variable.ttf",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Epilogue-VariableItalic.ttf",
+      style: "italic",
+    },
+  ],
   display: "swap",
 });
 
 const navItems = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
+  { label: "Facilities", href: "#features" },
   { label: "Alumni", href: "#alumni" },
   { label: "Admissions", href: "#admissions" },
   { label: "Gallery", href: "#gallery" },
@@ -43,9 +52,12 @@ interface HeaderProps {
 const sectionColors: Record<string, { bg: string; text: string; altBg: string; altText: string }> = {
   home: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
   about: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
+  features: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   alumni: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  achievements: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   gallery: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  testimonials: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   contact: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
 };
 
@@ -154,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
               priority
             />
             <Typography
-              className={archivoBlack.className}
+              className={epilogue.className}
               sx={{
                 color: logoTextColor,
                 fontSize: { xs: "1.8rem", md: "2rem" },
