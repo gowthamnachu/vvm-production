@@ -30,7 +30,7 @@ const archivoBlack = Archivo_Black({
 const navItems = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
-  { label: "Academics", href: "#academics" },
+  { label: "Alumni", href: "#alumni" },
   { label: "Admissions", href: "#admissions" },
   { label: "Gallery", href: "#gallery" },
   { label: "Contact", href: "#contact" },
@@ -43,7 +43,7 @@ interface HeaderProps {
 const sectionColors: Record<string, { bg: string; text: string; altBg: string; altText: string }> = {
   home: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
   about: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  academics: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  alumni: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
   admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   gallery: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
   contact: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
@@ -55,7 +55,8 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const current = sectionColors[activeSection] || sectionColors.home;
-  const headerBgColor = current.bg;
+  const isHome = activeSection === "home";
+  const headerBgColor = isHome ? "transparent" : current.bg;
   const textColor = current.text;
   const logoTextColor = current.text;
 
@@ -122,9 +123,9 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
         elevation={0}
         sx={{
           backgroundColor: headerBgColor,
-          backdropFilter: "blur(10px)",
-          borderBottom: `1px solid ${current.altText === 'white' ? 'rgba(255,255,255,0.2)' : 'rgba(62,78,59,0.2)'}`,
-          transition: "background-color 0.3s ease, border-color 0.3s ease",
+          backdropFilter: isHome ? "none" : "blur(10px)",
+          borderBottom: isHome ? "none" : `1px solid ${current.altText === 'white' ? 'rgba(255,255,255,0.2)' : 'rgba(62,78,59,0.2)'}`,
+          transition: "background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease",
         }}
       >
         <Toolbar

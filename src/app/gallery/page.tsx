@@ -1,6 +1,16 @@
 "use client";
 
 import Header from "@/components/Header";
+import dynamic from "next/dynamic";
+
+const CircularGallery = dynamic(() => import("@/components/CircularGallery"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[600px] flex items-center justify-center">
+      <p className="text-white">Loading gallery...</p>
+    </div>
+  ),
+});
 
 export default function Gallery() {
   return (
@@ -11,6 +21,22 @@ export default function Gallery() {
           <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-8">
             Gallery
           </h1>
+
+          {/* Circular Gallery */}
+          <div className="w-full mb-16">
+            <h2 className="text-white text-3xl md:text-4xl font-semibold mb-8 text-center">
+              Featured Gallery
+            </h2>
+            <div style={{ height: '600px', position: 'relative' }}>
+              <CircularGallery
+                bend={6}
+                borderRadius={0.03}
+                scrollSpeed={2}
+                scrollEase={0.05}
+                textColor="#ffffff"
+              />
+            </div>
+          </div>
 
           {/* Gallery Categories */}
           <div className="space-y-16">
