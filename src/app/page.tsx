@@ -4,26 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useAnimationFrame } from "framer-motion";
 import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
-import dynamic from "next/dynamic";
+import { TestimonialsCard } from "@/components/ui/testimonials-card";
 import Image from "next/image";
-
-const MotionGallery = dynamic(() => import("@/components/MotionGallery"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center">
-      <p className="text-white/60 text-sm">Loading gallery...</p>
-    </div>
-  ),
-});
-
-const DomeGallery = dynamic(() => import("@/components/DomeGallery"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center">
-      <p className="text-white/60 text-sm">Loading gallery...</p>
-    </div>
-  ),
-});
 
 // Auto-scrolling marquee images
 const marqueeImages = [
@@ -34,16 +16,6 @@ const marqueeImages = [
   "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png",
   "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png",
   "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png",
-];
-
-// Floating images for testimonials
-const floatingImages = [
-  "/hello (3).png",
-  "/hello (4).png",
-  "/hello (5).png",
-  "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png",
-  "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png",
-  "/4a8a0b50-2bc7-4689-a08c-642dc235cd20.png",
 ];
 
 // Auto-scrolling Marquee Component
@@ -86,90 +58,6 @@ function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: s
           </div>
         ))}
       </motion.div>
-    </div>
-  );
-}
-
-// Floating Image Component for Testimonials - Circular Layout
-function FloatingImages() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-  
-  // Calculate circular positions for 6 images
-  const imageCount = 6;
-  const circularPositions = Array.from({ length: imageCount }, (_, index) => {
-    const angle = (index * 360) / imageCount - 90; // Start from top
-    const angleRad = (angle * Math.PI) / 180;
-    
-    // Responsive radius - smaller on mobile, larger on desktop
-    const radiusXMobile = 40;
-    const radiusYMobile = 42;
-    const radiusXDesktop = 48;
-    const radiusYDesktop = 45;
-    
-    const xMobile = 50 + radiusXMobile * Math.cos(angleRad);
-    const yMobile = 50 + radiusYMobile * Math.sin(angleRad);
-    const xDesktop = 50 + radiusXDesktop * Math.cos(angleRad);
-    const yDesktop = 50 + radiusYDesktop * Math.sin(angleRad);
-    
-    return {
-      leftMobile: `${xMobile}%`,
-      topMobile: `${yMobile}%`,
-      leftDesktop: `${xDesktop}%`,
-      topDesktop: `${yDesktop}%`,
-      size: "w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48",
-      rotate: angle * 0.15,
-      delay: index * 0.2,
-      zIndex: index % 3 + 1,
-    };
-  });
-
-  return (
-    <div ref={ref}>
-      {floatingImages.map((src, index) => {
-        const pos = circularPositions[index % circularPositions.length];
-        return (
-          <motion.div
-            key={index}
-            className={`absolute ${pos.size} group cursor-pointer -translate-x-1/2 -translate-y-1/2`}
-            style={{
-              zIndex: pos.zIndex,
-            }}
-            initial={{ 
-              opacity: 0, 
-              scale: 0.3, 
-              left: '50%',
-              top: '50%',
-              rotate: 0,
-            }}
-            animate={isInView ? { 
-              opacity: 1, 
-              scale: 1, 
-              left: pos.leftMobile,
-              top: pos.topMobile,
-              rotate: pos.rotate,
-            } : {}}
-            whileHover={{ scale: 1.1, rotate: 0, zIndex: 50 }}
-            transition={{
-              duration: 1.2,
-              delay: pos.delay,
-              ease: [0.23, 1, 0.32, 1],
-            }}
-          >
-            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border-[3px] sm:border-4 border-white backdrop-blur-sm ring-2 ring-[#3e4e3b]/10">
-              <Image
-                src={src}
-                alt={`School memory ${index + 1}`}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-                sizes="(max-width: 640px) 128px, (max-width: 1024px) 176px, 224px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-[#3e4e3b]/10 via-transparent to-black/20 opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
-              <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-2xl" />
-            </div>
-          </motion.div>
-        );
-      })}
     </div>
   );
 }
@@ -240,7 +128,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "foreword", "features", "achievements", "admissions", "gallery", "testimonials", "contact"];
+      const sections = ["home", "foreword", "features", "achievements", "admissions", "testimonials", "contact"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -383,27 +271,8 @@ export default function Home() {
               </a>
             </motion.div>
             
-            {/* Quick Stats Row */}
-            <motion.div 
-              className="flex flex-wrap gap-6 sm:gap-10 pt-10 sm:pt-14 justify-center md:justify-start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-            >
-              {[
-                { value: "25+", label: "Years" },
-                { value: "5000+", label: "Alumni" },
-                { value: "100%", label: "Results" },
-              ].map((stat, i) => (
-                <div key={i} className="text-center md:text-left">
-                  <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-white to-amber-100/80 bg-clip-text text-transparent">{stat.value}</p>
-                  <p className="text-[10px] sm:text-xs text-amber-200/40 uppercase tracking-widest mt-1">{stat.label}</p>
-                </div>
-              ))}
-            </motion.div>
-            
             </div>
-            <div className="hidden lg:flex lg:col-span-5 items-center justify-center">
+            <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center gap-8">
               <motion.div
                 className="relative w-full max-w-md aspect-square"
                 initial={{ opacity: 0, scale: 0.8, x: 40 }}
@@ -422,6 +291,25 @@ export default function Home() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#3e4e3b]/30 via-transparent to-transparent" />
                 </div>
+              </motion.div>
+
+              {/* Quick Stats Row */}
+              <motion.div 
+                className="flex flex-wrap gap-8 justify-center w-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+              >
+                {[
+                  { value: "25+", label: "Years" },
+                  { value: "5000+", label: "Alumni" },
+                  { value: "100%", label: "Results" },
+                ].map((stat, i) => (
+                  <div key={i} className="text-center">
+                    <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-white to-amber-100/80 bg-clip-text text-transparent">{stat.value}</p>
+                    <p className="text-[10px] sm:text-xs text-amber-200/40 uppercase tracking-widest mt-1">{stat.label}</p>
+                  </div>
+                ))}
               </motion.div>
             </div>
           </div>
@@ -472,7 +360,7 @@ export default function Home() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#3e4e3b]/3 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
         
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
           <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 lg:gap-10">
           
@@ -488,7 +376,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight mb-3 sm:mb-4">
               Foreword
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#3e4e3b]/80 mb-2">
+            <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#3e4e3b] mb-2">
               A Message from Our Correspondent
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
@@ -940,30 +828,30 @@ export default function Home() {
           </motion.div>
 
           {/* Process Steps - Image */}
-          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-7 relative mb-10 sm:mb-16 lg:mb-0">
-            <div className="relative w-full rounded-2xl overflow-hidden">
+          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-6 relative mb-10 sm:mb-16 lg:mb-0">
+            <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden">
               <Image
                 src="/admissionprocess.png"
                 alt="Admission Process - 5 Steps: Inquiry, Application, Interaction, Assessment, Confirmation"
                 width={800}
                 height={1000}
                 className="w-full h-auto opacity-90"
-                sizes="(min-width: 1024px) 700px, (min-width: 768px) 600px, 100vw"
+                sizes="(min-width: 1024px) 650px, (min-width: 768px) 550px, 100vw"
               />
             </div>
           </motion.div>
 
           {/* CTA */}
-          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-5">
-            <div className="sticky top-32 rounded-3xl overflow-hidden group">
+          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-6">
+            <div className="sticky top-32 rounded-3xl overflow-hidden group max-w-md mx-auto">
               {/* Image */}
-              <div className="relative aspect-[3/4]">
+              <div className="relative aspect-[2/3]">
                 <Image
                   src="/children.png"
                   alt="Students at Vagdevi Vidya Mandir"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(min-width: 1024px) 360px, (min-width: 768px) 500px, 100vw"
+                  sizes="(min-width: 1024px) 400px, (min-width: 768px) 380px, 100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 
@@ -1009,116 +897,90 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section id="gallery" className="relative w-full bg-gradient-to-b from-[#3e4e3b] via-[#2d3a2a] to-[#3e4e3b] py-16 sm:py-20 lg:py-28 overflow-hidden">
-        {/* Decorative Elements */}
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-black/10 rounded-full blur-3xl" />
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)`,
-          backgroundSize: '48px 48px'
-        }} />
+      {/* Testimonials Section */}
+      <section id="testimonials" className="relative w-full py-24 sm:py-28 lg:py-36 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          {/* Mobile Background */}
+          <Image src="/testmonialsbackgroundmobile.jpg" alt="Testimonials background" fill className="object-cover object-center sm:hidden" sizes="100vw" />
+          {/* Desktop Background */}
+          <Image src="/testmonials_background.JPG" alt="Testimonials background" fill className="hidden sm:block object-cover object-center" sizes="100vw" />
+        </div>
+        {/* Green Blur Overlay */}
+        <div className="absolute inset-0 bg-[#3e4e3b]/80" />
         
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
-          <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 lg:gap-10">
-            <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-14">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/10">
+            {/* Header */}
+            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/20">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-white/90">Campus Life</span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-white/90">Voices of Excellence</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-5">Our Gallery</h2>
-              <p className="text-sm sm:text-base lg:text-lg text-white/50 leading-relaxed max-w-2xl mx-auto">
-                Explore moments from our vibrant campus life and celebrations
-              </p>
-              <div className="flex items-center justify-center gap-3 mt-6">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-white/20" />
-                <div className="w-2 h-2 rounded-full bg-white/30" />
-                <div className="w-24 h-[2px] bg-white/20" />
-                <div className="w-2 h-2 rounded-full bg-white/30" />
-                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-white/20" />
-              </div>
-            </motion.div>
-          </div>
-          </AnimatedSection>
-        </div>
-
-        {/* Motion Gallery */}
-        <div className="w-full overflow-hidden">
-          <div className="hidden lg:block" style={{ height: '500px' }}>
-            <MotionGallery bend={8} scrollSpeed={1.5} scrollEase={0.06} />
-          </div>
-          <div className="hidden md:block lg:hidden" style={{ height: '400px' }}>
-            <MotionGallery bend={6} scrollSpeed={1.2} scrollEase={0.08} />
-          </div>
-          <div className="block md:hidden" style={{ height: '320px' }}>
-            <MotionGallery bend={3} scrollSpeed={0.6} scrollEase={0.12} />
-          </div>
-        </div>
-
-        <p className="text-center text-xs sm:text-sm text-white/30 mt-5 sm:mt-7 lg:mt-9 flex items-center justify-center gap-2">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
-          <span className="lg:hidden">Swipe to explore</span>
-          <span className="hidden lg:inline">Drag or scroll to explore our gallery</span>
-        </p>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="relative w-full bg-gradient-to-br from-slate-50 via-white to-[#3e4e3b]/5 py-24 sm:py-28 lg:py-44 min-h-screen overflow-hidden flex items-center justify-center">
-        {/* Decorative Background Elements */}
-        <div className="absolute top-20 left-10 w-[400px] h-[400px] bg-gradient-to-br from-[#3e4e3b]/8 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-gradient-to-tl from-[#3e4e3b]/6 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-[#3e4e3b]/3 to-transparent rounded-full blur-3xl" />
-        
-        {/* Floating Images Background */}
-        <FloatingImages />
-        
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(62,78,59,0.1) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(62,78,59,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '80px 80px'
-        }} />
-        
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
-          <AnimatedSection>
-            {/* Header - Centered Content */}
-            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-[#3e4e3b]/8 via-[#3e4e3b]/5 to-[#3e4e3b]/8 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3e4e3b] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3e4e3b]"></span>
-                </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Our Community Gallery</span>
-              </motion.div>
-              
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-[#3e4e3b] bg-clip-text text-transparent leading-tight tracking-tight mb-6 sm:mb-8">
-                Moments That Define<br className="hidden sm:block" /> Excellence
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-6">
+                Teacher Testimonials
               </h2>
-              
-              <p className="text-base sm:text-lg lg:text-xl text-slate-500 leading-relaxed max-w-3xl mx-auto font-light">
-                Experience the vibrant tapestry of our school life through cherished memories, celebrating achievements, and the unwavering spirit of our community
+              <p className="text-base sm:text-lg lg:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto font-light">
+                Hear from our dedicated educators who shape young minds and inspire excellence every day
               </p>
-              
-              {/* Decorative Line */}
               <div className="flex items-center justify-center gap-3 mt-8">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-[#3e4e3b]/20"></div>
-                <div className="w-2 h-2 rounded-full bg-[#3e4e3b]/30"></div>
-                <div className="w-24 h-[2px] bg-[#3e4e3b]/20"></div>
-                <div className="w-2 h-2 rounded-full bg-[#3e4e3b]/30"></div>
-                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-[#3e4e3b]/20"></div>
+                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-white/30" />
+                <div className="w-2 h-2 rounded-full bg-white/40" />
+                <div className="w-24 h-[2px] bg-white/30" />
+                <div className="w-2 h-2 rounded-full bg-white/40" />
+                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-white/30" />
               </div>
             </motion.div>
+
+            {/* Testimonials Card */}
+            <div className="flex justify-center">
+              <TestimonialsCard
+                items={[
+                  {
+                    id: 1,
+                    title: "Mrs. Priya Sharma — Mathematics Teacher",
+                    description: "Teaching at Vagdevi Vidya Mandir has been a profoundly rewarding journey. The supportive environment and focus on holistic development allow us to nurture not just academic excellence but also strong character in our students.",
+                    image: "/sudharani.png",
+                  },
+                  {
+                    id: 2,
+                    title: "Mr. Rajesh Kumar — Science Teacher",
+                    description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
+                    image: "/sudharani.png",
+                  },
+                  {
+                    id: 3,
+                    title: "Ms. Anjali Reddy — English Teacher",
+                    description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
+                    image: "/sudharani.png",
+                  },
+                  {
+                    id: 4,
+                    title: "Mr. Suresh Patel — Physical Education",
+                    description: "The expansive sports facilities and strong emphasis on physical fitness create an ideal environment for developing well-rounded individuals. Sports teach discipline, teamwork, and resilience—values that last a lifetime.",
+                    image: "/sudharani.png",
+                  },
+                  {
+                    id: 5,
+                    title: "Mrs. Lakshmi Iyer — Arts & Music Teacher",
+                    description: "VVM celebrates creativity and artistic expression. Our dedicated Arts & Music studio provides students with the space and resources to discover their talents and pursue their passions with confidence.",
+                    image: "/sudharani.png",
+                  },
+                  {
+                    id: 6,
+                    title: "Mr. Venkat Rao — Computer Science",
+                    description: "The modern computer labs and progressive curriculum equip our students with essential digital skills. We're preparing them not just for exams, but for the technology-driven future that awaits them.",
+                    image: "/sudharani.png",
+                  },
+                ]}
+                width={700}
+                autoPlay={true}
+                autoPlayInterval={4000}
+              />
+            </div>
           </AnimatedSection>
         </div>
       </section>

@@ -40,7 +40,7 @@ const navItems = [
   { label: "Foreword", href: "#foreword" },
   { label: "Facilities", href: "#features" },
   { label: "Admissions", href: "#admissions" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Testimonials", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -54,7 +54,6 @@ const sectionColors: Record<string, { bg: string; text: string; altBg: string; a
   features: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   achievements: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  gallery: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
   testimonials: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
   contact: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
 };
@@ -67,9 +66,11 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
   const current = sectionColors[activeSection] || sectionColors.home;
   const isHome = activeSection === "home";
   const isDarkSection = current.text === "white";
-  const headerBgColor = isDarkSection 
-    ? "rgba(62, 78, 59, 0.7)" 
-    : "rgba(255, 255, 255, 0.7)";
+  const headerBgColor = isHome
+    ? "transparent"
+    : isDarkSection 
+      ? "rgba(62, 78, 59, 0.7)" 
+      : "rgba(255, 255, 255, 0.7)";
   const textColor = current.text;
   const logoTextColor = current.text;
 
@@ -136,10 +137,10 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
         elevation={0}
         sx={{
           backgroundColor: headerBgColor,
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: `1px solid ${isDarkSection ? 'rgba(255,255,255,0.1)' : 'rgba(62,78,59,0.08)'}`,
-          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
+          backdropFilter: isHome ? "none" : "blur(20px)",
+          WebkitBackdropFilter: isHome ? "none" : "blur(20px)",
+          borderBottom: isHome ? "none" : `1px solid ${isDarkSection ? 'rgba(255,255,255,0.1)' : 'rgba(62,78,59,0.08)'}`,
+          boxShadow: isHome ? "none" : "0 4px 24px rgba(0, 0, 0, 0.06)",
           transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
