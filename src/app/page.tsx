@@ -5,6 +5,8 @@ import { motion, useInView, useAnimationFrame } from "framer-motion";
 import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
 import { TestimonialsCard } from "@/components/ui/testimonials-card";
+import { GalleryWithTab } from "@/components/ui/gallery-with-tab";
+import FacilitiesCarousel from "@/components/FacilitiesCarousel";
 import Image from "next/image";
 
 // Auto-scrolling marquee images
@@ -128,7 +130,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "foreword", "features", "achievements", "admissions", "testimonials", "contact"];
+      const sections = ["home", "foreword", "features", "admissions", "testimonials", "gallery", "about", "contact"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -160,7 +162,7 @@ export default function Home() {
         staggerOrder="center-out"
         textFadeDelay={0.5}
         textSize="clamp(32px, 10vw, 150px)"
-        textColor="white"
+        textColor="#e9e9e9"
         movementDirection="top-down"
       />
       <Header activeSection={activeSection} />
@@ -205,7 +207,7 @@ export default function Home() {
             
             {/* Badge */}
             <motion.div 
-              className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/10 rounded-full mb-6"
+              className="inline-flex items-center gap-2.5 px-4 py-2 bg-[#e9e9e9]/10 backdrop-blur-md border border-[#e9e9e9]/10 rounded-full mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -223,8 +225,8 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <span className="bg-gradient-to-r from-white via-amber-100 to-white bg-clip-text text-transparent drop-shadow-2xl">Vagdevi</span>
-              <span className="block bg-gradient-to-r from-amber-200/90 via-white to-amber-200/70 bg-clip-text text-transparent">Vidya Mandir</span>
+              <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent drop-shadow-2xl">Vagdevi</span>
+              <span className="block bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent">Vidya Mandir</span>
             </motion.h1>
             
             {/* Decorative line */}
@@ -240,7 +242,7 @@ export default function Home() {
             </motion.div>
             
             <motion.p 
-              className="text-sm sm:text-base lg:text-lg text-white/80 max-w-lg mx-auto md:mx-0 leading-relaxed font-light"
+              className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/80 max-w-lg mx-auto md:mx-0 leading-relaxed font-light"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
@@ -256,7 +258,7 @@ export default function Home() {
             >
               <a 
                 href="#admissions" 
-                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-white text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(255,255,255,0.25)] active:scale-95 transition-all text-sm border border-white/20"
+                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(233,233,233,0.25)] active:scale-95 transition-all text-sm border border-[#e9e9e9]/20"
               >
                 Apply Now
                 <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -272,30 +274,11 @@ export default function Home() {
             </motion.div>
             
             </div>
-            <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center gap-8">
-              <motion.div
-                className="relative w-full max-w-md aspect-square"
-                initial={{ opacity: 0, scale: 0.8, x: 40 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.6, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <div className="absolute -inset-4 bg-gradient-to-br from-amber-200/20 via-white/10 to-[#3e4e3b]/20 rounded-[2rem] blur-2xl" />
-                <div className="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-2 border-white/10">
-                  <Image
-                    src="/childeren.png"
-                    alt="Happy students at Vagdevi Vidya Mandir"
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 448px, 0px"
-                    priority
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#3e4e3b]/30 via-transparent to-transparent" />
-                </div>
-              </motion.div>
+            <div className="hidden lg:flex lg:col-span-5 flex-col items-end justify-end h-full">
 
               {/* Quick Stats Row */}
               <motion.div 
-                className="flex flex-wrap gap-8 justify-center w-full"
+                className="flex flex-wrap gap-8 justify-end"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
@@ -306,7 +289,7 @@ export default function Home() {
                   { value: "100%", label: "Results" },
                 ].map((stat, i) => (
                   <div key={i} className="text-center">
-                    <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-white to-amber-100/80 bg-clip-text text-transparent">{stat.value}</p>
+                    <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-[#e9e9e9] to-amber-100/80 bg-clip-text text-transparent">{stat.value}</p>
                     <p className="text-[10px] sm:text-xs text-amber-200/40 uppercase tracking-widest mt-1">{stat.label}</p>
                   </div>
                 ))}
@@ -325,9 +308,9 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
         >
-          <span className="text-[10px] text-white/40 uppercase tracking-widest">Scroll</span>
-          <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
-            <div className="w-1 h-2.5 bg-white/50 rounded-full animate-bounce" />
+          <span className="text-[10px] text-[#e9e9e9]/40 uppercase tracking-widest">Scroll</span>
+          <div className="w-6 h-10 border-2 border-[#e9e9e9]/20 rounded-full flex justify-center pt-2">
+            <div className="w-1 h-2.5 bg-[#e9e9e9]/50 rounded-full animate-bounce" />
           </div>
         </motion.div>
       </section>
@@ -373,7 +356,7 @@ export default function Home() {
               </span>
               <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Foreword</span>
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-3 sm:mb-4">
               Foreword
             </h2>
             <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#3e4e3b] mb-2">
@@ -406,10 +389,10 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
                     {/* Name overlay on image bottom */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                      <h4 className="text-lg sm:text-xl font-bold text-white mb-0.5 drop-shadow-lg">
+                      <h4 className="text-lg sm:text-xl font-bold text-[#e9e9e9] mb-0.5 drop-shadow-lg">
                         Ramineni Radha Krishna
                       </h4>
-                      <p className="text-xs sm:text-sm text-white/80 font-medium tracking-wider uppercase">
+                      <p className="text-xs sm:text-sm text-[#e9e9e9]/80 font-medium tracking-wider uppercase">
                         Correspondent
                       </p>
                     </div>
@@ -420,11 +403,11 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm border border-slate-100/50 text-center">
                     <p className="text-xl sm:text-2xl font-bold text-[#3e4e3b]">25+</p>
-                    <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">Years Leading</p>
+                    <p className="text-[9px] sm:text-[10px] text-[#3e4e3b]/60 uppercase tracking-wider mt-0.5">Years Leading</p>
                   </div>
                   <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm border border-slate-100/50 text-center">
                     <p className="text-xl sm:text-2xl font-bold text-[#3e4e3b]">5000+</p>
-                    <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">Lives Shaped</p>
+                    <p className="text-[9px] sm:text-[10px] text-[#3e4e3b]/60 uppercase tracking-wider mt-0.5">Lives Shaped</p>
                   </div>
                 </div>
               </div>
@@ -435,7 +418,7 @@ export default function Home() {
 
               
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg border border-slate-100/50 hover:shadow-xl transition-shadow duration-500">
-                <div className="space-y-5 text-sm sm:text-base text-slate-600 leading-[1.8]">
+                <div className="space-y-5 text-sm sm:text-base text-[#3e4e3b]/70 leading-[1.8]">
                   <p className="first-letter:text-4xl first-letter:font-bold first-letter:text-[#3e4e3b] first-letter:float-left first-letter:mr-2 first-letter:leading-none">
                     It is with immense pride and profound gratitude that I welcome you to Vagdevi Vidya Mandir, an institution that has been steadfastly nurturing young minds and shaping exemplary futures for over two decades. From our humble beginnings to our current standing as a beacon of holistic education, we have remained unwavering in our commitment to fostering excellence in academics, character development, and essential life skills.
                   </p>
@@ -456,7 +439,7 @@ export default function Home() {
                 {/* Signature area */}
                 <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">Ramineni Radha Krishna</p>
+                    <p className="text-sm font-semibold text-[#3e4e3b]">Ramineni Radha Krishna</p>
                     <p className="text-xs text-[#3e4e3b] font-medium">Correspondent, Vagdevi Vidya Mandir</p>
                   </div>
 
@@ -466,18 +449,18 @@ export default function Home() {
 
           </div>
 
-          {/* Values - Premium Card Grid */}
+          {/* Why Choose VVM */}
           <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 mt-16 sm:mt-20 lg:mt-28">
             <div className="text-center mb-10">
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]/60 mb-3">Our Core Values</p>
-              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">What We Stand For</h3>
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]/60 mb-3">Why Choose Us</p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#3e4e3b]">Why Choose Vagdevi Vidya Mandir</h3>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[
-                { title: "Excellence", desc: "Striving for the highest standards in everything we do", icon: "M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z", gradient: "from-amber-500/10 to-amber-600/5" },
-                { title: "Integrity", desc: "Upholding honesty and strong moral principles", icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", gradient: "from-blue-500/10 to-blue-600/5" },
-                { title: "Innovation", desc: "Encouraging creative thinking and new ideas", icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z", gradient: "from-purple-500/10 to-purple-600/5" },
-                { title: "Compassion", desc: "Fostering empathy, kindness, and respect for all", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z", gradient: "from-rose-500/10 to-rose-600/5" },
+                { title: "25+ Years Legacy", desc: "Over two decades of trust, excellence, and proven results in holistic education", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", gradient: "from-amber-500/10 to-amber-600/5" },
+                { title: "CBSE Curriculum", desc: "Affiliated to CBSE with a structured, nationally recognized academic framework", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253", gradient: "from-blue-500/10 to-blue-600/5" },
+                { title: "Green Campus", desc: "Lush green environment with expansive playgrounds for physical and mental well-being", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z", gradient: "from-green-500/10 to-green-600/5" },
+                { title: "Holistic Growth", desc: "Equal focus on academics, sports, arts, and character building for well-rounded development", icon: "M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z", gradient: "from-purple-500/10 to-purple-600/5" },
               ].map((value, index) => (
                 <div 
                   key={index}
@@ -486,12 +469,12 @@ export default function Home() {
                   <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   <div className="relative">
                     <div className="w-12 h-12 bg-[#3e4e3b]/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#3e4e3b] transition-all duration-300 group-hover:shadow-lg">
-                      <svg className="w-6 h-6 text-[#3e4e3b] group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-6 h-6 text-[#3e4e3b] group-hover:text-[#e9e9e9] transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={value.icon} />
                       </svg>
                     </div>
-                    <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-slate-900 mb-2">{value.title}</h4>
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{value.desc}</p>
+                    <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-[#3e4e3b] mb-2">{value.title}</h4>
+                    <p className="text-xs sm:text-sm text-[#3e4e3b]/60 leading-relaxed">{value.desc}</p>
                   </div>
                 </div>
               ))}
@@ -524,269 +507,20 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Our Facilities</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-[#3e4e3b] bg-clip-text text-transparent leading-tight tracking-tight mb-4 sm:mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">
                 World-Class Infrastructure
               </h2>
-              <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/70 leading-relaxed max-w-2xl mx-auto">
                 State-of-the-art facilities meticulously designed to nurture every aspect of student development
               </p>
             </motion.div>
 
-            {/* Bento Grid - Advanced Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-              {/* Feature Card - Large */}
-              {[
-                {
-                  title: "Smart Classrooms",
-                  desc: "Interactive digital boards and modern teaching aids for enhanced, immersive learning experiences",
-                  icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
-                  color: "from-blue-500/10 to-blue-600/5",
-                  accent: "bg-blue-500"
-                },
-                {
-                  title: "Science Laboratories",
-                  desc: "Fully equipped physics, chemistry, and biology labs for hands-on experimental learning",
-                  icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z",
-                  color: "from-purple-500/10 to-purple-600/5",
-                  accent: "bg-purple-500"
-                },
-                {
-                  title: "Library & Digital Resources",
-                  desc: "Extensive collection of books, digital resources, and quiet study spaces for focused learning",
-                  icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
-                  color: "from-amber-500/10 to-amber-600/5",
-                  accent: "bg-amber-500"
-                },
-                {
-                  title: "Sports Complex",
-                  desc: "Multi-purpose grounds, indoor courts, and professional coaching for athletic excellence",
-                  icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-                  color: "from-green-500/10 to-green-600/5",
-                  accent: "bg-green-500"
-                },
-                {
-                  title: "Computer Labs",
-                  desc: "Advanced computing facilities with latest technology, coding programs, and digital literacy",
-                  icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
-                  color: "from-cyan-500/10 to-cyan-600/5",
-                  accent: "bg-cyan-500"
-                },
-                {
-                  title: "Arts & Music Studio",
-                  desc: "Dedicated creative spaces for visual arts, performing arts, and musical expression",
-                  icon: "M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3",
-                  color: "from-rose-500/10 to-rose-600/5",
-                  accent: "bg-rose-500"
-                },
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className={`group relative bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-slate-100/80 hover:shadow-2xl hover:border-[#3e4e3b]/15 hover:-translate-y-2 transition-all duration-500 overflow-hidden`}
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  <div className={`absolute top-0 left-0 w-full h-[2px] ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  <div className="relative">
-                    <div className="mb-5">
-                      <div className="w-14 h-14 bg-[#3e4e3b]/8 rounded-2xl flex items-center justify-center group-hover:bg-[#3e4e3b] transition-all duration-300 group-hover:shadow-lg group-hover:scale-110">
-                        <svg className="w-7 h-7 text-[#3e4e3b] group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={feature.icon} />
-                        </svg>
-                      </div>
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">{feature.title}</h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">{feature.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Additional Facilities Banner - Premium */}
-            <motion.div 
-              variants={fadeInUp}
-              className="mt-14 sm:mt-18 lg:mt-20 relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#3e4e3b] via-[#4a5d47] to-[#3e4e3b] rounded-3xl" />
-              <div className="absolute inset-0 opacity-10" style={{
-                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.3) 1px, transparent 0)`,
-                backgroundSize: '32px 32px'
-              }} />
-              <div className="relative p-8 sm:p-10 lg:p-14 rounded-3xl">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-                  <div className="text-center lg:text-left">
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">More Than Just Facilities</h3>
-                    <p className="text-white/60 text-sm sm:text-base max-w-xl">
-                      Our eco-conscious campus features solar power, rainwater harvesting, organic gardens, and sustainable practices integrated into daily learning.
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {[
-                      { label: "CBSE Affiliated", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" },
-                      { label: "Eco-Friendly", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945" },
-                      { label: "Safe Campus", icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04" },
-                    ].map((badge, i) => (
-                      <span key={i} className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 border border-white/15 rounded-full text-white text-xs sm:text-sm font-medium hover:bg-white/20 transition-colors">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={badge.icon} />
-                        </svg>
-                        {badge.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatedSection>
-        </div>
-      </section>
-
-      {/* Achievements Section */}
-      <section id="achievements" className="relative w-full bg-gradient-to-b from-white via-slate-50/50 to-white py-20 sm:py-24 lg:py-36 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-[500px] h-[500px] bg-[#3e4e3b]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-[600px] h-[600px] bg-[#3e4e3b]/3 rounded-full blur-3xl" />
-          <div className="absolute inset-0 opacity-[0.02]" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #3e4e3b 1px, transparent 0)`,
-            backgroundSize: '32px 32px'
-          }} />
-        </div>
-        
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
-          <AnimatedSection>
-            {/* Header */}
-            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-14 sm:mb-18 lg:mb-24">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#3e4e3b]/5 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3e4e3b] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3e4e3b]" />
-                </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Recognition</span>
-              </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-[#3e4e3b] bg-clip-text text-transparent leading-tight tracking-tight mb-4 sm:mb-6">
-                Awards & Achievements
-              </h2>
-              <p className="text-sm sm:text-base lg:text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">
-                Recognized excellence in education, sports, and holistic development across national and international platforms
-              </p>
-              <div className="flex items-center justify-center gap-3 mt-6">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-[#3e4e3b]/20" />
-                <div className="w-2 h-2 rounded-full bg-[#3e4e3b]/30" />
-                <div className="w-24 h-[2px] bg-[#3e4e3b]/20" />
-                <div className="w-2 h-2 rounded-full bg-[#3e4e3b]/30" />
-                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-[#3e4e3b]/20" />
-              </div>
+            {/* Facilities Carousel */}
+            <motion.div variants={fadeInUp}>
+              <FacilitiesCarousel />
             </motion.div>
 
-            {/* Awards Grid - Staggered Masonry Style */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 mb-14 sm:mb-16 lg:mb-20">
-              {[
-                {
-                  year: "2024",
-                  title: "Best CBSE School",
-                  org: "State Education Awards",
-                  icon: "M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z",
-                  accent: "from-amber-500 to-orange-500",
-                  featured: true
-                },
-                {
-                  year: "2023",
-                  title: "Green Campus Award",
-                  org: "Environmental Excellence",
-                  icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064",
-                  accent: "from-emerald-500 to-teal-500",
-                  featured: false
-                },
-                {
-                  year: "2023",
-                  title: "Sports Excellence",
-                  org: "National Level Recognition",
-                  icon: "M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z",
-                  accent: "from-blue-500 to-indigo-500",
-                  featured: false
-                },
-                {
-                  year: "2022",
-                  title: "Innovation in Teaching",
-                  org: "EdTech Excellence Award",
-                  icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z",
-                  accent: "from-violet-500 to-purple-500",
-                  featured: false
-                },
-                {
-                  year: "2022",
-                  title: "Cultural Excellence",
-                  org: "Arts & Heritage Council",
-                  icon: "M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3",
-                  accent: "from-rose-500 to-pink-500",
-                  featured: false
-                },
-                {
-                  year: "2021",
-                  title: "Community Impact",
-                  org: "Social Responsibility Award",
-                  icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
-                  accent: "from-cyan-500 to-sky-500",
-                  featured: false
-                },
-              ].map((award, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className={`group relative bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 hover:shadow-2xl hover:border-[#3e4e3b]/15 hover:-translate-y-1.5 transition-all duration-500 ${award.featured ? 'md:row-span-1 ring-1 ring-[#3e4e3b]/10 shadow-lg' : 'shadow-sm'}`}
-                >
-                  {/* Top accent bar */}
-                  <div className={`absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r ${award.accent} rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  
-                  <div className="flex items-start justify-between mb-5">
-                    <div className={`w-14 h-14 bg-gradient-to-br ${award.accent} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                      <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={award.icon} />
-                      </svg>
-                    </div>
-                    <span className="px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-xs font-bold text-slate-500 group-hover:bg-[#3e4e3b]/5 group-hover:text-[#3e4e3b] group-hover:border-[#3e4e3b]/10 transition-colors duration-300">{award.year}</span>
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-1.5 group-hover:text-[#3e4e3b] transition-colors duration-300">{award.title}</h3>
-                  <p className="text-sm text-slate-400 font-medium">{award.org}</p>
-                  
 
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Academic Results Banner */}
-            <motion.div variants={fadeInUp} className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-[#3e4e3b]/80 rounded-3xl p-8 sm:p-12 lg:p-16 overflow-hidden">
-              {/* Background decoration */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#3e4e3b] rounded-full blur-3xl" />
-              </div>
-              <div className="absolute inset-0 opacity-5" style={{
-                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.3) 1px, transparent 0)`,
-                backgroundSize: '40px 40px'
-              }} />
-              
-              <div className="relative">
-                <div className="text-center mb-8 sm:mb-10">
-                  <span className="text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/40">Academic Excellence</span>
-                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mt-2">Results That Speak for Themselves</h3>
-                </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-                  {[
-                    { num: "100%", label: "Board Results", sub: "Consecutive years" },
-                    { num: "45+", label: "Distinctions", sub: "Every academic year" },
-                    { num: "15+", label: "National Ranks", sub: "Competitive exams" },
-                    { num: "200+", label: "Medals Won", sub: "Sports & academics" },
-                  ].map((item, i) => (
-                    <div key={i} className="text-center p-4 sm:p-6 bg-white/[0.06] backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/[0.1] transition-all duration-300">
-                      <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-1">{item.num}</p>
-                      <p className="text-xs sm:text-sm font-semibold text-white/70 mb-0.5">{item.label}</p>
-                      <p className="text-[10px] text-white/30">{item.sub}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
           </AnimatedSection>
         </div>
       </section>
@@ -814,8 +548,8 @@ export default function Home() {
               </span>
               <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Join Us</span>
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-[#3e4e3b] bg-clip-text text-transparent leading-tight tracking-tight mb-4 sm:mb-6">Admissions Open</h2>
-            <p className="text-sm sm:text-base lg:text-lg text-slate-500 leading-relaxed px-2 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">Admissions Open</h2>
+            <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/60 leading-relaxed px-2 max-w-2xl mx-auto">
               Begin your child&apos;s journey with us. Our streamlined admission process makes it easy to join the Vagdevi family.
             </p>
             <div className="flex items-center justify-center gap-3 mt-6">
@@ -858,8 +592,8 @@ export default function Home() {
                 {/* Content overlaid at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 leading-tight">
-                    <span className="bg-gradient-to-r from-white via-amber-100 to-white bg-clip-text text-transparent">Ready to Join</span><br />
-                    <span className="bg-gradient-to-r from-amber-200/90 via-white to-amber-200/70 bg-clip-text text-transparent">Our Family?</span>
+                    <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">Ready to Join</span><br />
+                    <span className="bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent">Our Family?</span>
                   </h3>
                   <p className="text-xs sm:text-sm text-amber-100/50 mb-6 leading-relaxed max-w-xs">
                     Begin your child&apos;s journey towards excellence with world-class education.
@@ -867,7 +601,7 @@ export default function Home() {
                   
                   <a 
                     href="#contact"
-                    className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-white text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-white/20"
+                    className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(233,233,233,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-[#e9e9e9]/20"
                   >
                     Start Application
                     <svg className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -882,8 +616,8 @@ export default function Home() {
                       { value: "25+", sub: "Years" },
                       { value: "5000+", sub: "Alumni" },
                     ].map((item, i) => (
-                      <div key={i} className="flex-1 text-center py-2.5 bg-white/[0.06] backdrop-blur-md rounded-xl border border-amber-200/10">
-                        <p className="text-xs sm:text-sm font-bold bg-gradient-to-b from-white to-amber-100/80 bg-clip-text text-transparent leading-none">{item.value}</p>
+                      <div key={i} className="flex-1 text-center py-2.5 bg-[#e9e9e9]/[0.06] backdrop-blur-md rounded-xl border border-amber-200/10">
+                        <p className="text-xs sm:text-sm font-bold bg-gradient-to-b from-[#e9e9e9] to-amber-100/80 bg-clip-text text-transparent leading-none">{item.value}</p>
                         <p className="text-[8px] sm:text-[9px] text-amber-200/40 uppercase tracking-wider mt-0.5">{item.sub}</p>
                       </div>
                     ))}
@@ -913,25 +647,25 @@ export default function Home() {
           <AnimatedSection>
             {/* Header */}
             <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/20">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#e9e9e9]/10 backdrop-blur-sm rounded-full mb-6 border border-[#e9e9e9]/20">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-white/90">Voices of Excellence</span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-amber-100/90">Voices of Excellence</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-6">
-                Teacher Testimonials
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
+                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">Teacher Testimonials</span>
               </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto font-light">
+              <p className="text-base sm:text-lg lg:text-xl text-amber-50/60 leading-relaxed max-w-3xl mx-auto font-light">
                 Hear from our dedicated educators who shape young minds and inspire excellence every day
               </p>
               <div className="flex items-center justify-center gap-3 mt-8">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-white/30" />
-                <div className="w-2 h-2 rounded-full bg-white/40" />
-                <div className="w-24 h-[2px] bg-white/30" />
-                <div className="w-2 h-2 rounded-full bg-white/40" />
-                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-white/30" />
+                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40" />
+                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
+                <div className="w-24 h-[2px] bg-amber-200/25" />
+                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
+                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-amber-300/40" />
               </div>
             </motion.div>
 
@@ -985,6 +719,222 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <section id="gallery" className="relative w-full bg-gradient-to-br from-slate-50 via-white to-[#3e4e3b]/5 py-20 sm:py-24 lg:py-36 overflow-hidden">
+        {/* Decorative Background */}
+        <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-gradient-to-br from-[#3e4e3b]/8 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-gradient-to-tl from-[#3e4e3b]/6 to-transparent rounded-full blur-3xl" />
+
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
+          <AnimatedSection>
+            {/* Header */}
+            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-14 sm:mb-18">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-[#3e4e3b]/10 via-[#3e4e3b]/5 to-[#3e4e3b]/10 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3e4e3b] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3e4e3b]" />
+                </span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Campus Life</span>
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-6">
+                Our Gallery
+              </h2>
+              <p className="text-base sm:text-lg lg:text-xl text-[#3e4e3b]/60 leading-relaxed max-w-3xl mx-auto font-light">
+                Capturing the spirit of excellence, creativity, and joy across every activity
+              </p>
+              <div className="flex items-center justify-center gap-3 mt-8">
+                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-[#3e4e3b]/20" />
+                <div className="w-2 h-2 rounded-full bg-[#3e4e3b]/30" />
+                <div className="w-24 h-[2px] bg-[#3e4e3b]/20" />
+                <div className="w-2 h-2 rounded-full bg-[#3e4e3b]/30" />
+                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-[#3e4e3b]/20" />
+              </div>
+            </motion.div>
+
+            {/* Gallery Tabs */}
+            <motion.div variants={fadeInUp}>
+              <GalleryWithTab
+                data={[
+                  {
+                    label: "Skating",
+                    value: "skating",
+                    images: [
+                      { imageLink: "/hello (3).png" },
+                      { imageLink: "/hello (4).png" },
+                      { imageLink: "/hello (5).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" },
+                      { imageLink: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" },
+                    ],
+                  },
+                  {
+                    label: "Cricket",
+                    value: "cricket",
+                    images: [
+                      { imageLink: "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png" },
+                      { imageLink: "/hello (3).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_42_59 PM.png" },
+                      { imageLink: "/hello (4).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_59_31 PM.png" },
+                      { imageLink: "/hello (5).png" },
+                    ],
+                  },
+                  {
+                    label: "Yoga",
+                    value: "yoga",
+                    images: [
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" },
+                      { imageLink: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" },
+                      { imageLink: "/hello (3).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" },
+                      { imageLink: "/hello (4).png" },
+                      { imageLink: "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png" },
+                    ],
+                  },
+                  {
+                    label: "Sports",
+                    value: "sports",
+                    images: [
+                      { imageLink: "/hello (5).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_42_59 PM.png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_59_31 PM.png" },
+                      { imageLink: "/hello (3).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" },
+                    ],
+                  },
+                  {
+                    label: "Dance",
+                    value: "dance",
+                    images: [
+                      { imageLink: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" },
+                      { imageLink: "/hello (4).png" },
+                      { imageLink: "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png" },
+                      { imageLink: "/hello (5).png" },
+                      { imageLink: "/ChatGPT Image Feb 3, 2026, 08_42_59 PM.png" },
+                      { imageLink: "/hello (3).png" },
+                    ],
+                  },
+                ]}
+              />
+            </motion.div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* About Us Section */}
+      <section id="about" className="relative w-full bg-gradient-to-br from-[#3e4e3b] via-[#4a5d47] to-[#3e4e3b] py-20 sm:py-28 lg:py-36 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
+          backgroundSize: '36px 36px'
+        }} />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#4a5d47]/30 rounded-full blur-[120px]" />
+        
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
+          <AnimatedSection>
+            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#e9e9e9]/10 backdrop-blur-sm rounded-full mb-6 border border-[#e9e9e9]/15">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                </span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-amber-100/90">About Us</span>
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-4 sm:mb-6">
+                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">A Legacy of </span><span className="bg-gradient-to-r from-amber-200 via-amber-300 to-amber-200 bg-clip-text text-transparent">25 Years</span><span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent"> in Education</span>
+              </h2>
+              <div className="flex items-center justify-center gap-3 mt-6">
+                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40" />
+                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
+                <div className="w-24 h-[2px] bg-amber-200/25" />
+                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
+                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-amber-300/40" />
+              </div>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              {/* Left - Content */}
+              <motion.div variants={fadeInUp} className="space-y-6">
+                <div className="relative">
+                  <div className="absolute -left-4 top-0 bottom-0 w-[3px] bg-gradient-to-b from-amber-300 via-amber-300/50 to-transparent rounded-full hidden sm:block" />
+                  <p className="text-amber-50/80 text-sm sm:text-base lg:text-lg leading-relaxed sm:pl-6">
+                    Twenty-five years ago, Vagdevi Vidya Mandir was founded with a vision to create a school that goes beyond just academics. Observing many schools with only buildings and no playgrounds, where students suffered from stress due to a lack of outdoor activities, we set out to build something different—a school that nurtures both the mind and body.
+                  </p>
+                </div>
+
+                <p className="text-amber-50/65 text-sm sm:text-base leading-relaxed">
+                  At Vagdevi Vidya Mandir, we believe that education is not just about books but also about a child&apos;s mental and physical well-being. Our lush green campus and expansive playground provide the perfect environment for students to learn, grow, and play freely. We give equal importance to physical activities, ensuring that every child develops holistically with a balance of academics, sports, and extracurricular activities.
+                </p>
+
+                <p className="text-amber-50/65 text-sm sm:text-base leading-relaxed">
+                  Today, after 25 years, our school stands as a proud institution shaping young minds with knowledge, values, and discipline. We continue to uphold our mission of creating a joyful learning experience, fostering creativity, and encouraging overall development.
+                </p>
+
+                {/* Tagline */}
+                <div className="relative mt-8 p-5 sm:p-6 rounded-2xl bg-amber-100/[0.06] border border-amber-200/10 backdrop-blur-sm">
+                  <svg className="absolute top-3 left-4 w-8 h-8 text-amber-300/30" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                  <p className="text-base sm:text-lg lg:text-xl font-semibold italic pl-8 sm:pl-10">
+                    <span className="bg-gradient-to-r from-amber-100 via-[#e9e9e9] to-amber-100 bg-clip-text text-transparent">Vagdevi Vidya Mandir – Where Learning Meets Growth!</span>
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Right - Stats & Highlights */}
+              <motion.div variants={fadeInUp} className="space-y-5">
+                {/* Stats grid */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  {[
+                    { number: "25+", label: "Years of Excellence", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
+                    { number: "5000+", label: "Alumni Network", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" },
+                    { number: "100%", label: "Holistic Development", icon: "M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138" },
+                    { number: "50+", label: "Qualified Faculty", icon: "M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493" },
+                  ].map((stat, i) => (
+                    <div
+                      key={i}
+                      className="group relative p-5 sm:p-6 rounded-2xl bg-amber-100/[0.05] border border-amber-200/10 hover:bg-amber-100/[0.08] hover:border-amber-200/20 transition-all duration-500 backdrop-blur-sm"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-amber-300/10 flex items-center justify-center mb-3 group-hover:bg-amber-300/20 transition-colors duration-300">
+                        <svg className="w-5 h-5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={stat.icon} />
+                        </svg>
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-bold mb-1"><span className="bg-gradient-to-r from-amber-200 via-[#e9e9e9] to-amber-200 bg-clip-text text-transparent">{stat.number}</span></div>
+                      <div className="text-xs sm:text-sm text-amber-50/50 font-medium">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Vision highlights */}
+                <div className="space-y-3">
+                  {[
+                    { title: "Holistic Education", desc: "Balancing academics, sports, and extracurricular activities for complete development" },
+                    { title: "Green Campus", desc: "Lush green environment with expansive playgrounds for physical well-being" },
+                    { title: "Value-Based Learning", desc: "Instilling knowledge, discipline, and strong moral values in every student" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-4 p-4 rounded-xl bg-amber-100/[0.04] border border-amber-200/8 hover:bg-amber-100/[0.07] transition-all duration-300">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-amber-300/15 flex items-center justify-center mt-0.5">
+                        <svg className="w-4 h-4 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-sm sm:text-base font-semibold text-amber-50 mb-0.5">{item.title}</h4>
+                        <p className="text-xs sm:text-sm text-amber-50/45 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section id="contact" className="relative w-full bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
         {/* Decorative Elements */}
@@ -1008,8 +958,8 @@ export default function Home() {
               </span>
               <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Get in Touch</span>
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-slate-900 via-slate-800 to-[#3e4e3b] bg-clip-text text-transparent leading-tight tracking-tight mb-4 sm:mb-6">Contact Us</h2>
-            <p className="text-sm sm:text-base lg:text-lg text-slate-500 leading-relaxed px-2 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">Contact Us</h2>
+            <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/60 leading-relaxed px-2 max-w-2xl mx-auto">
               We&apos;d love to hear from you. Reach out with any questions about admissions, programs, or campus visits.
             </p>
             <div className="flex items-center justify-center gap-3 mt-6">
@@ -1027,45 +977,45 @@ export default function Home() {
             <div className="col-span-4 md:col-span-8 lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100">
               <div className="flex items-center gap-3 mb-7">
                 <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900">Send a Message</h3>
-                  <p className="text-xs text-slate-400">We typically respond within 24 hours</p>
+                  <h3 className="text-lg sm:text-xl font-bold text-[#3e4e3b]">Send a Message</h3>
+                  <p className="text-xs text-[#3e4e3b]/50">We typically respond within 24 hours</p>
                 </div>
               </div>
               <form className="space-y-4 sm:space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs sm:text-sm text-slate-700 font-semibold mb-2">Full Name</label>
+                    <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Full Name</label>
                     <input 
                       type="text" 
                       placeholder="Enter your name" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-slate-300 transition-all"
+                      className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm text-slate-700 font-semibold mb-2">Phone Number</label>
+                    <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Phone Number</label>
                     <input 
                       type="tel" 
                       placeholder="Enter your phone" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-slate-300 transition-all"
+                      className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm text-slate-700 font-semibold mb-2">Email Address</label>
+                  <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Email Address</label>
                   <input 
                     type="email" 
                     placeholder="Enter your email" 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-slate-300 transition-all"
+                    className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm text-slate-700 font-semibold mb-2">Subject</label>
-                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-slate-300 transition-all">
+                  <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Subject</label>
+                  <select className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all">
                     <option value="">Select a subject</option>
                     <option value="admissions">Admissions Inquiry</option>
                     <option value="general">General Information</option>
@@ -1075,16 +1025,16 @@ export default function Home() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm text-slate-700 font-semibold mb-2">Message</label>
+                  <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Message</label>
                   <textarea 
                     rows={4} 
                     placeholder="How can we help you?" 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-slate-300 transition-all resize-none"
+                    className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all resize-none"
                   />
                 </div>
                 <button 
                   type="submit" 
-                  className="w-full bg-gradient-to-r from-[#3e4e3b] to-[#4a5d47] text-white py-3.5 sm:py-4 rounded-xl font-bold hover:shadow-xl hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all text-sm sm:text-base flex items-center justify-center gap-2.5 group"
+                  className="w-full bg-gradient-to-r from-[#3e4e3b] to-[#4a5d47] text-[#e9e9e9] py-3.5 sm:py-4 rounded-xl font-bold hover:shadow-xl hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all text-sm sm:text-base flex items-center justify-center gap-2.5 group"
                 >
                   Send Message
                   <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1099,14 +1049,14 @@ export default function Home() {
               <div className="bg-white rounded-2xl p-6 sm:p-7 shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1.5">Address</h4>
-                    <p className="text-xs sm:text-sm lg:text-base text-slate-500 leading-relaxed">
+                    <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#3e4e3b] mb-1.5">Address</h4>
+                    <p className="text-xs sm:text-sm lg:text-base text-[#3e4e3b]/60 leading-relaxed">
                       Vagdevi Vidya Mandir<br />
                       School Address<br />
                       City, State - PIN
@@ -1117,40 +1067,40 @@ export default function Home() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500">
-                  <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-3 shadow-lg">
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center mb-3 shadow-lg">
+                    <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
-                  <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-1">Phone</h4>
-                  <p className="text-xs sm:text-sm text-slate-500">+91 XXXXX XXXXX</p>
+                  <h4 className="text-sm sm:text-base font-bold text-[#3e4e3b] mb-1">Phone</h4>
+                  <p className="text-xs sm:text-sm text-[#3e4e3b]/60">+91 XXXXX XXXXX</p>
                 </div>
                 
                 <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500">
-                  <div className="w-11 h-11 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mb-3 shadow-lg">
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center mb-3 shadow-lg">
+                    <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-1">Email</h4>
-                  <p className="text-xs sm:text-sm text-slate-500 break-all">info@vvm.edu</p>
+                  <h4 className="text-sm sm:text-base font-bold text-[#3e4e3b] mb-1">Email</h4>
+                  <p className="text-xs sm:text-sm text-[#3e4e3b]/60 break-all">info@vvm.edu</p>
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-[#3e4e3b] via-[#3e4e3b] to-[#2d3a2a] rounded-2xl p-6 sm:p-7 shadow-xl overflow-hidden relative">
                 <div className="absolute inset-0 opacity-10" style={{
-                  backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)`,
+                  backgroundImage: `radial-gradient(circle at 2px 2px, rgba(233,233,233,0.2) 1px, transparent 0)`,
                   backgroundSize: '24px 24px'
                 }} />
                 <div className="relative flex items-start gap-4">
-                  <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0 border border-white/10">
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 bg-[#e9e9e9]/10 rounded-xl flex items-center justify-center flex-shrink-0 border border-[#e9e9e9]/10">
+                    <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-1.5">Office Hours</h4>
-                    <p className="text-xs sm:text-sm lg:text-base text-white/70 leading-relaxed">
+                    <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#e9e9e9] mb-1.5">Office Hours</h4>
+                    <p className="text-xs sm:text-sm lg:text-base text-[#e9e9e9]/70 leading-relaxed">
                       Monday - Saturday<br />
                       9:00 AM - 5:00 PM
                     </p>
@@ -1160,7 +1110,7 @@ export default function Home() {
 
               {/* Social Links */}
               <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border border-slate-100">
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-4">Follow Us</h4>
+                <h4 className="text-sm sm:text-base font-bold text-[#3e4e3b] mb-4">Follow Us</h4>
                 <div className="flex gap-3">
                   {[
                     { icon: "M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z", name: "Twitter", color: "hover:bg-sky-500" },
@@ -1171,10 +1121,10 @@ export default function Home() {
                     <a 
                       key={i}
                       href="#" 
-                      className={`w-11 h-11 bg-slate-100 ${social.color} rounded-xl flex items-center justify-center group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5`}
+                      className={`w-11 h-11 bg-[#3e4e3b]/10 ${social.color} rounded-xl flex items-center justify-center group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5`}
                       aria-label={social.name}
                     >
-                      <svg className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#3e4e3b]/60 group-hover:text-[#e9e9e9] transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
                         <path d={social.icon} />
                       </svg>
                     </a>
@@ -1192,10 +1142,10 @@ export default function Home() {
       <footer className="w-full bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 2px 2px, rgba(233,233,233,0.15) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-[#e9e9e9]/10 to-transparent" />
         
         {/* Main Footer */}
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12 py-14 sm:py-18 lg:py-24">
@@ -1204,14 +1154,14 @@ export default function Home() {
             <div className="col-span-2 lg:col-span-2">
               <div className="flex items-center gap-3.5 mb-5">
                 <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-lg">V</span>
+                  <span className="text-[#e9e9e9] font-bold text-lg">V</span>
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-white tracking-tight">Vagdevi Vidya Mandir</p>
-                  <p className="text-[10px] tracking-widest uppercase text-white/40">Est. 2002</p>
+                  <p className="text-lg font-bold text-[#e9e9e9] tracking-tight">Vagdevi Vidya Mandir</p>
+                  <p className="text-[10px] tracking-widest uppercase text-[#e9e9e9]/40">Est. 2002</p>
                 </div>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed mb-7">
+              <p className="text-sm text-[#e9e9e9]/50 leading-relaxed mb-7">
                 Nurturing minds, building character, and creating future leaders through holistic education for over two decades.
               </p>
               <div className="flex gap-2.5">
@@ -1219,10 +1169,10 @@ export default function Home() {
                   <a 
                     key={i}
                     href="#" 
-                    className="w-9 h-9 bg-white/5 hover:bg-[#3e4e3b] rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 border border-white/5 hover:border-[#3e4e3b]"
+                    className="w-9 h-9 bg-[#e9e9e9]/5 hover:bg-[#3e4e3b] rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 border border-[#e9e9e9]/5 hover:border-[#3e4e3b]"
                     aria-label={social}
                   >
-                    <svg className="w-3.5 h-3.5 text-white/50 hover:text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5 text-[#e9e9e9]/50 hover:text-[#e9e9e9]" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10z" />
                     </svg>
                   </a>
@@ -1232,11 +1182,11 @@ export default function Home() {
 
             {/* Quick Links */}
             <div>
-              <h4 className="text-xs font-bold tracking-widest uppercase text-white/70 mb-5">Quick Links</h4>
+              <h4 className="text-xs font-bold tracking-widest uppercase text-[#e9e9e9]/70 mb-5">Quick Links</h4>
               <ul className="space-y-3">
                 {["Home", "Foreword", "Admissions", "Gallery", "Contact"].map((link, i) => (
                   <li key={i}>
-                    <a href={`#${link.toLowerCase().replace(' ', '')}`} className="text-sm text-white/40 hover:text-white hover:translate-x-1 inline-block transition-all duration-300">
+                    <a href={`#${link.toLowerCase().replace(' ', '')}`} className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] hover:translate-x-1 inline-block transition-all duration-300">
                       {link}
                     </a>
                   </li>
@@ -1246,11 +1196,11 @@ export default function Home() {
 
             {/* Academics */}
             <div>
-              <h4 className="text-xs font-bold tracking-widest uppercase text-white/70 mb-5">Academics</h4>
+              <h4 className="text-xs font-bold tracking-widest uppercase text-[#e9e9e9]/70 mb-5">Academics</h4>
               <ul className="space-y-3">
                 {["Primary School", "Middle School", "High School", "CBSE Curriculum", "Examinations"].map((link, i) => (
                   <li key={i}>
-                    <a href="#" className="text-sm text-white/40 hover:text-white hover:translate-x-1 inline-block transition-all duration-300">
+                    <a href="#" className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] hover:translate-x-1 inline-block transition-all duration-300">
                       {link}
                     </a>
                   </li>
@@ -1260,11 +1210,11 @@ export default function Home() {
 
             {/* Resources */}
             <div>
-              <h4 className="text-xs font-bold tracking-widest uppercase text-white/70 mb-5">Resources</h4>
+              <h4 className="text-xs font-bold tracking-widest uppercase text-[#e9e9e9]/70 mb-5">Resources</h4>
               <ul className="space-y-3">
                 {["Student Portal", "Parent Login", "Fee Payment", "Calendar", "Downloads"].map((link, i) => (
                   <li key={i}>
-                    <a href="#" className="text-sm text-white/40 hover:text-white hover:translate-x-1 inline-block transition-all duration-300">
+                    <a href="#" className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] hover:translate-x-1 inline-block transition-all duration-300">
                       {link}
                     </a>
                   </li>
@@ -1274,22 +1224,22 @@ export default function Home() {
 
             {/* Contact */}
             <div>
-              <h4 className="text-xs font-bold tracking-widest uppercase text-white/70 mb-5">Contact</h4>
-              <ul className="space-y-3.5 text-sm text-white/40">
+              <h4 className="text-xs font-bold tracking-widest uppercase text-[#e9e9e9]/70 mb-5">Contact</h4>
+              <ul className="space-y-3.5 text-sm text-[#e9e9e9]/40">
                 <li className="flex items-start gap-2.5">
-                  <svg className="w-4 h-4 mt-0.5 flex-shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#e9e9e9]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   </svg>
                   <span>City, State - PIN</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <svg className="w-4 h-4 flex-shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 flex-shrink-0 text-[#e9e9e9]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                   <span>+91 XXXXX XXXXX</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <svg className="w-4 h-4 flex-shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 flex-shrink-0 text-[#e9e9e9]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   <span>info@vvm.edu</span>
@@ -1300,15 +1250,15 @@ export default function Home() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="relative border-t border-white/5">
+        <div className="relative border-t border-[#e9e9e9]/5">
           <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-xs text-white/30 text-center md:text-left">
+              <p className="text-xs text-[#e9e9e9]/30 text-center md:text-left">
                 © {new Date().getFullYear()} Vagdevi Vidya Mandir. All rights reserved.
               </p>
               <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
                 {["Privacy Policy", "Terms of Service", "Sitemap"].map((link, i) => (
-                  <a key={i} href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+                  <a key={i} href="#" className="text-xs text-[#e9e9e9]/30 hover:text-[#e9e9e9]/60 transition-colors">
                     {link}
                   </a>
                 ))}

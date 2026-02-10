@@ -41,6 +41,8 @@ const navItems = [
   { label: "Facilities", href: "#features" },
   { label: "Admissions", href: "#admissions" },
   { label: "Testimonials", href: "#testimonials" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "About Us", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -49,13 +51,14 @@ interface HeaderProps {
 }
 
 const sectionColors: Record<string, { bg: string; text: string; altBg: string; altText: string }> = {
-  home: { bg: "#3e4e3b", text: "white", altBg: "#e9e9e9", altText: "#3e4e3b" },
-  foreword: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  features: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  achievements: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  testimonials: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
-  contact: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "white" },
+  home: { bg: "#3e4e3b", text: "#e9e9e9", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  foreword: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
+  features: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
+  admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
+  testimonials: { bg: "#3e4e3b", text: "#e9e9e9", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  gallery: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
+  about: { bg: "#3e4e3b", text: "#e9e9e9", altBg: "#e9e9e9", altText: "#3e4e3b" },
+  contact: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
 };
 
 const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
@@ -65,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
 
   const current = sectionColors[activeSection] || sectionColors.home;
   const isHome = activeSection === "home";
-  const isDarkSection = current.text === "white";
+  const isDarkSection = current.text === "#e9e9e9";
   const headerBgColor = isHome
     ? "transparent"
     : isDarkSection 
@@ -84,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
         width: 280,
         height: "100%",
         backgroundColor: "rgba(62, 78, 59, 0.98)",
-        color: "white",
+        color: "#e9e9e9",
       }}
     >
       <Box
@@ -94,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
           p: 1,
         }}
       >
-        <IconButton onClick={handleDrawerToggle} sx={{ color: "white" }}>
+        <IconButton onClick={handleDrawerToggle} sx={{ color: "#e9e9e9" }}>
           <CloseIcon />
         </IconButton>
       </Box>

@@ -70,8 +70,8 @@ export function TestimonialsCard({
       >
         {/* Counter */}
         {showCounter && (
-          <div className="hidden sm:block col-start-2 row-start-1 text-right font-mono text-sm text-white/50 tracking-wider">
-            <span className="text-white font-semibold text-base">{String(activeIndex + 1).padStart(2, '0')}</span>
+          <div className="hidden sm:block col-start-2 row-start-1 text-right font-mono text-sm text-[#e9e9e9]/50 tracking-wider">
+            <span className="text-[#e9e9e9] font-semibold text-base">{String(activeIndex + 1).padStart(2, '0')}</span>
             <span className="mx-1">/</span>
             <span>{String(items.length).padStart(2, '0')}</span>
           </div>
@@ -86,7 +86,7 @@ export function TestimonialsCard({
               return (
                 <motion.div
                   key={item.id}
-                  className="absolute inset-0 w-full h-full overflow-hidden border-4 bg-white/10 border-white/30 shadow-2xl rounded-2xl"
+                  className="absolute inset-0 w-full h-full overflow-hidden border-4 bg-[#e9e9e9]/10 border-[#e9e9e9]/30 shadow-2xl rounded-2xl"
                   initial={{
                     x: offset * 15,
                     y: Math.abs(offset) * 6,
@@ -141,16 +141,16 @@ export function TestimonialsCard({
               transition={{ duration: 0.35 }}
               className="space-y-4"
             >
-              <Quote className="w-8 h-8 text-white/30 mb-2" />
-              <p className="text-base sm:text-lg leading-relaxed text-white/85 font-light italic">
+              <Quote className="w-8 h-8 text-[#e9e9e9]/30 mb-2" />
+              <p className="text-base sm:text-lg leading-relaxed text-[#e9e9e9]/85 font-light italic">
                 &ldquo;{activeItem.description}&rdquo;
               </p>
-              <div className="pt-4 border-t border-white/15">
-                <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+              <div className="pt-4 border-t border-[#e9e9e9]/15">
+                <h3 className="text-lg sm:text-xl font-bold text-[#e9e9e9] tracking-wide">
                   {activeItem.title.split("—")[0]?.trim()}
                 </h3>
                 {activeItem.title.includes("—") && (
-                  <p className="text-sm text-white/60 font-medium tracking-wider uppercase mt-1">
+                  <p className="text-sm text-[#e9e9e9]/60 font-medium tracking-wider uppercase mt-1">
                     {activeItem.title.split("—")[1]?.trim()}
                   </p>
                 )}
@@ -166,25 +166,25 @@ export function TestimonialsCard({
               disabled={activeIndex === 0}
               onClick={handlePrev}
               className={cn(
-                "flex items-center justify-center w-11 h-11 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm transition-all duration-300",
+                "flex items-center justify-center w-11 h-11 rounded-full border border-[#e9e9e9]/20 bg-[#e9e9e9]/10 backdrop-blur-sm transition-all duration-300",
                 activeIndex === 0
                   ? "opacity-30 cursor-not-allowed"
-                  : "hover:bg-white/20 hover:border-white/40 hover:scale-110 active:scale-95"
+                  : "hover:bg-[#e9e9e9]/20 hover:border-[#e9e9e9]/40 hover:scale-110 active:scale-95"
               )}
             >
-              <ArrowLeft className="w-4 h-4 text-white" />
+              <ArrowLeft className="w-4 h-4 text-[#e9e9e9]" />
             </button>
             <button
               disabled={activeIndex === items.length - 1}
               onClick={handleNext}
               className={cn(
-                "flex items-center justify-center w-11 h-11 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm transition-all duration-300",
+                "flex items-center justify-center w-11 h-11 rounded-full border border-[#e9e9e9]/20 bg-[#e9e9e9]/10 backdrop-blur-sm transition-all duration-300",
                 activeIndex === items.length - 1
                   ? "opacity-30 cursor-not-allowed"
-                  : "hover:bg-white/20 hover:border-white/40 hover:scale-110 active:scale-95"
+                  : "hover:bg-[#e9e9e9]/20 hover:border-[#e9e9e9]/40 hover:scale-110 active:scale-95"
               )}
             >
-              <ArrowRight className="w-4 h-4 text-white" />
+              <ArrowRight className="w-4 h-4 text-[#e9e9e9]" />
             </button>
             {/* Dot indicators */}
             <div className="flex gap-1.5 ml-4">
@@ -198,8 +198,8 @@ export function TestimonialsCard({
                   className={cn(
                     "rounded-full transition-all duration-300",
                     i === activeIndex
-                      ? "w-6 h-2 bg-white"
-                      : "w-2 h-2 bg-white/30 hover:bg-white/50"
+                      ? "w-6 h-2 bg-[#e9e9e9]"
+                      : "w-2 h-2 bg-[#e9e9e9]/30 hover:bg-[#e9e9e9]/50"
                   )}
                 />
               ))}
