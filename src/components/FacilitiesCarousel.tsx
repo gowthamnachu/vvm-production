@@ -67,18 +67,14 @@ const facilities: Facility[] = [
 export default function FacilitiesCarousel() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const thumbContainerRef = useRef<HTMLDivElement>(null);
   const DURATION = 6000;
-  const PROGRESS_STEP = 30;
 
   const goTo = useCallback((index: number) => {
     setCurrent(index);
-    setProgress(0);
   }, []);
 
   const paginate = useCallback(
@@ -100,26 +96,19 @@ export default function FacilitiesCarousel() {
     }
   }, [current]);
 
-  // Auto-play
+  // Auto-play - Single interval
   useEffect(() => {
     if (isPaused) {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      if (progressRef.current) clearInterval(progressRef.current);
       return;
     }
 
-    progressRef.current = setInterval(() => {
-      setProgress((prev) => Math.min(prev + (PROGRESS_STEP / DURATION) * 100, 100));
-    }, PROGRESS_STEP);
-
     intervalRef.current = setInterval(() => {
       setCurrent((prev) => (prev + 1) % facilities.length);
-      setProgress(0);
     }, DURATION);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      if (progressRef.current) clearInterval(progressRef.current);
     };
   }, [isPaused, current]);
 
@@ -279,13 +268,17 @@ export default function FacilitiesCarousel() {
                     style={{ background: i === current ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.25)" }}
                     aria-label={`Go to slide ${i + 1}`}
                   >
-                    {i === current && (
-                      <motion.div
+                    {i === current && !isPaused && (
+                      <div 
                         className="absolute inset-y-0 left-0 rounded-full bg-white"
-                        initial={{ width: "0%" }}
-                        animate={{ width: `${progress}%` }}
-                        transition={{ duration: 0.05, ease: "linear" }}
+                        style={{
+                          animation: `progressBar ${DURATION}ms linear`,
+                          animationFillMode: 'forwards'
+                        }}
                       />
+                    )}
+                    {i === current && isPaused && (
+                      <div className="absolute inset-y-0 left-0 rounded-full bg-white w-full" />
                     )}
                     {i !== current && (
                       <div className="absolute inset-0 rounded-full bg-white/50" />

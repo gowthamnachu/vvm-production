@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo, lazy, Suspense } from "react";
 import { motion, useInView, useAnimationFrame } from "framer-motion";
 import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
-import { TestimonialsCard } from "@/components/ui/testimonials-card";
-import { GalleryWithTab } from "@/components/ui/gallery-with-tab";
-import FacilitiesCarousel from "@/components/FacilitiesCarousel";
 import Image from "next/image";
+
+// Lazy load heavy components
+const TestimonialsCard = lazy(() => import("@/components/ui/testimonials-card").then(mod => ({ default: mod.TestimonialsCard })));
+const GalleryWithTab = lazy(() => import("@/components/ui/gallery-with-tab").then(mod => ({ default: mod.GalleryWithTab })));
+const FacilitiesCarousel = lazy(() => import("@/components/FacilitiesCarousel"));
 
 // Auto-scrolling marquee images
 const marqueeImages = [
@@ -20,8 +22,8 @@ const marqueeImages = [
   "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png",
 ];
 
-// Auto-scrolling Marquee Component
-function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: string[]; direction?: "left" | "right"; speed?: number }) {
+// Auto-scrolling Marquee Component - Memoized
+const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: string[]; direction?: "left" | "right"; speed?: number }) {
   const [position, setPosition] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -43,8 +45,8 @@ function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: s
         className="flex gap-4"
         style={{ x: `${position}%` }}
       >
-        {/* Triple the images for seamless loop */}
-        {[...images, ...images, ...images].map((src, index) => (
+        {/* Double images for seamless loop - reduced from triple */}
+        {[...images, ...images].map((src, index) => (
           <div
             key={index}
             className="relative flex-shrink-0 w-48 h-32 sm:w-64 sm:h-40 lg:w-80 lg:h-48 rounded-xl overflow-hidden"
@@ -55,6 +57,8 @@ function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: s
               fill
               className="object-cover"
               sizes="(max-width: 640px) 192px, (max-width: 1024px) 256px, 320px"
+              loading={index < 4 ? "eager" : "lazy"}
+              priority={index < 2}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
           </div>
@@ -62,9 +66,9 @@ function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: s
       </motion.div>
     </div>
   );
-}
+});
 
-// Animation variants
+// Animation variants - removed blur for better performance
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 }
@@ -74,14 +78,14 @@ const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 }
+    transition: { staggerChildren: 0.15 }
   }
 };
 
-// Animated Section Component
-function AnimatedSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+// Animated Section Component - Memoized
+const AnimatedSection = memo(function AnimatedSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-100px", amount: 0.3 });
   
   return (
     <motion.div
@@ -94,7 +98,7 @@ function AnimatedSection({ children, className = "" }: { children: React.ReactNo
       {children}
     </motion.div>
   );
-}
+});
 
 // Counter Animation Component
 function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
@@ -129,25 +133,33 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const sections = ["home", "foreword", "features", "admissions", "testimonials", "gallery", "about", "contact"];
-      const scrollPosition = window.scrollY + 100;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sections = ["home", "foreword", "features", "admissions", "testimonials", "gallery", "about", "contact"];
+          const scrollPosition = window.scrollY + 100;
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetBottom = offsetTop + element.offsetHeight;
+          for (const section of sections) {
+            const element = document.getElementById(section);
+            if (element) {
+              const offsetTop = element.offsetTop;
+              const offsetBottom = offsetTop + element.offsetHeight;
 
-          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
-            setActiveSection(section);
-            break;
+              if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+                setActiveSection(section);
+                break;
+              }
+            }
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -316,9 +328,9 @@ export default function Home() {
       </section>
 
       {/* Foreword Section */}
-      <section id="foreword" className="relative w-full bg-gradient-to-b from-slate-950 via-[#f8fafc] to-white pt-0 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
+      <section id="foreword" className="relative w-full bg-[#f8fafc] pt-0 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
         {/* Auto-scrolling Image Marquee at Top */}
-        <div className="relative w-full bg-slate-950 py-10 sm:py-14 lg:py-16">
+        <div className="relative w-full py-10 sm:py-14 lg:py-16">
           <div className="space-y-4">
             {/* First Row - scrolls left */}
             <div className="opacity-70 hover:opacity-90 transition-opacity">
@@ -329,21 +341,16 @@ export default function Home() {
               <InfiniteMarquee images={[...marqueeImages].reverse()} direction="right" speed={20} />
             </div>
           </div>
-          {/* Gradient overlays for smooth fade effect */}
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent pointer-events-none" />
-          {/* Bottom gradient fade to section */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none" />
+          {/* Clean fade overlays */}
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#f8fafc] to-transparent pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#f8fafc] to-transparent pointer-events-none" />
         </div>
-        
-        {/* Gradient transition from dark to light */}
-        <div className="w-full h-32 sm:h-40 lg:h-48 bg-gradient-to-b from-slate-950 via-slate-800/50 to-transparent -mt-1" />
 
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#3e4e3b]/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
+        {/* Subtle Decorative Elements */}
+        <div className="absolute top-40 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/[0.015] rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#3e4e3b]/[0.02] rounded-full blur-3xl" />
         
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-16 sm:pt-20 lg:pt-24">
           <AnimatedSection>
           <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 lg:gap-10">
           
@@ -377,22 +384,21 @@ export default function Home() {
             {/* Left Image with Correspondent Info */}
             <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-4 order-1">
               <div className="sticky top-32">
-                {/* Image Card with border glow */}
+                {/* Professional Image Card */}
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-br from-[#3e4e3b]/20 via-transparent to-[#3e4e3b]/20 rounded-3xl blur-sm group-hover:blur-md transition-all duration-500" />
-                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-slate-200/60 bg-white">
                     <img 
                       src="/aboutus.png" 
                       alt="Ramineni Radha Krishna - Correspondent" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
                     {/* Name overlay on image bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                      <h4 className="text-lg sm:text-xl font-bold text-[#e9e9e9] mb-0.5 drop-shadow-lg">
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 bg-gradient-to-t from-slate-900/80 to-transparent">
+                      <h4 className="text-lg sm:text-xl font-bold text-white mb-0.5">
                         Ramineni Radha Krishna
                       </h4>
-                      <p className="text-xs sm:text-sm text-[#e9e9e9]/80 font-medium tracking-wider uppercase">
+                      <p className="text-xs sm:text-sm text-white/90 font-medium tracking-wider uppercase">
                         Correspondent
                       </p>
                     </div>
@@ -401,11 +407,11 @@ export default function Home() {
                 
                 {/* Quick info cards below image */}
                 <div className="grid grid-cols-2 gap-3 mt-4">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm border border-slate-100/50 text-center">
+                  <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-slate-200 text-center">
                     <p className="text-xl sm:text-2xl font-bold text-[#3e4e3b]">25+</p>
                     <p className="text-[9px] sm:text-[10px] text-[#3e4e3b]/60 uppercase tracking-wider mt-0.5">Years Leading</p>
                   </div>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm border border-slate-100/50 text-center">
+                  <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-slate-200 text-center">
                     <p className="text-xl sm:text-2xl font-bold text-[#3e4e3b]">5000+</p>
                     <p className="text-[9px] sm:text-[10px] text-[#3e4e3b]/60 uppercase tracking-wider mt-0.5">Lives Shaped</p>
                   </div>
@@ -464,9 +470,9 @@ export default function Home() {
               ].map((value, index) => (
                 <div 
                   key={index}
-                  className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl p-5 sm:p-7 lg:p-8 shadow-sm border border-slate-100/50 hover:shadow-xl hover:border-[#3e4e3b]/20 hover:-translate-y-2 transition-all duration-500 overflow-hidden`}
+                  className={`group relative bg-white rounded-2xl p-5 sm:p-7 lg:p-8 shadow-sm border border-slate-200 hover:shadow-lg hover:border-[#3e4e3b]/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden`}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   <div className="relative">
                     <div className="w-12 h-12 bg-[#3e4e3b]/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#3e4e3b] transition-all duration-300 group-hover:shadow-lg">
                       <svg className="w-6 h-6 text-[#3e4e3b] group-hover:text-[#e9e9e9] transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -517,7 +523,13 @@ export default function Home() {
 
             {/* Facilities Carousel */}
             <motion.div variants={fadeInUp}>
-              <FacilitiesCarousel />
+              <Suspense fallback={
+                <div className="w-full aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.2/1] rounded-2xl sm:rounded-3xl bg-[#2a3a28] animate-pulse flex items-center justify-center">
+                  <div className="text-white/40 text-sm">Loading facilities...</div>
+                </div>
+              }>
+                <FacilitiesCarousel />
+              </Suspense>
             </motion.div>
 
 
@@ -671,7 +683,12 @@ export default function Home() {
 
             {/* Testimonials Card */}
             <div className="flex justify-center">
-              <TestimonialsCard
+              <Suspense fallback={
+                <div className="w-full max-w-[700px] h-[400px] rounded-xl bg-[#e9e9e9]/10 animate-pulse flex items-center justify-center">
+                  <div className="text-[#e9e9e9]/40 text-sm">Loading testimonials...</div>
+                </div>
+              }>
+                <TestimonialsCard
                 items={[
                   {
                     id: 1,
@@ -712,8 +729,9 @@ export default function Home() {
                 ]}
                 width={700}
                 autoPlay={true}
-                autoPlayInterval={4000}
+                autoPlayInterval={5000}
               />
+              </Suspense>
             </div>
           </AnimatedSection>
         </div>
@@ -753,7 +771,12 @@ export default function Home() {
 
             {/* Gallery Tabs */}
             <motion.div variants={fadeInUp}>
-              <GalleryWithTab
+              <Suspense fallback={
+                <div className="w-full h-[500px] rounded-xl bg-[#3e4e3b]/5 animate-pulse flex items-center justify-center">
+                  <div className="text-[#3e4e3b]/40 text-sm">Loading gallery...</div>
+                </div>
+              }>
+                <GalleryWithTab
                 data={[
                   {
                     label: "Skating",
@@ -817,13 +840,29 @@ export default function Home() {
                   },
                 ]}
               />
+              </Suspense>
             </motion.div>
           </AnimatedSection>
         </div>
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="relative w-full bg-gradient-to-br from-[#3e4e3b] via-[#4a5d47] to-[#3e4e3b] py-20 sm:py-28 lg:py-36 overflow-hidden">
+      <section id="about" className="relative w-full py-20 sm:py-28 lg:py-36 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url('/aboutusbackground.JPG')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+          {/* Dark overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#3e4e3b]/85 via-[#4a5d47]/80 to-[#3e4e3b]/85" />
+        </div>
+        
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
@@ -1139,7 +1178,22 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 relative overflow-hidden">
+      <footer className="w-full relative overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url('/footerimage.JPG')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+          {/* Dark overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/85 to-slate-950/90" />
+        </div>
+        
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `radial-gradient(circle at 2px 2px, rgba(233,233,233,0.15) 1px, transparent 0)`,
