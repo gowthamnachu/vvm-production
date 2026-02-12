@@ -184,33 +184,21 @@ export default function Home() {
         id="home"
         className="relative min-h-screen w-full bg-slate-950 overflow-hidden"
       >
-        {/* Background */}
+        {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <div 
-            className="absolute inset-0 md:hidden"
-            style={{
-              backgroundImage: "url('/ChatGPT%20Image%20Feb%203%2C%202026%2C%2008_59_31%20PM.png')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-          <div className="absolute inset-0 md:hidden bg-black/30" />
-          <div 
-            className="absolute inset-0 hidden md:block"
-            style={{
-              backgroundImage: "url('/ChatGPT%20Image%20Feb%203%2C%202026%2C%2008_42_59%20PM.png')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#3e4e3b]/70 via-[#3e4e3b]/50 to-slate-950" />
-          {/* Animated grain overlay */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          }} />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/videos/hero-poster.jpg"
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/videos/hero.webm" type="video/webm" />
+            <source src="/videos/hero.mp4" type="video/mp4" />
+          </video>
         </div>
-
-
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 min-h-screen flex items-center">
