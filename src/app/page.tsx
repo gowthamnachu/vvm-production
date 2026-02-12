@@ -199,6 +199,8 @@ export default function Home() {
             <source src="/videos/hero.mp4" type="video/mp4" />
           </video>
         </div>
+        {/* Green Blur Overlay */}
+        <div className="absolute inset-0 bg-[#3e4e3b]/40" />
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 min-h-screen flex items-center">
@@ -318,20 +320,17 @@ export default function Home() {
       {/* Foreword Section */}
       <section id="foreword" className="relative w-full bg-[#f8fafc] pt-0 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
         {/* Auto-scrolling Image Marquee at Top */}
-        <div className="relative w-full py-10 sm:py-14 lg:py-16">
+        <div className="relative w-full py-10 sm:py-14 lg:py-16 z-20">
           <div className="space-y-4">
             {/* First Row - scrolls left */}
-            <div className="opacity-70 hover:opacity-90 transition-opacity">
+            <div className="opacity-100 transition-opacity">
               <InfiniteMarquee images={marqueeImages} direction="left" speed={30} />
             </div>
             {/* Second Row - scrolls right */}
-            <div className="opacity-50 hover:opacity-80 transition-opacity">
+            <div className="opacity-100 transition-opacity">
               <InfiniteMarquee images={[...marqueeImages].reverse()} direction="right" speed={20} />
             </div>
           </div>
-          {/* Clean fade overlays */}
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#f8fafc] to-transparent pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#f8fafc] to-transparent pointer-events-none" />
         </div>
 
         {/* Subtle Decorative Elements */}
@@ -963,14 +962,36 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="relative w-full bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.015]" style={{
+      <section id="contact" className="relative w-full bg-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-visible">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, #3e4e3b 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
+        
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
+
+        {/* Decorative Images Around Contact */}
+        <div className="hidden lg:block absolute top-32 left-8 xl:left-16 w-44 h-32 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform -rotate-6 z-[60]" style={{ opacity: 0.3 }}>
+          <img src="/hello (3).png" alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="hidden lg:block absolute top-[45%] right-8 xl:right-16 w-48 h-36 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform rotate-6 z-[60]" style={{ opacity: 0.3 }}>
+          <img src="/hello (4).png" alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="hidden lg:block absolute bottom-[35%] left-8 xl:left-20 w-40 h-28 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform rotate-3 z-[60]" style={{ opacity: 0.3 }}>
+          <img src="/hello (5).png" alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="hidden lg:block absolute bottom-40 right-8 xl:right-20 w-44 h-32 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform -rotate-3 z-[60]" style={{ opacity: 0.3 }}>
+          <img src="/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="hidden xl:block absolute top-[60%] left-12 w-36 h-28 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform -rotate-12 z-[60]" style={{ opacity: 0.25 }}>
+          <img src="/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="hidden xl:block absolute top-48 right-12 w-40 h-28 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform rotate-12 z-[60]" style={{ opacity: 0.25 }}>
+          <img src="/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" alt="" className="w-full h-full object-cover" />
+        </div>
         
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
@@ -998,7 +1019,7 @@ export default function Home() {
             </div>
           </motion.div>
 
-          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 max-w-6xl mx-auto">
+          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 max-w-6xl mx-auto relative">
             
             {/* Form */}
             <div className="col-span-4 md:col-span-8 lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100">
@@ -1157,6 +1178,37 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Google Maps */}
+          <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 mt-8">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100">
+              <div className="p-4 sm:p-5 border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center shadow-lg">
+                    <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-base sm:text-lg font-bold text-[#3e4e3b]">Find Us on Map</h4>
+                    <p className="text-xs text-[#3e4e3b]/50">Vagdevi Vidya Mandir Location</p>
+                  </div>
+                </div>
+              </div>
+              <div className="relative w-full h-[350px] sm:h-[450px]">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.5837!2d78.3906!3d17.4485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDI2JzU0LjYiTiA3OMKwMjMnMjYuMiJF!5e0!3m2!1sen!2sin!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full"
+                />
               </div>
             </div>
           </motion.div>
