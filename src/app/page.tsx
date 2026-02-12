@@ -86,7 +86,7 @@ const staggerContainer = {
 // Animated Section Component - Memoized
 const AnimatedSection = memo(function AnimatedSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px", amount: 0.3 });
+  const isInView = useInView(ref, { once: true, margin: "-50px", amount: 0.1 });
 
   return (
     <motion.div
@@ -975,23 +975,35 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
 
         {/* Decorative Images Around Contact */}
-        <div className="hidden lg:block absolute top-32 left-8 xl:left-16 w-44 h-32 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform -rotate-6 z-[60]" style={{ opacity: 0.3 }}>
-          <img src="/hello (3).png" alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="hidden lg:block absolute top-[45%] right-8 xl:right-16 w-48 h-36 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform rotate-6 z-[60]" style={{ opacity: 0.3 }}>
-          <img src="/hello (4).png" alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="hidden lg:block absolute bottom-[35%] left-8 xl:left-20 w-40 h-28 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform rotate-3 z-[60]" style={{ opacity: 0.3 }}>
-          <img src="/hello (5).png" alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="hidden lg:block absolute bottom-40 right-8 xl:right-20 w-44 h-32 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform -rotate-3 z-[60]" style={{ opacity: 0.3 }}>
-          <img src="/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="hidden xl:block absolute top-[60%] left-12 w-36 h-28 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform -rotate-12 z-[60]" style={{ opacity: 0.25 }}>
-          <img src="/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="hidden xl:block absolute top-48 right-12 w-40 h-28 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 transform rotate-12 z-[60]" style={{ opacity: 0.25 }}>
-          <img src="/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" alt="" className="w-full h-full object-cover" />
+        {/* Animated Floating Decorative Images */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[
+            { src: "/hello (3).png", top: "12%", left: "5%", width: "w-48", height: "h-36", rotate: -6, delay: 0 },
+            { src: "/hello (4).png", top: "40%", right: "4%", width: "w-52", height: "h-40", rotate: 6, delay: 1.5 },
+            { src: "/hello (5).png", bottom: "15%", left: "8%", width: "w-44", height: "h-32", rotate: -3, delay: 0.8 },
+            { src: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png", bottom: "20%", right: "10%", width: "w-48", height: "h-36", rotate: 3, delay: 2.2 },
+            { src: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png", top: "55%", left: "-2%", width: "w-40", height: "h-32", rotate: -12, delay: 1.2 },
+            { src: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png", top: "18%", right: "12%", width: "w-44", height: "h-32", rotate: 8, delay: 2.8 },
+          ].map((img, index) => (
+            <motion.div
+              key={index}
+              className={`hidden lg:block absolute ${img.width} ${img.height} rounded-2xl overflow-hidden shadow-2xl border-4 border-white/40 z-[5] will-change-transform`}
+              style={{
+                top: img.top,
+                left: img.left,
+                right: img.right,
+                bottom: img.bottom,
+                rotate: img.rotate
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent z-10" />
+              <img
+                src={img.src}
+                alt=""
+                className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+              />
+            </motion.div>
+          ))}
         </div>
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
@@ -1022,184 +1034,195 @@ export default function Home() {
 
               <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 max-w-6xl mx-auto relative">
 
-                {/* Form */}
-                <div className="col-span-4 md:col-span-8 lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100">
-                  <div className="flex items-center gap-3 mb-7">
-                    <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center shadow-lg">
-                      <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg sm:text-xl font-bold text-[#3e4e3b]">Send a Message</h3>
-                      <p className="text-xs text-[#3e4e3b]/50">We typically respond within 24 hours</p>
-                    </div>
-                  </div>
-                  <form className="space-y-4 sm:space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Full Name</label>
-                        <input
-                          type="text"
-                          placeholder="Enter your name"
-                          className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Phone Number</label>
-                        <input
-                          type="tel"
-                          placeholder="Enter your phone"
-                          className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Email Address</label>
-                      <input
-                        type="email"
-                        placeholder="Enter your email"
-                        className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Subject</label>
-                      <select className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all">
-                        <option value="">Select a subject</option>
-                        <option value="admissions">Admissions Inquiry</option>
-                        <option value="general">General Information</option>
-                        <option value="fees">Fee Structure</option>
-                        <option value="visit">Campus Visit</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm text-[#3e4e3b]/80 font-semibold mb-2">Message</label>
-                      <textarea
-                        rows={4}
-                        placeholder="How can we help you?"
-                        className="w-full bg-[#3e4e3b]/5 border border-[#3e4e3b]/15 rounded-xl px-4 py-3 text-sm text-[#3e4e3b] placeholder-[#3e4e3b]/40 focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] hover:border-[#3e4e3b]/30 transition-all resize-none"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-[#3e4e3b] to-[#4a5d47] text-[#e9e9e9] py-3.5 sm:py-4 rounded-xl font-bold hover:shadow-xl hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all text-sm sm:text-base flex items-center justify-center gap-2.5 group"
-                    >
-                      Send Message
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </button>
-                  </form>
-                </div>
-
-                {/* Contact Info */}
-                <div className="col-span-4 md:col-span-8 lg:col-span-5 space-y-4">
-                  <div className="bg-white rounded-2xl p-6 sm:p-7 shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#3e4e3b] mb-1.5">Address</h4>
-                        <p className="text-xs sm:text-sm lg:text-base text-[#3e4e3b]/60 leading-relaxed">
-                          Vagdevi Vidya Mandir<br />
-                          School Address<br />
-                          City, State - PIN
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500">
-                      <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center mb-3 shadow-lg">
-                        <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                      </div>
-                      <h4 className="text-sm sm:text-base font-bold text-[#3e4e3b] mb-1">Phone</h4>
-                      <p className="text-xs sm:text-sm text-[#3e4e3b]/60">+91 XXXXX XXXXX</p>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500">
-                      <div className="w-11 h-11 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center mb-3 shadow-lg">
-                        <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="col-span-4 md:col-span-8 lg:col-span-7 relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-[#3e4e3b] to-[#4a5d47] rounded-[2rem] opacity-20 group-hover:opacity-40 blur transition duration-500" />
+                  <div className="relative h-full bg-white/80 backdrop-blur-xl rounded-[1.8rem] p-8 sm:p-10 border border-white/40 shadow-2xl">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-500">
+                        <svg className="w-6 h-6 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                       </div>
-                      <h4 className="text-sm sm:text-base font-bold text-[#3e4e3b] mb-1">Email</h4>
-                      <p className="text-xs sm:text-sm text-[#3e4e3b]/60 break-all">info@vvm.edu</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-br from-[#3e4e3b] via-[#3e4e3b] to-[#2d3a2a] rounded-2xl p-6 sm:p-7 shadow-xl overflow-hidden relative">
-                    <div className="absolute inset-0 opacity-10" style={{
-                      backgroundImage: `radial-gradient(circle at 2px 2px, rgba(233,233,233,0.2) 1px, transparent 0)`,
-                      backgroundSize: '24px 24px'
-                    }} />
-                    <div className="relative flex items-start gap-4">
-                      <div className="w-11 h-11 bg-[#e9e9e9]/10 rounded-xl flex items-center justify-center flex-shrink-0 border border-[#e9e9e9]/10">
-                        <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
                       <div>
-                        <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#e9e9e9] mb-1.5">Office Hours</h4>
-                        <p className="text-xs sm:text-sm lg:text-base text-[#e9e9e9]/70 leading-relaxed">
-                          Monday - Saturday<br />
-                          9:00 AM - 5:00 PM
-                        </p>
+                        <h3 className="text-2xl font-bold text-[#3e4e3b]">Send a Message</h3>
+                        <p className="text-sm text-[#3e4e3b]/60 font-medium mt-1">We typically respond within 24 hours</p>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Social Links */}
-                  <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border border-slate-100">
-                    <h4 className="text-sm sm:text-base font-bold text-[#3e4e3b] mb-4">Follow Us</h4>
-                    <div className="flex gap-3">
-                      {[
-                        { icon: "M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z", name: "Twitter", color: "hover:bg-sky-500" },
-                        { icon: "M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z", name: "Facebook", color: "hover:bg-blue-600" },
-                        { icon: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z", name: "Instagram", color: "hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500" },
-                        { icon: "M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z", name: "LinkedIn", color: "hover:bg-blue-700" },
-                      ].map((social, i) => (
-                        <a
-                          key={i}
-                          href="#"
-                          className={`w-11 h-11 bg-[#3e4e3b]/10 ${social.color} rounded-xl flex items-center justify-center group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5`}
-                          aria-label={social.name}
+                    <form className="space-y-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="group/input relative">
+                          <input
+                            type="text"
+                            id="name"
+                            className="peer w-full bg-white/50 border border-[#3e4e3b]/10 rounded-xl px-5 py-4 text-[#3e4e3b] placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] transition-all"
+                            placeholder="Full Name"
+                          />
+                          <label
+                            htmlFor="name"
+                            className="absolute left-5 -top-2.5 bg-white/80 px-2 text-xs font-semibold text-[#3e4e3b] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#3e4e3b]/50 peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-[#3e4e3b]"
+                          >
+                            Full Name
+                          </label>
+                        </div>
+                        <div className="group/input relative">
+                          <input
+                            type="tel"
+                            id="phone"
+                            className="peer w-full bg-white/50 border border-[#3e4e3b]/10 rounded-xl px-5 py-4 text-[#3e4e3b] placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] transition-all"
+                            placeholder="Phone Number"
+                          />
+                          <label
+                            htmlFor="phone"
+                            className="absolute left-5 -top-2.5 bg-white/80 px-2 text-xs font-semibold text-[#3e4e3b] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#3e4e3b]/50 peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-[#3e4e3b]"
+                          >
+                            Phone Number
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="group/input relative">
+                        <input
+                          type="email"
+                          id="email"
+                          className="peer w-full bg-white/50 border border-[#3e4e3b]/10 rounded-xl px-5 py-4 text-[#3e4e3b] placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] transition-all"
+                          placeholder="Email Address"
+                        />
+                        <label
+                          htmlFor="email"
+                          className="absolute left-5 -top-2.5 bg-white/80 px-2 text-xs font-semibold text-[#3e4e3b] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#3e4e3b]/50 peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-[#3e4e3b]"
                         >
-                          <svg className="w-4 h-4 text-[#3e4e3b]/60 group-hover:text-[#e9e9e9] transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
-                            <path d={social.icon} />
+                          Email Address
+                        </label>
+                      </div>
+
+                      <div className="relative">
+                        <select
+                          id="subject"
+                          className="peer w-full bg-white/50 border border-[#3e4e3b]/10 rounded-xl px-5 py-4 text-[#3e4e3b] focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] transition-all appearance-none cursor-pointer"
+                        >
+                          <option value="" disabled selected>Select a subject</option>
+                          <option value="admissions">Admissions Inquiry</option>
+                          <option value="general">General Information</option>
+                          <option value="fees">Fee Structure</option>
+                          <option value="visit">Campus Visit</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[#3e4e3b]/50">
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
-                        </a>
-                      ))}
-                    </div>
+                        </div>
+                        <label
+                          htmlFor="subject"
+                          className="absolute left-5 -top-2.5 bg-white/80 px-2 text-xs font-semibold text-[#3e4e3b]"
+                        >
+                          Subject
+                        </label>
+                      </div>
+
+                      <div className="group/input relative">
+                        <textarea
+                          id="message"
+                          rows={4}
+                          className="peer w-full bg-white/50 border border-[#3e4e3b]/10 rounded-xl px-5 py-4 text-[#3e4e3b] placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] transition-all resize-none"
+                          placeholder="Message"
+                        />
+                        <label
+                          htmlFor="message"
+                          className="absolute left-5 -top-2.5 bg-white/80 px-2 text-xs font-semibold text-[#3e4e3b] transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#3e4e3b]/50 peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-[#3e4e3b]"
+                        >
+                          How can we help you?
+                        </label>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full bg-gradient-to-r from-[#3e4e3b] to-[#4a5d47] text-white py-4 rounded-xl font-bold tracking-wide hover:shadow-lg hover:shadow-[#3e4e3b]/25 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group/btn relative overflow-hidden"
+                      >
+                        <span className="relative z-10">Send Message</span>
+                        <svg className="w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#4a5d47] to-[#3e4e3b] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                      </button>
+                    </form>
                   </div>
                 </div>
-              </motion.div>
 
-              {/* Google Maps */}
-              <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 mt-8">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100">
-                  <div className="p-4 sm:p-5 border-b border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#3e4e3b] to-[#4a5d47] rounded-xl flex items-center justify-center shadow-lg">
-                        <svg className="w-5 h-5 text-[#e9e9e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                        </svg>
+                {/* Contact Info */}
+                {/* Contact Info Panel & Map */}
+                <div className="col-span-4 md:col-span-8 lg:col-span-5 flex flex-col gap-6 sm:gap-8">
+
+                  {/* Unified Contact Info Card */}
+                  <div className="bg-[#3e4e3b] rounded-[2rem] p-8 sm:p-10 text-[#e9e9e9] shadow-2xl relative overflow-hidden group">
+                    {/* Background decoration */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/10 transition-colors duration-500" />
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+
+                    <h3 className="text-2xl font-bold mb-8 relative z-10">Contact Information</h3>
+
+                    <div className="space-y-8 relative z-10">
+                      <div className="flex items-start gap-4 group/item">
+                        <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 group-hover/item:bg-white/20 transition-all duration-300">
+                          <svg className="w-5 h-5 group-hover/item:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wider text-white/40 mb-1">Address</p>
+                          <p className="text-lg font-medium leading-relaxed">
+                            Vagdevi Vidya Mandir<br />
+                            School Address<br />
+                            City, State - PIN
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="text-base sm:text-lg font-bold text-[#3e4e3b]">Find Us on Map</h4>
-                        <p className="text-xs text-[#3e4e3b]/50">Vagdevi Vidya Mandir Location</p>
+
+                      <div className="flex items-start gap-4 group/item">
+                        <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 group-hover/item:bg-white/20 transition-all duration-300">
+                          <svg className="w-5 h-5 group-hover/item:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wider text-white/40 mb-1">Phone</p>
+                          <p className="text-lg font-medium">+91 XXXXX XXXXX</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4 group/item">
+                        <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-white/10 group-hover/item:bg-white/20 transition-all duration-300">
+                          <svg className="w-5 h-5 group-hover/item:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wider text-white/40 mb-1">Email</p>
+                          <p className="text-lg font-medium">info@vvm.edu</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4 group/item pt-4 border-t border-white/10">
+                        <div className="w-12 h-12 bg-amber-400/20 rounded-xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm border border-amber-400/20 group-hover/item:bg-amber-400/30 transition-all duration-300">
+                          <svg className="w-5 h-5 text-amber-300 group-hover/item:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wider text-amber-200/60 mb-1">Office Hours</p>
+                          <p className="text-base font-medium text-amber-50">Mon - Sat: 9:00 AM - 5:00 PM</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="relative w-full h-[350px] sm:h-[450px]">
+
+                  {/* Enhanced Map */}
+                  <div className="flex-1 min-h-[300px] bg-white rounded-[2rem] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 relative group">
+                    {/* Overlay that fades out on hover */}
+                    <div className="absolute inset-0 bg-[#3e4e3b]/10 z-10 pointer-events-none transition-opacity duration-500 group-hover:opacity-0" />
+
                     <iframe
                       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.5837!2d78.3906!3d17.4485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDI2JzU0LjYiTiA3OMKwMjMnMjYuMiJF!5e0!3m2!1sen!2sin!4v1234567890"
                       width="100%"
@@ -1208,8 +1231,15 @@ export default function Home() {
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      className="w-full h-full"
+                      className="w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
                     />
+
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg z-20 transform -translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <span className="text-xs font-bold text-[#3e4e3b] flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        Locate Us
+                      </span>
+                    </div>
                   </div>
                 </div>
               </motion.div>

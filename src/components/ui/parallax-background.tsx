@@ -26,19 +26,10 @@ export function ParallaxBackground({
         >
             {image ? (
                 <>
-                    {/* Mobile Background: usually 'fixed' doesn't work well on mobile, so we use 'scroll' or default */}
                     <div
-                        className="absolute inset-0 bg-center bg-cover bg-no-repeat sm:hidden"
+                        className="absolute inset-0 bg-center bg-cover bg-no-repeat bg-fixed"
                         style={{
                             backgroundImage: `url('${mobileImage || image}')`,
-                        }}
-                    />
-
-                    {/* Desktop Background: Fixed attachment */}
-                    <div
-                        className="hidden sm:block absolute inset-0 bg-center bg-cover bg-no-repeat bg-fixed"
-                        style={{
-                            backgroundImage: `url('${image}')`,
                         }}
                     />
 
