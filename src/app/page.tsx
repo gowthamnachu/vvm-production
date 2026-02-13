@@ -283,7 +283,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                Nurturing minds, building character, and creating future leaders through quality education with cultural values in a lush green campus.
+                A Place Where Knowledge Meets Excellence! Nurturing minds, building character, and creating future leaders through quality education.
               </motion.p>
 
               <motion.div
@@ -353,6 +353,12 @@ export default function Home() {
 
       {/* Foreword Section */}
       <section id="foreword" className="relative w-full bg-[#f8fafc] pt-0 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
+        {/* Green grid pattern */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
+
         {/* Auto-scrolling Image Marquee at Top */}
         <div className="relative w-full py-10 sm:py-14 lg:py-16 z-20">
           <div className="space-y-4">
@@ -447,7 +453,7 @@ export default function Home() {
                   <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg border border-slate-100/50 hover:shadow-xl transition-shadow duration-500">
                     <div className="space-y-5 text-sm sm:text-base text-[#3e4e3b]/70 leading-[1.8]">
                       <p className="first-letter:text-4xl first-letter:font-bold first-letter:text-[#3e4e3b] first-letter:float-left first-letter:mr-2 first-letter:leading-none">
-                        It is with immense pride and profound gratitude that I welcome you to Vagdevi Vidya Mandir, an institution that has been steadfastly nurturing young minds and shaping exemplary futures for over two decades. From our humble beginnings to our current standing as a beacon of holistic education, we have remained unwavering in our commitment to fostering excellence in academics, character development, and essential life skills.
+                        IIt is with immense pride and profound gratitude that I welcome you to Vagdevi Vidya Mandir, an institution that has been steadfastly nurturing young minds and shaping exemplary futures for over two decades. From our humble beginnings to our current standing as a beacon of holistic education, we have remained unwavering in our commitment to fostering excellence in academics, character development, and essential life skills.
                       </p>
 
                       <p>
@@ -563,9 +569,10 @@ export default function Home() {
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.015]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #3e4e3b 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
+        {/* Green grid pattern */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
         }} />
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
@@ -773,6 +780,11 @@ export default function Home() {
 
       {/* Gallery Section */}
       <section id="gallery" className="relative w-full bg-gradient-to-br from-slate-50 via-white to-[#3e4e3b]/5 py-20 sm:py-24 lg:py-36 overflow-hidden">
+        {/* Green grid pattern */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
         {/* Decorative Background */}
         <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-gradient-to-br from-[#3e4e3b]/8 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-gradient-to-tl from-[#3e4e3b]/6 to-transparent rounded-full blur-3xl" />
@@ -884,7 +896,6 @@ export default function Home() {
 
       {/* About Us Section */}
       <section id="about" className="relative w-full py-20 sm:py-28 lg:py-36 overflow-hidden">
-        {/* Background Image */}
         {/* Background Image with Parallax */}
         <ParallaxBackground
           image="/aboutusbackground.JPG"
@@ -892,73 +903,76 @@ export default function Home() {
           speed={0.15}
           className="z-0"
         />
-        {/* Dark overlay for readability - outside for static positioning */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3e4e3b]/85 via-[#4a5d47]/80 to-[#3e4e3b]/85" />
+        {/* Dark green overlay */}
+        <div className="absolute inset-0 bg-[#3e4e3b]/90" />
 
-        {/* Decorative elements */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)`,
-          backgroundSize: '36px 36px'
+        {/* Subtle dot pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
         }} />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#4a5d47]/30 rounded-full blur-[120px]" />
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
+            {/* Header */}
             <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
               <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#e9e9e9]/10 backdrop-blur-sm rounded-full mb-6 border border-[#e9e9e9]/15">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#e9e9e9] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#e9e9e9]" />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-amber-100/90">About Us</span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#e9e9e9]/80">About Us</span>
               </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-4 sm:mb-6">
-                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">A Legacy of </span><span className="bg-gradient-to-r from-amber-200 via-amber-300 to-amber-200 bg-clip-text text-transparent">25 Years</span><span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent"> in Education</span>
+                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">A Legacy of </span>
+                <span className="bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent">25 Years</span>
+                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent"> in Education</span>
               </h2>
+              <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/50 leading-relaxed max-w-2xl mx-auto">
+                A Place Where Knowledge Meets Excellence!
+              </p>
               <div className="flex items-center justify-center gap-3 mt-6">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40" />
-                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
-                <div className="w-24 h-[2px] bg-amber-200/25" />
-                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
-                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-amber-300/40" />
+                <div className="w-12 h-[1.5px] bg-gradient-to-r from-transparent to-[#e9e9e9]/25" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#e9e9e9]/30" />
+                <div className="w-20 h-[1.5px] bg-[#e9e9e9]/20" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#e9e9e9]/30" />
+                <div className="w-12 h-[1.5px] bg-gradient-to-l from-transparent to-[#e9e9e9]/25" />
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
               {/* Left - Content */}
               <motion.div variants={fadeInUp} className="space-y-6">
                 <div className="relative">
-                  <div className="absolute -left-4 top-0 bottom-0 w-[3px] bg-gradient-to-b from-amber-300 via-amber-300/50 to-transparent rounded-full hidden sm:block" />
-                  <p className="text-amber-50/80 text-sm sm:text-base lg:text-lg leading-relaxed sm:pl-6">
+                  <div className="absolute -left-4 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#e9e9e9]/40 via-[#e9e9e9]/20 to-transparent rounded-full hidden sm:block" />
+                  <p className="text-[#e9e9e9]/80 text-sm sm:text-base lg:text-lg leading-relaxed sm:pl-6">
                     Twenty-five years ago, Vagdevi Vidya Mandir was founded with a vision to create a school that goes beyond just academics. Observing many schools with only buildings and no playgrounds, where students suffered from stress due to a lack of outdoor activities, we set out to build something different—a school that nurtures both the mind and body.
                   </p>
                 </div>
 
-                <p className="text-amber-50/65 text-sm sm:text-base leading-relaxed">
+                <p className="text-[#e9e9e9]/60 text-sm sm:text-base leading-relaxed">
                   At Vagdevi Vidya Mandir, we believe that education is not just about books but also about a child&apos;s mental and physical well-being. Our lush green campus and expansive playground provide the perfect environment for students to learn, grow, and play freely. We give equal importance to physical activities, ensuring that every child develops holistically with a balance of academics, sports, and extracurricular activities.
                 </p>
 
-                <p className="text-amber-50/65 text-sm sm:text-base leading-relaxed">
+                <p className="text-[#e9e9e9]/60 text-sm sm:text-base leading-relaxed">
                   Today, after 25 years, our school stands as a proud institution shaping young minds with knowledge, values, and discipline. We continue to uphold our mission of creating a joyful learning experience, fostering creativity, and encouraging overall development.
                 </p>
 
                 {/* Tagline */}
-                <div className="relative mt-8 p-5 sm:p-6 rounded-2xl bg-amber-100/[0.06] border border-amber-200/10 backdrop-blur-sm">
-                  <svg className="absolute top-3 left-4 w-8 h-8 text-amber-300/30" fill="currentColor" viewBox="0 0 24 24">
+                <div className="relative mt-8 flex items-start gap-3">
+                  <svg className="w-7 h-7 text-[#e9e9e9]/25 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                   </svg>
-                  <p className="text-base sm:text-lg lg:text-xl font-semibold italic pl-8 sm:pl-10">
-                    <span className="bg-gradient-to-r from-amber-100 via-[#e9e9e9] to-amber-100 bg-clip-text text-transparent">Vagdevi Vidya Mandir – Where Learning Meets Growth!</span>
+                  <p className="text-base sm:text-lg lg:text-xl font-semibold italic text-[#e9e9e9]/80">
+                    Vagdevi Vidya Mandir — A Place Where Knowledge Meets Excellence!
                   </p>
                 </div>
               </motion.div>
 
               {/* Right - Stats & Highlights */}
-              <motion.div variants={fadeInUp} className="space-y-5">
+              <motion.div variants={fadeInUp} className="space-y-6">
                 {/* Stats grid */}
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 gap-4 sm:gap-5">
                   {[
                     { number: "25+", label: "Years of Excellence", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
                     { number: "5000+", label: "Alumni Network", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" },
@@ -967,15 +981,15 @@ export default function Home() {
                   ].map((stat, i) => (
                     <div
                       key={i}
-                      className="group relative p-5 sm:p-6 rounded-2xl bg-amber-100/[0.05] border border-amber-200/10 hover:bg-amber-100/[0.08] hover:border-amber-200/20 transition-all duration-500 backdrop-blur-sm"
+                      className="group p-5 sm:p-6 rounded-2xl border border-[#e9e9e9]/10 hover:border-[#e9e9e9]/20 transition-all duration-300"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-amber-300/10 flex items-center justify-center mb-3 group-hover:bg-amber-300/20 transition-colors duration-300">
-                        <svg className="w-5 h-5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-10 h-10 rounded-xl bg-[#e9e9e9]/10 flex items-center justify-center mb-3 group-hover:bg-[#e9e9e9]/15 transition-colors duration-300">
+                        <svg className="w-5 h-5 text-[#e9e9e9]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={stat.icon} />
                         </svg>
                       </div>
-                      <div className="text-2xl sm:text-3xl font-bold mb-1"><span className="bg-gradient-to-r from-amber-200 via-[#e9e9e9] to-amber-200 bg-clip-text text-transparent">{stat.number}</span></div>
-                      <div className="text-xs sm:text-sm text-amber-50/50 font-medium">{stat.label}</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-[#e9e9e9] mb-1">{stat.number}</div>
+                      <div className="text-xs sm:text-sm text-[#e9e9e9]/45 font-medium">{stat.label}</div>
                     </div>
                   ))}
                 </div>
@@ -987,15 +1001,15 @@ export default function Home() {
                     { title: "Green Campus", desc: "Lush green environment with expansive playgrounds for physical well-being" },
                     { title: "Value-Based Learning", desc: "Instilling knowledge, discipline, and strong moral values in every student" },
                   ].map((item, i) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-xl bg-amber-100/[0.04] border border-amber-200/8 hover:bg-amber-100/[0.07] transition-all duration-300">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-amber-300/15 flex items-center justify-center mt-0.5">
-                        <svg className="w-4 h-4 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div key={i} className="flex gap-4 p-4 rounded-xl hover:bg-[#e9e9e9]/[0.04] transition-all duration-300">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#e9e9e9]/10 flex items-center justify-center mt-0.5">
+                        <svg className="w-4 h-4 text-[#e9e9e9]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-sm sm:text-base font-semibold text-amber-50 mb-0.5">{item.title}</h4>
-                        <p className="text-xs sm:text-sm text-amber-50/45 leading-relaxed">{item.desc}</p>
+                        <h4 className="text-sm sm:text-base font-semibold text-[#e9e9e9] mb-0.5">{item.title}</h4>
+                        <p className="text-xs sm:text-sm text-[#e9e9e9]/40 leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -1004,15 +1018,15 @@ export default function Home() {
             </div>
           </AnimatedSection>
         </div>
-      </section >
+      </section>
 
       {/* Contact Section */}
       {/* Contact Section */}
       <section id="contact" className="relative w-full bg-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #3e4e3b 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
+        {/* Green grid pattern */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
         }} />
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
@@ -1293,7 +1307,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-sm text-[#e9e9e9]/50 leading-relaxed mb-7">
-                Nurturing minds, building character, and creating future leaders through holistic education for over two decades.
+                A Place Where Knowledge Meets Excellence!
               </p>
               <div className="flex gap-2.5">
                 {["Twitter", "Facebook", "Instagram", "YouTube"].map((social, i) => (
