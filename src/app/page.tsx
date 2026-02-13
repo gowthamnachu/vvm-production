@@ -1,11 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef, memo, lazy, Suspense } from "react";
-import { motion, useInView, useAnimationFrame } from "framer-motion";
+import { motion, useInView, useAnimationFrame, useScroll, useTransform } from "framer-motion";
 import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
 import Image from "next/image";
 import { ParallaxBackground } from "@/components/ui/parallax-background";
+import ScrollProgress from "@/components/ui/scroll-progress";
+import ScrollToTop from "@/components/ui/scroll-to-top";
+import { TextReveal } from "@/components/ui/text-reveal";
+import { MagneticButton } from "@/components/ui/magnetic-button";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 // Lazy load heavy components
 const TestimonialsCard = lazy(() => import("@/components/ui/testimonials-card").then(mod => ({ default: mod.TestimonialsCard })));
@@ -100,19 +105,72 @@ const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "lef
   );
 });
 
-// Animation variants - removed blur for better performance
+// Animation variants - enhanced
+const easeSmooth: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
+
 const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 40 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.7, ease: easeSmooth }
+  }
+};
+
+const fadeInDown = {
+  hidden: { opacity: 0, y: -30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: easeSmooth }
+  }
+};
+
+const fadeInLeft = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.7, ease: easeSmooth }
+  }
+};
+
+const fadeInRight = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.7, ease: easeSmooth }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.85 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.6, ease: easeSmooth }
+  }
 };
 
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.15 }
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 }
   }
 };
+
+// Parallax scroll hook for section elements
+function useParallaxScroll(offset = 50) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
+  return { ref, y };
+}
 
 // Animated Section Component - Memoized
 const AnimatedSection = memo(function AnimatedSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -132,34 +190,29 @@ const AnimatedSection = memo(function AnimatedSection({ children, className = ""
   );
 });
 
-// Counter Animation Component
-function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
+// Section Divider component
+const SectionDivider = memo(function SectionDivider({ variant = "light" }: { variant?: "light" | "dark" }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-  const numericValue = parseInt(value.replace(/[^0-9]/g, ''));
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (isInView) {
-      const duration = 2000;
-      const steps = 60;
-      const increment = numericValue / steps;
-      let current = 0;
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= numericValue) {
-          setCount(numericValue);
-          clearInterval(timer);
-        } else {
-          setCount(Math.floor(current));
-        }
-      }, duration / steps);
-      return () => clearInterval(timer);
-    }
-  }, [isInView, numericValue]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
-}
+  const isInView = useInView(ref, { once: true, margin: "-20px" });
+  const isDark = variant === "dark";
+  
+  return (
+    <motion.div
+      ref={ref}
+      className="relative w-full flex items-center justify-center py-2"
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.8 }}
+    >
+      <motion.div
+        className={`h-[1px] ${isDark ? 'bg-gradient-to-r from-transparent via-[#e9e9e9]/20 to-transparent' : 'bg-gradient-to-r from-transparent via-[#3e4e3b]/15 to-transparent'}`}
+        initial={{ width: 0 }}
+        animate={isInView ? { width: "80%" } : {}}
+        transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+      />
+    </motion.div>
+  );
+});
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
@@ -209,6 +262,8 @@ export default function Home() {
         textColor="#e9e9e9"
         movementDirection="top-down"
       />
+      <ScrollProgress />
+      <ScrollToTop />
       <Header activeSection={activeSection} />
 
       {/* Hero Section */}
@@ -234,6 +289,9 @@ export default function Home() {
         </ParallaxBackground>
         {/* Green Blur Overlay */}
         <div className="absolute inset-0 bg-[#3e4e3b]/40" />
+        
+        {/* Animated grain overlay */}
+        <div className="absolute inset-0 noise-overlay opacity-30 z-[1]" />
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 min-h-screen flex items-center">
@@ -243,9 +301,9 @@ export default function Home() {
               {/* Badge */}
               <motion.div
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/[0.06] backdrop-blur-sm border border-white/[0.08] rounded-full mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
@@ -258,31 +316,60 @@ export default function Home() {
 
               <motion.h1
                 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.05] tracking-tight"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent drop-shadow-2xl">Vagdevi</span>
-                <span className="block bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent">Vidya Mandir</span>
+                <motion.span 
+                  className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent drop-shadow-2xl inline-block"
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Vagdevi
+                </motion.span>
+                <motion.span 
+                  className="block bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                >
+                  Vidya Mandir
+                </motion.span>
               </motion.h1>
 
-              {/* Decorative line */}
+              {/* Decorative line - enhanced with draw animation */}
               <motion.div
                 className="flex items-center gap-3 my-6 justify-center md:justify-start"
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
+                transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40" />
-                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
-                <div className="w-24 h-[2px] bg-amber-200/25" />
+                <motion.div 
+                  className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40"
+                  initial={{ width: 0 }}
+                  animate={{ width: 48 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                />
+                <motion.div 
+                  className="w-2 h-2 rounded-full bg-amber-300/40"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.8 }}
+                />
+                <motion.div 
+                  className="w-24 h-[2px] bg-amber-200/25"
+                  initial={{ width: 0 }}
+                  animate={{ width: 96 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                />
               </motion.div>
 
               <motion.p
                 className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/80 max-w-lg mx-auto md:mx-0 leading-relaxed font-light"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
+                transition={{ duration: 0.7, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
                 A Place Where Knowledge Meets Excellence! Nurturing minds, building character, and creating future leaders through quality education.
               </motion.p>
@@ -291,29 +378,33 @@ export default function Home() {
                 className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-8 justify-center md:justify-start"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
               >
-                <a
-                  href="#admissions"
-                  className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(233,233,233,0.25)] active:scale-95 transition-all text-sm border border-[#e9e9e9]/20"
-                >
-                  Apply Now
-                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-                <a
-                  href="#foreword"
-                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 border border-amber-200/20 text-amber-50 font-medium rounded-full hover:bg-amber-100/10 hover:border-amber-200/40 active:scale-95 transition-all text-sm backdrop-blur-sm"
-                >
-                  Explore Our Legacy
-                </a>
+                <MagneticButton strength={0.15}>
+                  <a
+                    href="#admissions"
+                    className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(233,233,233,0.25)] active:scale-95 transition-all text-sm border border-[#e9e9e9]/20"
+                  >
+                    Apply Now
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
+                </MagneticButton>
+                <MagneticButton strength={0.15}>
+                  <a
+                    href="#foreword"
+                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 border border-amber-200/20 text-amber-50 font-medium rounded-full hover:bg-amber-100/10 hover:border-amber-200/40 active:scale-95 transition-all text-sm backdrop-blur-sm"
+                  >
+                    Explore Our Legacy
+                  </a>
+                </MagneticButton>
               </motion.div>
 
             </div>
             <div className="hidden lg:flex lg:col-span-5 flex-col items-end justify-end h-full">
 
-              {/* Quick Stats Row */}
+              {/* Quick Stats Row - Enhanced with AnimatedCounter */}
               <motion.div
                 className="flex flex-wrap gap-8 justify-end"
                 initial={{ opacity: 0, y: 20 }}
@@ -321,14 +412,22 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
                 {[
-                  { value: "25+", label: "Years" },
-                  { value: "5000+", label: "Alumni" },
-                  { value: "100%", label: "Results" },
+                  { value: 25, suffix: "+", label: "Years" },
+                  { value: 5000, suffix: "+", label: "Alumni" },
+                  { value: 100, suffix: "%", label: "Results" },
                 ].map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-[#e9e9e9] to-amber-100/80 bg-clip-text text-transparent">{stat.value}</p>
+                  <motion.div 
+                    key={i} 
+                    className="text-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 + i * 0.15 }}
+                  >
+                    <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-[#e9e9e9] to-amber-100/80 bg-clip-text text-transparent">
+                      <AnimatedCounter value={stat.value} suffix={stat.suffix} duration={2.5} />
+                    </p>
                     <p className="text-[10px] sm:text-xs text-amber-200/40 uppercase tracking-widest mt-1">{stat.label}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </motion.div>
             </div>
@@ -338,7 +437,31 @@ export default function Home() {
         {/* Bottom Fade */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-950 to-transparent z-20" />
 
-
+        {/* Scroll indicator */}        <motion.div 
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+        >
+          <motion.span 
+            className="text-[9px] tracking-[0.3em] uppercase text-[#e9e9e9]/30 font-medium"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            Scroll
+          </motion.span>
+          <motion.div
+            className="w-5 h-8 rounded-full border border-[#e9e9e9]/20 flex items-start justify-center p-1"
+            animate={{ opacity: [0.4, 0.8, 0.4] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <motion.div
+              className="w-1 h-1.5 rounded-full bg-[#e9e9e9]/50"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Foreword Section */}
@@ -348,6 +471,8 @@ export default function Home() {
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
+        
+        {/* Floating decorative elements */}
 
         {/* Auto-scrolling Image Marquee at Top */}
         <div className="relative w-full py-10 sm:py-14 lg:py-16 z-20">
@@ -373,16 +498,24 @@ export default function Home() {
 
               {/* Section Header - Centered */}
               <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
-                <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-[#3e4e3b]/10 via-[#3e4e3b]/5 to-[#3e4e3b]/10 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10">
+                <motion.span 
+                  className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-[#3e4e3b]/10 via-[#3e4e3b]/5 to-[#3e4e3b]/10 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3e4e3b] opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3e4e3b]" />
                   </span>
                   <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Foreword</span>
-                </span>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-3 sm:mb-4">
+                </motion.span>
+                <TextReveal
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-3 sm:mb-4"
+                  splitBy="words"
+                  variant="blur-up"
+                >
                   Foreword
-                </h2>
+                </TextReveal>
                 <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#3e4e3b] mb-2">
                   A Message from Our Correspondent
                 </p>
@@ -399,11 +532,11 @@ export default function Home() {
               <div className="col-span-4 md:col-span-8 lg:col-span-12 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
 
                 {/* Left Image with Correspondent Info */}
-                <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-4 order-1">
+                <motion.div variants={fadeInLeft} className="col-span-4 md:col-span-8 lg:col-span-4 order-1">
                   <div className="sticky top-32">
                     {/* Professional Image Card */}
-                    <div className="relative group">
-                      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-slate-200/60 bg-white">
+                    <div className="relative group gradient-border-animated rounded-2xl">
+                      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-slate-200/60 bg-white card-lift">
                         <img
                           src="/aboutus.png"
                           alt="Ramineni Radha Krishna - Correspondent"
@@ -437,10 +570,10 @@ export default function Home() {
                 </motion.div>
 
                 {/* Content - Right Side */}
-                <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-8 order-2 space-y-6">
+                <motion.div variants={fadeInRight} className="col-span-4 md:col-span-8 lg:col-span-8 order-2 space-y-6">
 
 
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg border border-slate-100/50 hover:shadow-xl transition-shadow duration-500">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg border border-slate-100/50 hover:shadow-xl transition-shadow duration-500 card-lift">
                     <div className="space-y-5 text-sm sm:text-base text-[#3e4e3b]/70 leading-[1.8]">
                       <p className="first-letter:text-4xl first-letter:font-bold first-letter:text-[#3e4e3b] first-letter:float-left first-letter:mr-2 first-letter:leading-none">
                         IIt is with immense pride and profound gratitude that I welcome you to Vagdevi Vidya Mandir, an institution that has been steadfastly nurturing young minds and shaping exemplary futures for over two decades. From our humble beginnings to our current standing as a beacon of holistic education, we have remained unwavering in our commitment to fostering excellence in academics, character development, and essential life skills.
@@ -488,7 +621,7 @@ export default function Home() {
                 </div>
 
                 <div className="flex justify-center">
-                  <img src="/whychooseus.gif" alt="Why Choose Vagdevi Vidya Mandir" className="w-full max-w-4xl rounded-2xl" />
+                  <img src="/whychooseus.gif" alt="Why Choose Vagdevi Vidya Mandir" className="w-full max-w-4xl" />
                 </div>
               </motion.div>
             </div>
@@ -511,16 +644,24 @@ export default function Home() {
           <AnimatedSection>
             {/* Centered Section Header */}
             <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/10">
+              <motion.span 
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/10"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#e9e9e9] opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#e9e9e9]" />
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#e9e9e9]">Our Facilities</span>
-              </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#e9e9e9] leading-tight tracking-tight mb-4 sm:mb-6">
+              </motion.span>
+              <TextReveal
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#e9e9e9] leading-tight tracking-tight mb-4 sm:mb-6"
+                splitBy="words"
+                variant="blur-up"
+              >
                 World-Class Infrastructure
-              </h2>
+              </TextReveal>
               <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/60 leading-relaxed max-w-2xl mx-auto">
                 State-of-the-art facilities meticulously designed to nurture every aspect of student development
               </p>
@@ -541,11 +682,14 @@ export default function Home() {
               </motion.div>
 
               {/* Right — God image (transparent container) */}
-              <motion.div variants={fadeInUp} className="lg:col-span-4 flex items-center justify-center lg:sticky lg:top-24">
+              <motion.div variants={fadeInRight} className="lg:col-span-4 flex items-center justify-center lg:sticky lg:top-24">
                 <div className="relative w-full max-w-sm lg:max-w-none flex flex-col items-center">
-                  {/* Soft glow behind */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/3 via-white/5 to-white/3 rounded-3xl blur-2xl scale-110" />
-                  <div className="relative">
+
+                  <motion.div 
+                    className="relative"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 200 }}
+                  >
                     <Image
                       src="/facilities/god.png"
                       alt="Divine blessings"
@@ -554,7 +698,7 @@ export default function Home() {
                       className="w-full h-auto object-contain drop-shadow-2xl"
                       priority={false}
                     />
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
 
@@ -566,13 +710,15 @@ export default function Home() {
       {/* Admissions Section */}
       <section id="admissions" className="relative w-full bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
         {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl animate-morph" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl animate-morph" style={{ animationDelay: '-4s' }} />
         {/* Green grid pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
+        
+        {/* Floating elements */}
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
@@ -587,7 +733,13 @@ export default function Home() {
                   </span>
                   <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Join Us</span>
                 </span>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">Admissions Open</h2>
+                <TextReveal
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6"
+                  splitBy="words"
+                  variant="blur-up"
+                >
+                  Admissions Open
+                </TextReveal>
                 <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/60 leading-relaxed px-2 max-w-2xl mx-auto">
                   Begin your child&apos;s journey with us. Our streamlined admission process makes it easy to join the Vagdevi family.
                 </p>
@@ -601,8 +753,12 @@ export default function Home() {
               </motion.div>
 
               {/* Process Steps - Image */}
-              <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-6 relative mb-10 sm:mb-16 lg:mb-0">
-                <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden">
+              <motion.div variants={fadeInLeft} className="col-span-4 md:col-span-8 lg:col-span-6 relative mb-10 sm:mb-16 lg:mb-0">
+                <motion.div 
+                  className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
                   <Image
                     src="/admissionprocess.png"
                     alt="Admission Process - 5 Steps: Inquiry, Application, Interaction, Assessment, Confirmation"
@@ -611,11 +767,11 @@ export default function Home() {
                     className="w-full h-auto opacity-90"
                     sizes="(min-width: 1024px) 650px, (min-width: 768px) 550px, 100vw"
                   />
-                </div>
+                </motion.div>
               </motion.div>
 
               {/* CTA */}
-              <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-6">
+              <motion.div variants={fadeInRight} className="col-span-4 md:col-span-8 lg:col-span-6">
                 <div className="sticky top-32 rounded-3xl overflow-hidden group max-w-md mx-auto">
                   {/* Image */}
                   <div className="relative aspect-[2/3]">
@@ -638,15 +794,17 @@ export default function Home() {
                         Begin your child&apos;s journey towards excellence with world-class education.
                       </p>
 
-                      <a
-                        href="#contact"
-                        className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(233,233,233,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-[#e9e9e9]/20"
-                      >
-                        Start Application
-                        <svg className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </a>
+                      <MagneticButton strength={0.1}>
+                        <a
+                          href="#contact"
+                          className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(233,233,233,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-[#e9e9e9]/20"
+                        >
+                          Start Application
+                          <svg className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </a>
+                      </MagneticButton>
 
                       {/* Trust indicators */}
                       <div className="mt-5 flex items-center justify-between gap-2">
@@ -682,6 +840,8 @@ export default function Home() {
         />
         {/* Green Blur Overlay */}
         <div className="absolute inset-0 bg-[#3e4e3b]/85 backdrop-blur-[2px]" />
+        
+        {/* Floating elements */}
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
@@ -694,9 +854,13 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#e9e9e9]/80">Voices of Excellence</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5 sm:mb-6 text-[#e9e9e9]">
+              <TextReveal
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5 sm:mb-6 text-[#e9e9e9]"
+                splitBy="words"
+                variant="blur-up"
+              >
                 Teacher Testimonials
-              </h2>
+              </TextReveal>
               <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/50 leading-relaxed max-w-2xl mx-auto">
                 Hear from our dedicated educators who shape young minds and inspire excellence every day
               </p>
@@ -785,9 +949,9 @@ export default function Home() {
           backgroundSize: '60px 60px'
         }} />
         {/* Decorative Background */}
-        <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-gradient-to-br from-[#3e4e3b]/8 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-gradient-to-tl from-[#3e4e3b]/6 to-transparent rounded-full blur-3xl" />
-
+        <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-gradient-to-br from-[#3e4e3b]/8 to-transparent rounded-full blur-3xl animate-morph" />
+        <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-gradient-to-tl from-[#3e4e3b]/6 to-transparent rounded-full blur-3xl animate-morph" style={{ animationDelay: '-5s' }} />
+        
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
             {/* Header */}
@@ -799,9 +963,13 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Campus Life</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-6">
+              <TextReveal
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-6"
+                splitBy="words"
+                variant="blur-up"
+              >
                 Our Gallery
-              </h2>
+              </TextReveal>
               <p className="text-base sm:text-lg lg:text-xl text-[#3e4e3b]/60 leading-relaxed max-w-3xl mx-auto font-light">
                 Capturing the spirit of excellence, creativity, and joy across every activity
               </p>
@@ -910,6 +1078,8 @@ export default function Home() {
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
+        
+        {/* Floating elements */}
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
@@ -923,9 +1093,9 @@ export default function Home() {
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#e9e9e9]/80">About Us</span>
               </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-4 sm:mb-6">
-                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">A Legacy of </span>
-                <span className="bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent">25 Years</span>
-                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent"> in Education</span>
+                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent animate-gradient-text">A Legacy of </span>
+                <span className="bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent animate-gradient-text" style={{ animationDelay: '-2s' }}>25 Years</span>
+                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent animate-gradient-text" style={{ animationDelay: '-4s' }}> in Education</span>
               </h2>
               <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/50 leading-relaxed max-w-2xl mx-auto">
                 A Place Where Knowledge Meets Excellence!
@@ -941,7 +1111,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
               {/* Left - Content */}
-              <motion.div variants={fadeInUp} className="space-y-6">
+              <motion.div variants={fadeInLeft} className="space-y-6">
                 <div className="relative">
                   <div className="absolute -left-4 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#e9e9e9]/40 via-[#e9e9e9]/20 to-transparent rounded-full hidden sm:block" />
                   <p className="text-[#e9e9e9]/80 text-sm sm:text-base lg:text-lg leading-relaxed sm:pl-6">
@@ -969,27 +1139,34 @@ export default function Home() {
               </motion.div>
 
               {/* Right - Stats & Highlights */}
-              <motion.div variants={fadeInUp} className="space-y-6">
+              <motion.div variants={fadeInRight} className="space-y-6">
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-4 sm:gap-5">
                   {[
-                    { number: "25+", label: "Years of Excellence", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
-                    { number: "5000+", label: "Alumni Network", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" },
-                    { number: "100%", label: "Holistic Development", icon: "M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138" },
-                    { number: "50+", label: "Qualified Faculty", icon: "M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493" },
+                    { number: 25, suffix: "+", label: "Years of Excellence", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
+                    { number: 5000, suffix: "+", label: "Alumni Network", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" },
+                    { number: 100, suffix: "%", label: "Holistic Development", icon: "M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138" },
+                    { number: 50, suffix: "+", label: "Qualified Faculty", icon: "M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493" },
                   ].map((stat, i) => (
-                    <div
+                    <motion.div
                       key={i}
-                      className="group p-5 sm:p-6 rounded-2xl border border-[#e9e9e9]/10 hover:border-[#e9e9e9]/20 transition-all duration-300"
+                      className="group p-5 sm:p-6 rounded-2xl border border-[#e9e9e9]/10 hover:border-[#e9e9e9]/20 transition-all duration-300 card-lift"
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1, duration: 0.5 }}
+                      whileHover={{ borderColor: "rgba(233,233,233,0.25)" }}
                     >
                       <div className="w-10 h-10 rounded-xl bg-[#e9e9e9]/10 flex items-center justify-center mb-3 group-hover:bg-[#e9e9e9]/15 transition-colors duration-300">
                         <svg className="w-5 h-5 text-[#e9e9e9]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={stat.icon} />
                         </svg>
                       </div>
-                      <div className="text-2xl sm:text-3xl font-bold text-[#e9e9e9] mb-1">{stat.number}</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-[#e9e9e9] mb-1">
+                        <AnimatedCounter value={stat.number} suffix={stat.suffix} duration={2} />
+                      </div>
                       <div className="text-xs sm:text-sm text-[#e9e9e9]/45 font-medium">{stat.label}</div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
@@ -1000,9 +1177,16 @@ export default function Home() {
                     { title: "Green Campus", desc: "Lush green environment with expansive playgrounds for physical well-being" },
                     { title: "Value-Based Learning", desc: "Instilling knowledge, discipline, and strong moral values in every student" },
                   ].map((item, i) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-xl hover:bg-[#e9e9e9]/[0.04] transition-all duration-300">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#e9e9e9]/10 flex items-center justify-center mt-0.5">
-                        <svg className="w-4 h-4 text-[#e9e9e9]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <motion.div 
+                      key={i} 
+                      className="flex gap-4 p-4 rounded-xl hover:bg-[#e9e9e9]/[0.04] transition-all duration-300 group"
+                      initial={{ opacity: 0, x: 30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 + i * 0.15, duration: 0.5 }}
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#e9e9e9]/10 flex items-center justify-center mt-0.5 group-hover:bg-[#e9e9e9]/20 transition-colors duration-300">
+                        <svg className="w-4 h-4 text-[#e9e9e9]/70 group-hover:text-[#e9e9e9] transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
@@ -1010,7 +1194,7 @@ export default function Home() {
                         <h4 className="text-sm sm:text-base font-semibold text-[#e9e9e9] mb-0.5">{item.title}</h4>
                         <p className="text-xs sm:text-sm text-[#e9e9e9]/40 leading-relaxed">{item.desc}</p>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
@@ -1032,7 +1216,7 @@ export default function Home() {
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
-
+        
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
             {/* Header */}
@@ -1044,7 +1228,13 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Get in Touch</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">Contact Us</h2>
+              <TextReveal
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6"
+                splitBy="words"
+                variant="blur-up"
+              >
+                Contact Us
+              </TextReveal>
               <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/60 leading-relaxed px-2 max-w-2xl mx-auto">
                 We&apos;d love to hear from you. Reach out with any questions about admissions, programs, or campus visits.
               </p>
@@ -1061,7 +1251,7 @@ export default function Home() {
             <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-10 max-w-6xl mx-auto">
 
               {/* Contact Form */}
-              <div className="lg:col-span-7 relative group order-2 lg:order-1">
+              <div className="lg:col-span-7 relative group order-1">
                 <div className="absolute -inset-0.5 bg-gradient-to-br from-[#3e4e3b]/25 via-[#3e4e3b]/10 to-[#3e4e3b]/25 rounded-2xl sm:rounded-[2rem] blur-sm opacity-0 group-hover:opacity-100 transition duration-500" />
                 <div className="relative h-full bg-white rounded-2xl sm:rounded-[1.75rem] p-5 sm:p-7 lg:p-10 border border-[#3e4e3b]/8 shadow-lg">
                   {/* Form header */}
@@ -1163,15 +1353,17 @@ export default function Home() {
                       </label>
                     </div>
 
-                    <button
-                      type="submit"
-                      className="w-full bg-[#3e4e3b] text-[#e9e9e9] py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm"
-                    >
-                      <span>Send Message</span>
-                      <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </button>
+                    <MagneticButton strength={0.08} className="w-full">
+                      <button
+                        type="submit"
+                        className="w-full bg-[#3e4e3b] text-[#e9e9e9] py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm"
+                      >
+                        <span>Send Message</span>
+                        <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </button>
+                    </MagneticButton>
 
                     <p className="text-[11px] text-[#3e4e3b]/35 text-center">
                       By submitting this form, you agree to our privacy policy. We&apos;ll never share your information.
@@ -1181,7 +1373,7 @@ export default function Home() {
               </div>
 
               {/* Right Column: Map + CTA */}
-              <div className="lg:col-span-5 flex flex-col gap-4 sm:gap-5 order-1 lg:order-2">
+              <div className="lg:col-span-5 flex flex-col gap-4 sm:gap-5 order-2">
                 {/* Map */}
                 <div className="h-[250px] sm:h-[300px] lg:flex-1 lg:min-h-[300px] bg-white rounded-2xl sm:rounded-[1.75rem] overflow-hidden shadow-lg border border-[#3e4e3b]/8 relative group">
                   <div className="absolute inset-0 bg-[#3e4e3b]/5 z-10 pointer-events-none transition-opacity duration-500 group-hover:opacity-0" />
@@ -1261,22 +1453,40 @@ export default function Home() {
           className="z-0"
         />
         <div className="absolute inset-0 bg-[#3e4e3b]/85" />
+        
+        {/* Floating elements */}
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-14">
 
           {/* Top: Brand centered */}
-          <div className="text-center mb-8">
+          <motion.div 
+            className="text-center mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-1 ring-[#e9e9e9]/10">
+              <motion.div 
+                className="w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-1 ring-[#e9e9e9]/10"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 200 }}
+              >
                 <img src="/vvvm_logo.jpg" alt="Vagdevi Vidya Mandir Logo" className="w-full h-full object-cover" />
-              </div>
+              </motion.div>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-[#e9e9e9] tracking-tight mb-1">Vagdevi Vidya Mandir</h3>
             <p className="text-xs sm:text-sm text-[#e9e9e9]/35 italic">A Place Where Knowledge Meets Excellence!</p>
-          </div>
+          </motion.div>
 
           {/* Middle: 3 columns — Address | Links | Contact */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-8">
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             {/* Address */}
             <div>
               <h4 className="text-xs font-bold tracking-[0.15em] uppercase text-[#e9e9e9]/50 mb-2">Campus</h4>
@@ -1291,7 +1501,7 @@ export default function Home() {
               <h4 className="text-xs font-bold tracking-[0.15em] uppercase text-[#e9e9e9]/50 mb-2">Quick Links</h4>
               <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
                 {["Home", "About", "Admissions", "Gallery", "Contact"].map((link, i) => (
-                  <a key={i} href={`#${link.toLowerCase()}`} className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] transition-colors">
+                  <a key={i} href={`#${link.toLowerCase()}`} className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] transition-colors text-underline-animated">
                     {link}
                   </a>
                 ))}
@@ -1306,25 +1516,39 @@ export default function Home() {
                 <p><a href="mailto:info@vvm.edu" className="hover:text-[#e9e9e9] transition-colors">info@vvm.edu</a></p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Social Icons */}
-          <div className="flex justify-center gap-2.5 mb-8">
+          <motion.div 
+            className="flex justify-center gap-2.5 mb-8"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             {[
               { label: "Instagram", href: "https://www.instagram.com/vagdevidya_mandir", icon: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" },
               { label: "YouTube", href: "https://www.youtube.com/@vagdevividyamandir4209", icon: "M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
             ].map((social, i) => (
-              <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-[#e9e9e9]/[0.06] hover:bg-[#e9e9e9]/15 rounded-full flex items-center justify-center transition-all duration-300 border border-[#e9e9e9]/[0.06] hover:border-[#e9e9e9]/15" aria-label={social.label}>
-                <svg className="w-3.5 h-3.5 text-[#e9e9e9]/40 hover:text-[#e9e9e9]" fill="currentColor" viewBox="0 0 24 24"><path d={social.icon} /></svg>
-              </a>
+              <MagneticButton key={i} strength={0.3}>
+                <a href={social.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-[#e9e9e9]/[0.06] hover:bg-[#e9e9e9]/15 rounded-full flex items-center justify-center transition-all duration-300 border border-[#e9e9e9]/[0.06] hover:border-[#e9e9e9]/15 hover:scale-110" aria-label={social.label}>
+                  <svg className="w-3.5 h-3.5 text-[#e9e9e9]/40 hover:text-[#e9e9e9]" fill="currentColor" viewBox="0 0 24 24"><path d={social.icon} /></svg>
+                </a>
+              </MagneticButton>
             ))}
-          </div>
+          </motion.div>
 
           {/* Bottom bar */}
-          <div className="pt-5 border-t border-[#e9e9e9]/[0.06] flex flex-col sm:flex-row justify-between items-center gap-2">
+          <motion.div 
+            className="pt-5 border-t border-[#e9e9e9]/[0.06] flex flex-col sm:flex-row justify-between items-center gap-2"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             <p className="text-xs text-[#e9e9e9]/25">© {new Date().getFullYear()} Vagdevi Vidya Mandir. All rights reserved.</p>
             <p className="text-xs text-[#e9e9e9]/15">Designed with care for the future of education</p>
-          </div>
+          </motion.div>
         </div>
       </footer>
     </>
