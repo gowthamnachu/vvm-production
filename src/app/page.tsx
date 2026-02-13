@@ -11,42 +11,74 @@ import { ParallaxBackground } from "@/components/ui/parallax-background";
 const TestimonialsCard = lazy(() => import("@/components/ui/testimonials-card").then(mod => ({ default: mod.TestimonialsCard })));
 const GalleryWithTab = lazy(() => import("@/components/ui/gallery-with-tab").then(mod => ({ default: mod.GalleryWithTab })));
 const FacilitiesCarousel = lazy(() => import("@/components/FacilitiesCarousel"));
+const WhyChooseFlow = lazy(() => import("@/components/WhyChooseFlow"));
 
-// Auto-scrolling marquee images
-const marqueeImages = [
-  "/hello (3).png",
-  "/hello (4).png",
-  "/hello (5).png",
-  "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png",
-  "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png",
-  "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png",
-  "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png",
+// Auto-scrolling marquee images - Row 1 (first 10)
+const marqueeImagesRow1 = [
+  "/scrolling/MSP02217.JPG",
+  "/scrolling/MSP02224.JPG",
+  "/scrolling/MSP02298.JPG",
+  "/scrolling/MSP02363.JPG",
+  "/scrolling/MSP02400.JPG",
+  "/scrolling/MSP02421.JPG",
+  "/scrolling/MSP02461.JPG",
+  "/scrolling/MSP02476.JPG",
+  "/scrolling/MSP02526.JPG",
+  "/scrolling/MSP02576.JPG",
+];
+
+// Auto-scrolling marquee images - Row 2 (last 10)
+const marqueeImagesRow2 = [
+  "/scrolling/MSP02611.JPG",
+  "/scrolling/MSP02631.JPG",
+  "/scrolling/MSP02645 (1).JPG",
+  "/scrolling/MSP02686.JPG",
+  "/scrolling/MSP02715.JPG",
+  "/scrolling/MSP02797.JPG",
+  "/scrolling/MSP02805.JPG",
+  "/scrolling/MSP02865.JPG",
+  "/scrolling/MSP02962.JPG",
+  "/scrolling/MSP03077.JPG",
 ];
 
 // Auto-scrolling Marquee Component - Memoized
 const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: string[]; direction?: "left" | "right"; speed?: number }) {
-  const [position, setPosition] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef(0);
+  const singleSetWidth = useRef(0);
+
+  // Measure the width of one set of images (half the inner content)
+  useEffect(() => {
+    const measure = () => {
+      if (innerRef.current) {
+        // We render 2 copies, so one set = half the scrollWidth
+        singleSetWidth.current = innerRef.current.scrollWidth / 2;
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [images]);
 
   useAnimationFrame((time, delta) => {
-    const moveBy = (delta / 1000) * speed;
-    setPosition((prev) => {
-      const newPos = direction === "left" ? prev - moveBy : prev + moveBy;
-      // Reset position when one set of images has scrolled past
-      if (Math.abs(newPos) >= 100) {
-        return 0;
-      }
-      return newPos;
-    });
+    if (!innerRef.current || singleSetWidth.current === 0) return;
+    const moveBy = (delta / 1000) * speed * 20; // px per second
+    scrollRef.current += moveBy;
+    // Reset seamlessly when one full set has scrolled past
+    if (scrollRef.current >= singleSetWidth.current) {
+      scrollRef.current -= singleSetWidth.current;
+    }
+    const tx = direction === "left" ? -scrollRef.current : -(singleSetWidth.current - scrollRef.current);
+    innerRef.current.style.transform = `translateX(${tx}px)`;
   });
 
   return (
-    <div ref={containerRef} className="overflow-hidden">
-      <motion.div
-        className="flex gap-4"
-        style={{ x: `${position}%` }}
+    <div className="overflow-hidden">
+      <div
+        ref={innerRef}
+        className="flex gap-4 will-change-transform"
       >
-        {/* Double images for seamless loop - reduced from triple */}
+        {/* Double images for seamless infinite loop */}
         {[...images, ...images].map((src, index) => (
           <div
             key={index}
@@ -64,7 +96,7 @@ const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "lef
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 });
@@ -324,13 +356,13 @@ export default function Home() {
         {/* Auto-scrolling Image Marquee at Top */}
         <div className="relative w-full py-10 sm:py-14 lg:py-16 z-20">
           <div className="space-y-4">
-            {/* First Row - scrolls left */}
+            {/* First Row - scrolls left (first 10 images) */}
             <div className="opacity-100 transition-opacity">
-              <InfiniteMarquee images={marqueeImages} direction="left" speed={30} />
+              <InfiniteMarquee images={marqueeImagesRow1} direction="left" speed={12} />
             </div>
-            {/* Second Row - scrolls right */}
+            {/* Second Row - scrolls right (last 10 images) */}
             <div className="opacity-100 transition-opacity">
-              <InfiniteMarquee images={[...marqueeImages].reverse()} direction="right" speed={20} />
+              <InfiniteMarquee images={marqueeImagesRow2} direction="right" speed={8} />
             </div>
           </div>
         </div>
@@ -446,34 +478,13 @@ export default function Home() {
 
               {/* Why Choose VVM */}
               <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 mt-16 sm:mt-20 lg:mt-28">
-                <div className="text-center mb-10">
-                  <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]/60 mb-3">Why Choose Us</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-[#3e4e3b]">Why Choose Vagdevi Vidya Mandir</h3>
-                </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                  {[
-                    { title: "25+ Years Legacy", desc: "Over two decades of trust, excellence, and proven results in holistic education", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", gradient: "from-amber-500/10 to-amber-600/5" },
-                    { title: "CBSE Curriculum", desc: "Affiliated to CBSE with a structured, nationally recognized academic framework", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253", gradient: "from-blue-500/10 to-blue-600/5" },
-                    { title: "Green Campus", desc: "Lush green environment with expansive playgrounds for physical and mental well-being", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z", gradient: "from-green-500/10 to-green-600/5" },
-                    { title: "Holistic Growth", desc: "Equal focus on academics, sports, arts, and character building for well-rounded development", icon: "M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z", gradient: "from-purple-500/10 to-purple-600/5" },
-                  ].map((value, index) => (
-                    <div
-                      key={index}
-                      className={`group relative bg-white rounded-2xl p-5 sm:p-7 lg:p-8 shadow-sm border border-slate-200 hover:shadow-lg hover:border-[#3e4e3b]/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden`}
-                    >
-                      <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-                      <div className="relative">
-                        <div className="w-12 h-12 bg-[#3e4e3b]/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#3e4e3b] transition-all duration-300 group-hover:shadow-lg">
-                          <svg className="w-6 h-6 text-[#3e4e3b] group-hover:text-[#e9e9e9] transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={value.icon} />
-                          </svg>
-                        </div>
-                        <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-[#3e4e3b] mb-2">{value.title}</h4>
-                        <p className="text-xs sm:text-sm text-[#3e4e3b]/60 leading-relaxed">{value.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <Suspense fallback={
+                  <div className="w-full h-[580px] flex items-center justify-center">
+                    <div className="text-[#3e4e3b]/30 text-sm">Loading...</div>
+                  </div>
+                }>
+                  <WhyChooseFlow />
+                </Suspense>
               </motion.div>
             </div>
           </AnimatedSection>
@@ -481,47 +492,68 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative w-full bg-gradient-to-b from-white via-[#f8fafc] to-white py-20 sm:py-24 lg:py-36 overflow-hidden">
-        {/* Decorative Grid Pattern */}
-        <div className="absolute inset-0 opacity-20">
+      <section id="features" className="relative w-full bg-[#3e4e3b] py-20 sm:py-24 lg:py-36 overflow-hidden">
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.04]">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(62,78,59,0.12) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
             backgroundSize: '48px 48px'
           }} />
         </div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-[#3e4e3b]/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-white/5 to-transparent rounded-full blur-3xl" />
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
-            {/* Section Header */}
-            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-14 sm:mb-18 lg:mb-24">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-[#3e4e3b]/10 via-[#3e4e3b]/5 to-[#3e4e3b]/10 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10">
+            {/* Centered Section Header */}
+            <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/10">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3e4e3b] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3e4e3b]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#e9e9e9] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#e9e9e9]" />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Our Facilities</span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#e9e9e9]">Our Facilities</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#e9e9e9] leading-tight tracking-tight mb-4 sm:mb-6">
                 World-Class Infrastructure
               </h2>
-              <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/70 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/60 leading-relaxed max-w-2xl mx-auto">
                 State-of-the-art facilities meticulously designed to nurture every aspect of student development
               </p>
             </motion.div>
 
-            {/* Facilities Carousel */}
-            <motion.div variants={fadeInUp}>
-              <Suspense fallback={
-                <div className="w-full aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.2/1] rounded-2xl sm:rounded-3xl bg-[#2a3a28] animate-pulse flex items-center justify-center">
-                  <div className="text-white/40 text-sm">Loading facilities...</div>
+            {/* Two-column: Carousel left, God image right */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+
+              {/* Left — Carousel */}
+              <motion.div variants={fadeInUp} className="lg:col-span-8">
+                <Suspense fallback={
+                  <div className="w-full aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.2/1] rounded-2xl sm:rounded-3xl bg-white/5 animate-pulse flex items-center justify-center">
+                    <div className="text-white/40 text-sm">Loading facilities...</div>
+                  </div>
+                }>
+                  <FacilitiesCarousel />
+                </Suspense>
+              </motion.div>
+
+              {/* Right — God image (transparent container) */}
+              <motion.div variants={fadeInUp} className="lg:col-span-4 flex items-center justify-center lg:sticky lg:top-24">
+                <div className="relative w-full max-w-sm lg:max-w-none flex flex-col items-center">
+                  {/* Soft glow behind */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/3 via-white/5 to-white/3 rounded-3xl blur-2xl scale-110" />
+                  <div className="relative">
+                    <Image
+                      src="/facilities/god.png"
+                      alt="Divine blessings"
+                      width={400}
+                      height={500}
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      priority={false}
+                    />
+                  </div>
                 </div>
-              }>
-                <FacilitiesCarousel />
-              </Suspense>
-            </motion.div>
+              </motion.div>
 
-
+            </div>
           </AnimatedSection>
         </div>
       </section>
@@ -634,7 +666,6 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <section id="testimonials" className="relative w-full py-24 sm:py-28 lg:py-36 overflow-hidden">
-        {/* Background Image */}
         {/* Background Image with Parallax */}
         <ParallaxBackground
           image="/testmonials_background.JPG"
@@ -644,31 +675,31 @@ export default function Home() {
           className="z-0"
         />
         {/* Green Blur Overlay */}
-        <div className="absolute inset-0 bg-[#3e4e3b]/80" />
+        <div className="absolute inset-0 bg-[#3e4e3b]/85 backdrop-blur-[2px]" />
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
             {/* Header */}
             <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#e9e9e9]/10 backdrop-blur-sm rounded-full mb-6 border border-[#e9e9e9]/20">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#e9e9e9]/10 backdrop-blur-sm rounded-full mb-6 border border-[#e9e9e9]/15">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#e9e9e9] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#e9e9e9]" />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-amber-100/90">Voices of Excellence</span>
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#e9e9e9]/80">Voices of Excellence</span>
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
-                <span className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent">Teacher Testimonials</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5 sm:mb-6 text-[#e9e9e9]">
+                Teacher Testimonials
               </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-amber-50/60 leading-relaxed max-w-3xl mx-auto font-light">
+              <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/50 leading-relaxed max-w-2xl mx-auto">
                 Hear from our dedicated educators who shape young minds and inspire excellence every day
               </p>
               <div className="flex items-center justify-center gap-3 mt-8">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40" />
-                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
-                <div className="w-24 h-[2px] bg-amber-200/25" />
-                <div className="w-2 h-2 rounded-full bg-amber-300/40" />
-                <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-amber-300/40" />
+                <div className="w-12 h-[1.5px] bg-gradient-to-r from-transparent to-[#e9e9e9]/25" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#e9e9e9]/30" />
+                <div className="w-20 h-[1.5px] bg-[#e9e9e9]/20" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#e9e9e9]/30" />
+                <div className="w-12 h-[1.5px] bg-gradient-to-l from-transparent to-[#e9e9e9]/25" />
               </div>
             </motion.div>
 
@@ -683,39 +714,51 @@ export default function Home() {
                   items={[
                     {
                       id: 1,
-                      title: "Mrs. Priya Sharma — Mathematics Teacher",
-                      description: "Teaching at Vagdevi Vidya Mandir has been a profoundly rewarding journey. The supportive environment and focus on holistic development allow us to nurture not just academic excellence but also strong character in our students.",
-                      image: "/sudharani.png",
+                      title: "Mrs. Ambica — Senior Faculty",
+                      description: "Being part of the Vagdevi family has been an enriching experience. The school's commitment to nurturing both academic brilliance and moral values makes it a truly exceptional institution to teach at.",
+                      image: "/testmonials/Ambica.png",
                     },
                     {
                       id: 2,
-                      title: "Mr. Rajesh Kumar — Science Teacher",
-                      description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
-                      image: "/sudharani.png",
+                      title: "Mrs. Devi — Mathematics Teacher",
+                      description: "Teaching at Vagdevi Vidya Mandir has been profoundly rewarding. The supportive environment and focus on holistic development allow us to nurture not just academic excellence but also strong character in our students.",
+                      image: "/testmonials/Devi.png",
                     },
                     {
                       id: 3,
-                      title: "Ms. Anjali Reddy — English Teacher",
-                      description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
-                      image: "/sudharani.png",
+                      title: "Mrs. Satya Veni — Science Teacher",
+                      description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
+                      image: "/testmonials/SatyaVeni.png",
                     },
                     {
                       id: 4,
-                      title: "Mr. Suresh Patel — Physical Education",
-                      description: "The expansive sports facilities and strong emphasis on physical fitness create an ideal environment for developing well-rounded individuals. Sports teach discipline, teamwork, and resilience—values that last a lifetime.",
-                      image: "/sudharani.png",
+                      title: "Mrs. Sharmila — English Teacher",
+                      description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
+                      image: "/testmonials/Sharmila.png",
                     },
                     {
                       id: 5,
-                      title: "Mrs. Lakshmi Iyer — Arts & Music Teacher",
-                      description: "VVM celebrates creativity and artistic expression. Our dedicated Arts & Music studio provides students with the space and resources to discover their talents and pursue their passions with confidence.",
-                      image: "/sudharani.png",
+                      title: "Mrs. Sudha Rani — Telugu Teacher",
+                      description: "VVM celebrates cultural heritage alongside modern education. Our dedicated approach to language teaching helps students connect with their roots while building strong communication skills.",
+                      image: "/testmonials/sudharani.png",
                     },
                     {
                       id: 6,
-                      title: "Mr. Venkat Rao — Computer Science",
-                      description: "The modern computer labs and progressive curriculum equip our students with essential digital skills. We're preparing them not just for exams, but for the technology-driven future that awaits them.",
-                      image: "/sudharani.png",
+                      title: "Mrs. Vasundhara — Social Studies Teacher",
+                      description: "The progressive curriculum and collaborative environment at VVM empower us as educators. Every day, I see students developing into responsible, compassionate young citizens of tomorrow.",
+                      image: "/testmonials/Vasundhara.png",
+                    },
+                    {
+                      id: 7,
+                      title: "Mrs. Vijaya Sri — Arts & Crafts Teacher",
+                      description: "VVM celebrates creativity and artistic expression. Our dedicated Arts studio provides students with the space and resources to discover their talents and pursue their passions with confidence.",
+                      image: "/testmonials/VijayaSri.png",
+                    },
+                    {
+                      id: 8,
+                      title: "Yoga Sir — Physical Education & Yoga",
+                      description: "The expansive sports facilities and strong emphasis on physical and mental fitness create an ideal environment. Yoga and sports teach discipline, mindfulness, and resilience—values that last a lifetime.",
+                      image: "/testmonials/Yoga%20sir.png",
                     },
                   ]}
                   width={700}
@@ -770,63 +813,65 @@ export default function Home() {
                 <GalleryWithTab
                   data={[
                     {
+                      label: "Dance",
+                      value: "dance",
+                      images: [
+                        { imageLink: "/gallery/dance/MSP02529.JPG" },
+                        { imageLink: "/gallery/dance/MSP02534.JPG" },
+                        { imageLink: "/gallery/dance/MSP02537.JPG" },
+                        { imageLink: "/gallery/dance/MSP02542.JPG" },
+                        { imageLink: "/gallery/dance/MSP02564.JPG" },
+                        { imageLink: "/gallery/dance/MSP02826.JPG" },
+                        { imageLink: "/gallery/dance/MSP02836.JPG" },
+                        { imageLink: "/gallery/dance/MSP02842.JPG" },
+                      ],
+                    },
+                    {
+                      label: "Karate & Boxing",
+                      value: "karate",
+                      images: [
+                        { imageLink: "/gallery/karate&Boxing/MSP02277.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02287.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02300.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02303.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02312.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02324.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02354.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02359.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02363.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02366.JPG" },
+                      ],
+                    },
+                    {
                       label: "Skating",
                       value: "skating",
                       images: [
-                        { imageLink: "/hello (3).png" },
-                        { imageLink: "/hello (4).png" },
-                        { imageLink: "/hello (5).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" },
-                        { imageLink: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" },
-                      ],
-                    },
-                    {
-                      label: "Cricket",
-                      value: "cricket",
-                      images: [
-                        { imageLink: "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png" },
-                        { imageLink: "/hello (3).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_42_59 PM.png" },
-                        { imageLink: "/hello (4).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_59_31 PM.png" },
-                        { imageLink: "/hello (5).png" },
-                      ],
-                    },
-                    {
-                      label: "Yoga",
-                      value: "yoga",
-                      images: [
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" },
-                        { imageLink: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" },
-                        { imageLink: "/hello (3).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" },
-                        { imageLink: "/hello (4).png" },
-                        { imageLink: "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png" },
+                        { imageLink: "/gallery/skating/MSP02452.JPG" },
+                        { imageLink: "/gallery/skating/MSP02461.JPG" },
+                        { imageLink: "/gallery/skating/MSP02479.JPG" },
+                        { imageLink: "/gallery/skating/MSP02510.JPG" },
+                        { imageLink: "/gallery/skating/MSP02515.JPG" },
+                        { imageLink: "/gallery/skating/MSP02522.JPG" },
+                        { imageLink: "/gallery/skating/MSP02796.JPG" },
+                        { imageLink: "/gallery/skating/MSP02801.JPG" },
+                        { imageLink: "/gallery/skating/MSP02804.JPG" },
+                        { imageLink: "/gallery/skating/MSP02805.JPG" },
+                        { imageLink: "/gallery/skating/MSP02823.JPG" },
                       ],
                     },
                     {
                       label: "Sports",
                       value: "sports",
                       images: [
-                        { imageLink: "/hello (5).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_42_59 PM.png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_59_31 PM.png" },
-                        { imageLink: "/hello (3).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png" },
-                      ],
-                    },
-                    {
-                      label: "Dance",
-                      value: "dance",
-                      images: [
-                        { imageLink: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png" },
-                        { imageLink: "/hello (4).png" },
-                        { imageLink: "/ChatGPT Image Jan 29, 2026, 01_41_49 PM.png" },
-                        { imageLink: "/hello (5).png" },
-                        { imageLink: "/ChatGPT Image Feb 3, 2026, 08_42_59 PM.png" },
-                        { imageLink: "/hello (3).png" },
+                        { imageLink: "/gallery/sports/MSP02383.JPG" },
+                        { imageLink: "/gallery/sports/MSP02384.JPG" },
+                        { imageLink: "/gallery/sports/MSP02409.JPG" },
+                        { imageLink: "/gallery/sports/MSP02417.JPG" },
+                        { imageLink: "/gallery/sports/MSP02884.JPG" },
+                        { imageLink: "/gallery/sports/MSP02906.JPG" },
+                        { imageLink: "/gallery/sports/MSP02927.JPG" },
+                        { imageLink: "/gallery/sports/MSP03067.JPG" },
+                        { imageLink: "/gallery/sports/MSP03072.JPG" },
                       ],
                     },
                   ]}
@@ -963,48 +1008,12 @@ export default function Home() {
 
       {/* Contact Section */}
       {/* Contact Section */}
-      <section id="contact" className="relative w-full bg-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-visible">
+      <section id="contact" className="relative w-full bg-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-[0.02]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, #3e4e3b 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
-
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl" />
-
-        {/* Decorative Images Around Contact */}
-        {/* Animated Floating Decorative Images */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[
-            { src: "/hello (3).png", top: "12%", left: "5%", width: "w-48", height: "h-36", rotate: -6, delay: 0 },
-            { src: "/hello (4).png", top: "40%", right: "4%", width: "w-52", height: "h-40", rotate: 6, delay: 1.5 },
-            { src: "/hello (5).png", bottom: "15%", left: "8%", width: "w-44", height: "h-32", rotate: -3, delay: 0.8 },
-            { src: "/ChatGPT Image Feb 3, 2026, 08_01_55 PM.png", bottom: "20%", right: "10%", width: "w-48", height: "h-36", rotate: 3, delay: 2.2 },
-            { src: "/ChatGPT Image Feb 3, 2026, 08_13_49 PM.png", top: "55%", left: "-2%", width: "w-40", height: "h-32", rotate: -12, delay: 1.2 },
-            { src: "/ChatGPT Image Jan 29, 2026, 01_36_09 PM.png", top: "18%", right: "12%", width: "w-44", height: "h-32", rotate: 8, delay: 2.8 },
-          ].map((img, index) => (
-            <motion.div
-              key={index}
-              className={`hidden lg:block absolute ${img.width} ${img.height} rounded-2xl overflow-hidden shadow-2xl border-4 border-white/40 z-[5] will-change-transform`}
-              style={{
-                top: img.top,
-                left: img.left,
-                right: img.right,
-                bottom: img.bottom,
-                rotate: img.rotate
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent z-10" />
-              <img
-                src={img.src}
-                alt=""
-                className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
-              />
-            </motion.div>
-          ))}
-        </div>
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
@@ -1099,9 +1108,10 @@ export default function Home() {
                       <div className="relative">
                         <select
                           id="subject"
+                          defaultValue=""
                           className="peer w-full bg-white/50 border border-[#3e4e3b]/10 rounded-xl px-5 py-4 text-[#3e4e3b] focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/20 focus:border-[#3e4e3b] transition-all appearance-none cursor-pointer"
                         >
-                          <option value="" disabled selected>Select a subject</option>
+                          <option value="" disabled>Select a subject</option>
                           <option value="admissions">Admissions Inquiry</option>
                           <option value="general">General Information</option>
                           <option value="fees">Fee Structure</option>

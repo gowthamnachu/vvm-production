@@ -202,3 +202,23 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
   }
 }
+
+/* Circular progress animation for carousel timer */
+@keyframes circleProgress {
+  from {
+    stroke-dashoffset: 97.389;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pencil drawing line animation */
+@keyframes pencilDraw {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}

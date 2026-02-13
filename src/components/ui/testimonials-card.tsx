@@ -78,7 +78,7 @@ export function TestimonialsCard({
         )}
 
         {/* Image Stack */}
-        <div className="col-start-1 row-start-1 sm:row-span-3 relative w-full aspect-square max-w-[280px] sm:max-w-none mx-auto">
+        <div className="col-start-1 row-start-1 sm:row-span-3 relative w-full aspect-[1080/1350] max-w-[280px] sm:max-w-none mx-auto">
           <AnimatePresence custom={direction}>
             {items.map((item, index) => {
               const isActive = index === activeIndex;
@@ -174,20 +174,8 @@ export function TestimonialsCard({
             >
               <ArrowLeft className="w-4 h-4 text-[#e9e9e9]" />
             </button>
-            <button
-              disabled={activeIndex === items.length - 1}
-              onClick={handleNext}
-              className={cn(
-                "flex items-center justify-center w-11 h-11 rounded-full border border-[#e9e9e9]/20 bg-[#e9e9e9]/10 backdrop-blur-sm transition-all duration-300",
-                activeIndex === items.length - 1
-                  ? "opacity-30 cursor-not-allowed"
-                  : "hover:bg-[#e9e9e9]/20 hover:border-[#e9e9e9]/40 hover:scale-110 active:scale-95"
-              )}
-            >
-              <ArrowRight className="w-4 h-4 text-[#e9e9e9]" />
-            </button>
             {/* Dot indicators */}
-            <div className="flex gap-1.5 ml-4">
+            <div className="flex gap-1.5">
               {items.map((_, i) => (
                 <button
                   key={i}
@@ -204,6 +192,18 @@ export function TestimonialsCard({
                 />
               ))}
             </div>
+            <button
+              disabled={activeIndex === items.length - 1}
+              onClick={handleNext}
+              className={cn(
+                "flex items-center justify-center w-11 h-11 rounded-full border border-[#e9e9e9]/20 bg-[#e9e9e9]/10 backdrop-blur-sm transition-all duration-300",
+                activeIndex === items.length - 1
+                  ? "opacity-30 cursor-not-allowed"
+                  : "hover:bg-[#e9e9e9]/20 hover:border-[#e9e9e9]/40 hover:scale-110 active:scale-95"
+              )}
+            >
+              <ArrowRight className="w-4 h-4 text-[#e9e9e9]" />
+            </button>
           </div>
         )}
       </div>
