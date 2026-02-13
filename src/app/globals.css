@@ -225,6 +225,34 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== ADVANCED ANIMATION STYLES ===== */
 
+/* CSS-only marquee animations */
+@keyframes marquee-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-marquee-left {
+  animation: marquee-left 25s linear infinite;
+}
+.animate-marquee-right {
+  animation: marquee-right 25s linear infinite;
+}
+
+/* Scroll indicator dot */
+@keyframes scrollDot {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(12px); opacity: 1; }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Smooth reveal for text */
 @keyframes textRevealUp {
   from {

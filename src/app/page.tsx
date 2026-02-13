@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, memo, lazy, Suspense } from "react";
-import { motion, useInView, useAnimationFrame, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
 import Image from "next/image";
 import { ParallaxBackground } from "@/components/ui/parallax-background";
 import ScrollProgress from "@/components/ui/scroll-progress";
 import ScrollToTop from "@/components/ui/scroll-to-top";
-import { TextReveal } from "@/components/ui/text-reveal";
-import { MagneticButton } from "@/components/ui/magnetic-button";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 // Lazy load heavy components
@@ -45,42 +43,13 @@ const marqueeImagesRow2 = [
   "/scrolling/MSP03077.JPG",
 ];
 
-// Auto-scrolling Marquee Component - Memoized
-const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "left", speed = 25 }: { images: string[]; direction?: "left" | "right"; speed?: number }) {
-  const innerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef(0);
-  const singleSetWidth = useRef(0);
-
-  // Measure the width of one set of images (half the inner content)
-  useEffect(() => {
-    const measure = () => {
-      if (innerRef.current) {
-        // We render 2 copies, so one set = half the scrollWidth
-        singleSetWidth.current = innerRef.current.scrollWidth / 2;
-      }
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [images]);
-
-  useAnimationFrame((time, delta) => {
-    if (!innerRef.current || singleSetWidth.current === 0) return;
-    const moveBy = (delta / 1000) * speed * 20; // px per second
-    scrollRef.current += moveBy;
-    // Reset seamlessly when one full set has scrolled past
-    if (scrollRef.current >= singleSetWidth.current) {
-      scrollRef.current -= singleSetWidth.current;
-    }
-    const tx = direction === "left" ? -scrollRef.current : -(singleSetWidth.current - scrollRef.current);
-    innerRef.current.style.transform = `translateX(${tx}px)`;
-  });
-
+// Auto-scrolling Marquee Component - CSS-only animation (no JS per-frame loop)
+const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "left" }: { images: string[]; direction?: "left" | "right" }) {
   return (
     <div className="overflow-hidden">
       <div
-        ref={innerRef}
-        className="flex gap-4 will-change-transform"
+        className={`flex gap-4 will-change-transform ${direction === "left" ? "animate-marquee-left" : "animate-marquee-right"}`}
+        style={{ width: "max-content" }}
       >
         {/* Double images for seamless infinite loop */}
         {[...images, ...images].map((src, index) => (
@@ -380,25 +349,21 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
-                <MagneticButton strength={0.15}>
-                  <a
-                    href="#admissions"
-                    className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(233,233,233,0.25)] active:scale-95 transition-all text-sm border border-[#e9e9e9]/20"
-                  >
-                    Apply Now
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </a>
-                </MagneticButton>
-                <MagneticButton strength={0.15}>
-                  <a
-                    href="#foreword"
-                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 border border-amber-200/20 text-amber-50 font-medium rounded-full hover:bg-amber-100/10 hover:border-amber-200/40 active:scale-95 transition-all text-sm backdrop-blur-sm"
-                  >
-                    Explore Our Legacy
-                  </a>
-                </MagneticButton>
+                <a
+                  href="#admissions"
+                  className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(233,233,233,0.25)] active:scale-95 transition-all text-sm border border-[#e9e9e9]/20"
+                >
+                  Apply Now
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+                <a
+                  href="#foreword"
+                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 border border-amber-200/20 text-amber-50 font-medium rounded-full hover:bg-amber-100/10 hover:border-amber-200/40 active:scale-95 transition-all text-sm backdrop-blur-sm"
+                >
+                  Explore Our Legacy
+                </a>
               </motion.div>
 
             </div>
@@ -437,31 +402,13 @@ export default function Home() {
         {/* Bottom Fade */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-950 to-transparent z-20" />
 
-        {/* Scroll indicator */}        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-        >
-          <motion.span 
-            className="text-[9px] tracking-[0.3em] uppercase text-[#e9e9e9]/30 font-medium"
-            animate={{ opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            Scroll
-          </motion.span>
-          <motion.div
-            className="w-5 h-8 rounded-full border border-[#e9e9e9]/20 flex items-start justify-center p-1"
-            animate={{ opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <motion.div
-              className="w-1 h-1.5 rounded-full bg-[#e9e9e9]/50"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
-        </motion.div>
+        {/* Scroll indicator — CSS-only */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 animate-[fadeIn_0.8s_ease_1.5s_both]">
+          <span className="text-[9px] tracking-[0.3em] uppercase text-[#e9e9e9]/30 font-medium animate-pulse">Scroll</span>
+          <div className="w-5 h-8 rounded-full border border-[#e9e9e9]/20 flex items-start justify-center p-1">
+            <div className="w-1 h-1.5 rounded-full bg-[#e9e9e9]/50 animate-[scrollDot_1.5s_ease-in-out_infinite]" />
+          </div>
+        </div>
       </section>
 
       {/* Foreword Section */}
@@ -479,11 +426,11 @@ export default function Home() {
           <div className="space-y-4">
             {/* First Row - scrolls left (first 10 images) */}
             <div className="opacity-100 transition-opacity">
-              <InfiniteMarquee images={marqueeImagesRow1} direction="left" speed={12} />
+              <InfiniteMarquee images={marqueeImagesRow1} direction="left" />
             </div>
             {/* Second Row - scrolls right (last 10 images) */}
             <div className="opacity-100 transition-opacity">
-              <InfiniteMarquee images={marqueeImagesRow2} direction="right" speed={8} />
+              <InfiniteMarquee images={marqueeImagesRow2} direction="right" />
             </div>
           </div>
         </div>
@@ -509,13 +456,9 @@ export default function Home() {
                   </span>
                   <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Foreword</span>
                 </motion.span>
-                <TextReveal
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-3 sm:mb-4"
-                  splitBy="words"
-                  variant="blur-up"
-                >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-3 sm:mb-4">
                   Foreword
-                </TextReveal>
+                </h2>
                 <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#3e4e3b] mb-2">
                   A Message from Our Correspondent
                 </p>
@@ -655,13 +598,9 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#e9e9e9]">Our Facilities</span>
               </motion.span>
-              <TextReveal
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#e9e9e9] leading-tight tracking-tight mb-4 sm:mb-6"
-                splitBy="words"
-                variant="blur-up"
-              >
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#e9e9e9] leading-tight tracking-tight mb-4 sm:mb-6">
                 World-Class Infrastructure
-              </TextReveal>
+              </h2>
               <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/60 leading-relaxed max-w-2xl mx-auto">
                 State-of-the-art facilities meticulously designed to nurture every aspect of student development
               </p>
@@ -733,13 +672,9 @@ export default function Home() {
                   </span>
                   <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Join Us</span>
                 </span>
-                <TextReveal
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6"
-                  splitBy="words"
-                  variant="blur-up"
-                >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">
                   Admissions Open
-                </TextReveal>
+                </h2>
                 <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/60 leading-relaxed px-2 max-w-2xl mx-auto">
                   Begin your child&apos;s journey with us. Our streamlined admission process makes it easy to join the Vagdevi family.
                 </p>
@@ -794,17 +729,15 @@ export default function Home() {
                         Begin your child&apos;s journey towards excellence with world-class education.
                       </p>
 
-                      <MagneticButton strength={0.1}>
-                        <a
-                          href="#contact"
-                          className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(233,233,233,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-[#e9e9e9]/20"
-                        >
-                          Start Application
-                          <svg className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
-                        </a>
-                      </MagneticButton>
+                      <a
+                        href="#contact"
+                        className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(233,233,233,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-[#e9e9e9]/20"
+                      >
+                        Start Application
+                        <svg className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </a>
 
                       {/* Trust indicators */}
                       <div className="mt-5 flex items-center justify-between gap-2">
@@ -854,13 +787,9 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#e9e9e9]/80">Voices of Excellence</span>
               </span>
-              <TextReveal
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5 sm:mb-6 text-[#e9e9e9]"
-                splitBy="words"
-                variant="blur-up"
-              >
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-5 sm:mb-6 text-[#e9e9e9]">
                 Teacher Testimonials
-              </TextReveal>
+              </h2>
               <p className="text-sm sm:text-base lg:text-lg text-[#e9e9e9]/50 leading-relaxed max-w-2xl mx-auto">
                 Hear from our dedicated educators who shape young minds and inspire excellence every day
               </p>
@@ -963,13 +892,9 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Campus Life</span>
               </span>
-              <TextReveal
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-6"
-                splitBy="words"
-                variant="blur-up"
-              >
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-6">
                 Our Gallery
-              </TextReveal>
+              </h2>
               <p className="text-base sm:text-lg lg:text-xl text-[#3e4e3b]/60 leading-relaxed max-w-3xl mx-auto font-light">
                 Capturing the spirit of excellence, creativity, and joy across every activity
               </p>
@@ -1228,13 +1153,9 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#3e4e3b]">Get in Touch</span>
               </span>
-              <TextReveal
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6"
-                splitBy="words"
-                variant="blur-up"
-              >
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3e4e3b] leading-tight tracking-tight mb-4 sm:mb-6">
                 Contact Us
-              </TextReveal>
+              </h2>
               <p className="text-sm sm:text-base lg:text-lg text-[#3e4e3b]/60 leading-relaxed px-2 max-w-2xl mx-auto">
                 We&apos;d love to hear from you. Reach out with any questions about admissions, programs, or campus visits.
               </p>
@@ -1353,17 +1274,15 @@ export default function Home() {
                       </label>
                     </div>
 
-                    <MagneticButton strength={0.08} className="w-full">
-                      <button
-                        type="submit"
-                        className="w-full bg-[#3e4e3b] text-[#e9e9e9] py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm"
-                      >
-                        <span>Send Message</span>
-                        <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </button>
-                    </MagneticButton>
+                    <button
+                      type="submit"
+                      className="w-full bg-[#3e4e3b] text-[#e9e9e9] py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm"
+                    >
+                      <span>Send Message</span>
+                      <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </button>
 
                     <p className="text-[11px] text-[#3e4e3b]/35 text-center">
                       By submitting this form, you agree to our privacy policy. We&apos;ll never share your information.
@@ -1530,11 +1449,9 @@ export default function Home() {
               { label: "Instagram", href: "https://www.instagram.com/vagdevidya_mandir", icon: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" },
               { label: "YouTube", href: "https://www.youtube.com/@vagdevividyamandir4209", icon: "M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
             ].map((social, i) => (
-              <MagneticButton key={i} strength={0.3}>
-                <a href={social.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-[#e9e9e9]/[0.06] hover:bg-[#e9e9e9]/15 rounded-full flex items-center justify-center transition-all duration-300 border border-[#e9e9e9]/[0.06] hover:border-[#e9e9e9]/15 hover:scale-110" aria-label={social.label}>
-                  <svg className="w-3.5 h-3.5 text-[#e9e9e9]/40 hover:text-[#e9e9e9]" fill="currentColor" viewBox="0 0 24 24"><path d={social.icon} /></svg>
-                </a>
-              </MagneticButton>
+              <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-[#e9e9e9]/[0.06] hover:bg-[#e9e9e9]/15 rounded-full flex items-center justify-center transition-all duration-300 border border-[#e9e9e9]/[0.06] hover:border-[#e9e9e9]/15 hover:scale-110" aria-label={social.label}>
+                <svg className="w-3.5 h-3.5 text-[#e9e9e9]/40 hover:text-[#e9e9e9]" fill="currentColor" viewBox="0 0 24 24"><path d={social.icon} /></svg>
+              </a>
             ))}
           </motion.div>
 
