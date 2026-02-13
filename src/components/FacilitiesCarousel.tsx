@@ -69,7 +69,7 @@ const facilities: Facility[] = [
   {
     title: "Smart Classrooms",
     desc: "Interactive digital boards and modern teaching aids for enhanced, immersive learning",
-    image: "/facilities/Smartclass rooms.JPG",
+    image: "/facilities/Smartclass rooms.png",
     icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
   },
   {
