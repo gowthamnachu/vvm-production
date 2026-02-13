@@ -26,10 +26,13 @@ const epilogue = localFont({
 
 export const metadata: Metadata = {
   title: "Vagdevi Vidya Mandir | Excellence in Education Since 2002",
-  description: "Vagdevi Vidya Mandir - A premier CBSE school nurturing holistic development through quality education, cultural values, and a green campus environment.",
+  description: "Vagdevi Vidya Mandir - A premier AP Govt recognized school nurturing holistic development through quality education, cultural values, and a green campus environment.",
   icons: {
-    icon: "/vvvm_logo.jpg",
-    apple: "/vvvm_logo.jpg",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: "/favicon.png",
   },
 };
 

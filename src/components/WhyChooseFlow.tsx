@@ -26,8 +26,8 @@ const items = [
   {
     id: "2",
     num: "02",
-    title: "CBSE Curriculum",
-    desc: "Affiliated to CBSE with a structured, nationally recognized academic framework",
+    title: "SSC Curriculum",
+    desc: "Recognized by AP Govt with a structured, state-board academic framework",
     color: "#A8D8EA",
     icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
   },
@@ -51,19 +51,17 @@ const items = [
 
 /* ───────────────── Custom Nodes ───────────────── */
 
-/** Central hub – the main heading itself inside a large circle */
+/** Central hub node at top */
 function CenterNode() {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex flex-col items-center">
       <div
-        className="relative flex flex-col items-center justify-center rounded-full border-[3px] border-[#3e4e3b]/20 bg-[#f5f2ec] shadow-xl"
-        style={{ width: 220, height: 220 }}
+        className="relative flex flex-col items-center justify-center rounded-full bg-gradient-to-br from-[#3e4e3b] to-[#2d3a2e] shadow-2xl"
+        style={{ width: 180, height: 180 }}
       >
-        {/* inner dashed ring */}
-        <div className="absolute inset-3 rounded-full border-[1.5px] border-dashed border-[#3e4e3b]/12" />
-        {/* icon */}
+        <div className="absolute inset-2 rounded-full border border-white/10" />
         <svg
-          className="w-9 h-9 text-[#3e4e3b]/70 mb-2"
+          className="w-7 h-7 text-[#e9e9e9]/80 mb-1.5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -75,53 +73,56 @@ function CenterNode() {
             d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342"
           />
         </svg>
-        <span className="text-base sm:text-lg font-bold text-[#3e4e3b] leading-tight text-center px-6">
+        <span className="text-sm sm:text-base font-bold text-[#e9e9e9] leading-tight text-center px-5">
           Why Choose
         </span>
-        <span className="text-[11px] sm:text-xs font-semibold text-[#3e4e3b]/50 uppercase tracking-widest mt-0.5">
-          Vagdevi Vidya Mandir
+        <span className="text-[9px] sm:text-[10px] font-semibold text-[#e9e9e9]/50 uppercase tracking-[0.2em] mt-0.5">
+          VVM
         </span>
       </div>
-      <Handle type="source" position={Position.Right} className="!bg-transparent !border-0 !w-0 !h-0" />
+      {/* 4 source handles spread evenly along bottom */}
+      <Handle id="s0" type="source" position={Position.Bottom} style={{ left: "20%" }} className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle id="s1" type="source" position={Position.Bottom} style={{ left: "40%" }} className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle id="s2" type="source" position={Position.Bottom} style={{ left: "60%" }} className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle id="s3" type="source" position={Position.Bottom} style={{ left: "80%" }} className="!bg-transparent !border-0 !w-0 !h-0" />
     </div>
   );
 }
 
-/** Small numbered dot on the branch */
-function NumberNode({ data }: NodeProps) {
-  const d = data as { num: string };
+/** Invisible junction node for routing straight lines */
+function JunctionNode() {
   return (
-    <div className="flex items-center justify-center">
-      <Handle type="target" position={Position.Left} className="!bg-transparent !border-0 !w-0 !h-0" />
-      <div className="w-10 h-10 rounded-full bg-white border-2 border-[#3e4e3b]/15 flex items-center justify-center shadow-sm">
-        <span className="text-[11px] font-bold text-[#3e4e3b]/70">{d.num}</span>
-      </div>
-      <Handle type="source" position={Position.Right} className="!bg-transparent !border-0 !w-0 !h-0" />
+    <div className="w-0 h-0">
+      <Handle type="target" position={Position.Top} className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle type="source" position={Position.Bottom} className="!bg-transparent !border-0 !w-0 !h-0" />
     </div>
   );
 }
 
-/** Coloured pill label */
-function LabelNode({ data }: NodeProps) {
-  const d = data as { title: string; desc: string; color: string; icon: string };
+/** Feature card node */
+function FeatureNode({ data }: NodeProps) {
+  const d = data as { num: string; title: string; desc: string; color: string; icon: string };
   return (
-    <div className="flex items-center">
-      <Handle type="target" position={Position.Left} className="!bg-transparent !border-0 !w-0 !h-0" />
-      <div
-        className="relative px-5 py-3.5 sm:px-6 sm:py-4 rounded-2xl shadow-md min-w-[200px] max-w-[280px] sm:max-w-[320px]"
-        style={{ backgroundColor: d.color }}
-      >
-        <div className="flex items-center gap-2 mb-1">
-          <svg className="w-4 h-4 text-[#3e4e3b]/70 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d={d.icon} />
-          </svg>
-          <span className="text-sm sm:text-base font-bold text-[#3e4e3b] uppercase tracking-wide leading-tight">
-            {d.title}
-          </span>
+    <div className="flex flex-col items-center">
+      <Handle type="target" position={Position.Top} className="!bg-transparent !border-0 !w-0 !h-0" />
+      <div className="w-[170px] sm:w-[195px] bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        {/* Colored top bar */}
+        <div className="h-1.5" style={{ backgroundColor: d.color }} />
+        <div className="p-4 sm:p-5">
+          {/* Number + Icon row */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-300">{d.num}</span>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${d.color}30` }}>
+              <svg className="w-4 h-4" style={{ color: d.color }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                <path strokeLinecap="round" strokeLinejoin="round" d={d.icon} />
+              </svg>
+            </div>
+          </div>
+          {/* Title */}
+          <h4 className="text-xs sm:text-sm font-bold text-[#2d3a2e] leading-tight mb-1.5">{d.title}</h4>
+          {/* Description */}
+          <p className="text-[10px] sm:text-[11px] text-gray-400 leading-relaxed">{d.desc}</p>
         </div>
-        <p className="text-[11px] sm:text-xs text-[#3e4e3b]/55 leading-relaxed">
-          {d.desc}
-        </p>
       </div>
     </div>
   );
@@ -130,18 +131,25 @@ function LabelNode({ data }: NodeProps) {
 /* ───────────────── Graph layout ───────────────── */
 
 function buildGraph(isMobile: boolean) {
-  const centerX = isMobile ? 10 : 40;
-  const centerY = isMobile ? 310 : 230;
-  const numX = isMobile ? 180 : 310;
-  const labelX = isMobile ? 230 : 380;
-  const spacing = isMobile ? 130 : 120;
-  const startY = centerY - ((items.length - 1) * spacing) / 2;
+  const colWidth = isMobile ? 185 : 220;
+  const totalWidth = (items.length - 1) * colWidth;
+
+  // Center node
+  const centerNodeWidth = 180;
+  const centerX = totalWidth / 2 - centerNodeWidth / 2;
+
+  // Junction Y (where horizontal bar sits)
+  const junctionY = 220;
+  // Feature card Y
+  const featureY = 260;
+
+  const cardWidth = isMobile ? 170 : 195;
 
   const nodes: Node[] = [
     {
       id: "center",
       type: "centerNode",
-      position: { x: centerX, y: centerY - 110 },
+      position: { x: centerX, y: 0 },
       data: {},
       draggable: false,
       selectable: false,
@@ -151,46 +159,47 @@ function buildGraph(isMobile: boolean) {
   const edges: Edge[] = [];
 
   items.forEach((item, i) => {
-    const y = startY + i * spacing;
-    const numId = `num-${item.id}`;
-    const labelId = `label-${item.id}`;
+    const colCenterX = i * colWidth;
+    const junctionId = `junc-${item.id}`;
+    const featureId = `feat-${item.id}`;
 
+    // Junction node (invisible, for routing)
     nodes.push({
-      id: numId,
-      type: "numberNode",
-      position: { x: numX, y: y - 20 },
-      data: { num: item.num },
+      id: junctionId,
+      type: "junctionNode",
+      position: { x: colCenterX + cardWidth / 2, y: junctionY },
+      data: {},
       draggable: false,
       selectable: false,
     });
 
+    // Feature card
     nodes.push({
-      id: labelId,
-      type: "labelNode",
-      position: { x: labelX, y: y - 38 },
-      data: { title: item.title, desc: item.desc, color: item.color, icon: item.icon },
+      id: featureId,
+      type: "featureNode",
+      position: { x: colCenterX, y: featureY },
+      data: { num: item.num, title: item.title, desc: item.desc, color: item.color, icon: item.icon },
       draggable: false,
       selectable: false,
     });
 
-    // center → number dot (dotted line)
+    // Center → junction (step edge = right angles)
     edges.push({
-      id: `e-center-${numId}`,
+      id: `e-center-${junctionId}`,
       source: "center",
-      target: numId,
-      type: "default",
-      style: { stroke: "#3e4e3b", strokeWidth: 1.5, opacity: 0.3, strokeDasharray: "6 4" },
-      animated: false,
+      sourceHandle: `s${i}`,
+      target: junctionId,
+      type: "step",
+      style: { stroke: "#3e4e3b", strokeWidth: 1.5, opacity: 0.2 },
     });
 
-    // number dot → label pill (dotted line)
+    // Junction → feature (straight vertical)
     edges.push({
-      id: `e-${numId}-${labelId}`,
-      source: numId,
-      target: labelId,
-      type: "default",
-      style: { stroke: "#3e4e3b", strokeWidth: 1.5, opacity: 0.3, strokeDasharray: "6 4" },
-      animated: false,
+      id: `e-${junctionId}-${featureId}`,
+      source: junctionId,
+      target: featureId,
+      type: "straight",
+      style: { stroke: "#3e4e3b", strokeWidth: 1.5, opacity: 0.2 },
     });
   });
 
@@ -199,8 +208,8 @@ function buildGraph(isMobile: boolean) {
 
 const nodeTypes = {
   centerNode: CenterNode,
-  numberNode: NumberNode,
-  labelNode: LabelNode,
+  junctionNode: JunctionNode,
+  featureNode: FeatureNode,
 };
 
 /* ───────────────── Main component ───────────────── */
@@ -214,8 +223,8 @@ function WhyChooseFlowInner() {
 
   const { nodes, edges } = useMemo(() => buildGraph(isMobile), [isMobile]);
 
-  const flowHeight = isMobile ? 640 : 580;
-  const flowWidth = isMobile ? 500 : 780;
+  const flowHeight = isMobile ? 560 : 540;
+  const flowWidth = isMobile ? 760 : 900;
 
   return (
     <div
