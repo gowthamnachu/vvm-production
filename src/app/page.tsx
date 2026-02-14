@@ -629,14 +629,14 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 200 }}
                   >
-                    <Image
-                      src="/facilities/god.png"
-                      alt="Divine blessings"
-                      width={400}
-                      height={500}
-                      className="w-full h-auto object-contain drop-shadow-2xl"
-                      priority={false}
-                    />
+                      <Image
+                        src="/facilities/god_image.png"
+                        alt="Divine blessings"
+                        width={400}
+                        height={500}
+                        className="w-full h-auto object-contain drop-shadow-2xl"
+                        priority={false}
+                      />
                   </motion.div>
                 </div>
               </motion.div>
