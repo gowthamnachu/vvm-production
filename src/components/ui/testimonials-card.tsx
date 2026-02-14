@@ -171,6 +171,7 @@ export function TestimonialsCard({
                   ? "opacity-30 cursor-not-allowed"
                   : "hover:bg-[#e9e9e9]/20 hover:border-[#e9e9e9]/40 hover:scale-110 active:scale-95"
               )}
+              suppressHydrationWarning
             >
               <ArrowLeft className="w-4 h-4 text-[#e9e9e9]" />
             </button>
@@ -189,6 +190,7 @@ export function TestimonialsCard({
                       ? "w-6 h-2 bg-[#e9e9e9]"
                       : "w-2 h-2 bg-[#e9e9e9]/30 hover:bg-[#e9e9e9]/50"
                   )}
+                  suppressHydrationWarning
                 />
               ))}
             </div>
@@ -201,6 +203,7 @@ export function TestimonialsCard({
                   ? "opacity-30 cursor-not-allowed"
                   : "hover:bg-[#e9e9e9]/20 hover:border-[#e9e9e9]/40 hover:scale-110 active:scale-95"
               )}
+              suppressHydrationWarning
             >
               <ArrowRight className="w-4 h-4 text-[#e9e9e9]" />
             </button>

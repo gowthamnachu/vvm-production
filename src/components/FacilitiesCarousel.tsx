@@ -336,6 +336,7 @@ export default function FacilitiesCarousel() {
                   onClick={() => paginate(-1)}
                   className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#e9e9e9]/10 backdrop-blur-sm border border-[#e9e9e9]/10 flex items-center justify-center text-[#e9e9e9]/70 hover:bg-[#e9e9e9]/20 hover:text-[#e9e9e9] transition-all duration-200 active:scale-95"
                   aria-label="Previous"
+                  suppressHydrationWarning
                 >
                   <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -345,6 +346,7 @@ export default function FacilitiesCarousel() {
                   onClick={() => paginate(1)}
                   className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#e9e9e9]/10 backdrop-blur-sm border border-[#e9e9e9]/10 flex items-center justify-center text-[#e9e9e9]/70 hover:bg-[#e9e9e9]/20 hover:text-[#e9e9e9] transition-all duration-200 active:scale-95"
                   aria-label="Next"
+                  suppressHydrationWarning
                 >
                   <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -371,6 +373,7 @@ export default function FacilitiesCarousel() {
                 ? "ring-2 ring-[#3e4e3b] ring-offset-2 ring-offset-white"
                 : "opacity-60 hover:opacity-90"
             }`}
+            suppressHydrationWarning
           >
             <div className="relative w-16 h-11 sm:w-20 sm:h-14 lg:w-24 lg:h-16">
               <Image

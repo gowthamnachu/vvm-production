@@ -185,6 +185,9 @@ const SectionDivider = memo(function SectionDivider({ variant = "light" }: { var
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const heroSectionRef = useRef(null);
+  const isHeroInView = useInView(heroSectionRef, { amount: 0.3 });
 
   useEffect(() => {
     let ticking = false;
@@ -219,6 +222,20 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Play/pause video based on hero section visibility
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isHeroInView) {
+      video.play().catch(() => {
+        // Ignore play errors (e.g., if autoplay is blocked)
+      });
+    } else {
+      video.pause();
+    }
+  }, [isHeroInView]);
+
   return (
     <>
       <RevealLoader
@@ -237,6 +254,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section
+        ref={heroSectionRef}
         id="home"
         className="relative min-h-screen w-full bg-slate-950 overflow-hidden"
       >
@@ -244,7 +262,7 @@ export default function Home() {
         {/* Video Background with Parallax */}
         <ParallaxBackground className="z-0" speed={0.2}>
           <video
-            autoPlay
+            ref={videoRef}
             muted
             loop
             playsInline
@@ -1196,6 +1214,7 @@ export default function Home() {
                           id="name"
                           className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all"
                           placeholder="Full Name"
+                          suppressHydrationWarning
                         />
                         <label
                           htmlFor="name"
@@ -1210,6 +1229,7 @@ export default function Home() {
                           id="phone"
                           className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all"
                           placeholder="Phone Number"
+                          suppressHydrationWarning
                         />
                         <label
                           htmlFor="phone"
@@ -1226,6 +1246,7 @@ export default function Home() {
                         id="email"
                         className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all"
                         placeholder="Email Address"
+                        suppressHydrationWarning
                       />
                       <label
                         htmlFor="email"
@@ -1240,6 +1261,7 @@ export default function Home() {
                         id="subject"
                         defaultValue=""
                         className="w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all appearance-none cursor-pointer"
+                        suppressHydrationWarning
                       >
                         <option value="" disabled>Select a subject</option>
                         <option value="admissions">Admissions Inquiry</option>
@@ -1277,6 +1299,7 @@ export default function Home() {
                     <button
                       type="submit"
                       className="w-full bg-[#3e4e3b] text-[#e9e9e9] py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm"
+                      suppressHydrationWarning
                     >
                       <span>Send Message</span>
                       <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
