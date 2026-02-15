@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, memo, lazy, Suspense } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
 import Image from "next/image";
@@ -197,6 +197,15 @@ export default function Home() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info'; title: string; message: string } | null>(null);
+  const notificationTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
+    if (notificationTimer.current) clearTimeout(notificationTimer.current);
+    const titles = { success: 'Success!', error: 'Something went wrong', info: 'Heads up' };
+    setNotification({ type, title: titles[type], message });
+    notificationTimer.current = setTimeout(() => setNotification(null), 5000);
+  };
 
   const handleContactChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setContactForm((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -225,7 +234,7 @@ export default function Home() {
 
     // Validation
     if (!name || !phone || !email) {
-      alert("Please fill in your name, phone number, and email address.");
+      showNotification('error', 'Please fill in your name, phone number, and email address.');
       return;
     }
 
@@ -245,7 +254,7 @@ export default function Home() {
 
       if (response.ok) {
         // Email sent successfully
-        alert("✅ Thank you! Your message has been sent successfully. We'll get back to you soon.");
+        showNotification('success', 'Thank you! Your message has been sent successfully. We\'ll get back to you soon.');
         setContactForm({
           name: "",
           phone: "",
@@ -255,7 +264,7 @@ export default function Home() {
         });
       } else if (data.fallbackToWhatsApp) {
         // Fallback to WhatsApp (daily limit reached or service unavailable)
-        alert("📧 Email service temporarily unavailable. Redirecting to WhatsApp...");
+        showNotification('info', 'Email service temporarily unavailable. Redirecting to WhatsApp...');
         setTimeout(() => sendViaWhatsApp(contactForm), 1500);
       } else {
         throw new Error("Failed to send message");
@@ -263,7 +272,7 @@ export default function Home() {
     } catch (error) {
       console.error("Error submitting form:", error);
       // Fallback to WhatsApp on any error
-      alert("📧 Switching to WhatsApp for your convenience...");
+      showNotification('info', 'Switching to WhatsApp for your convenience...');
       setTimeout(() => sendViaWhatsApp(contactForm), 1500);
     } finally {
       setIsSubmitting(false);
@@ -320,6 +329,112 @@ export default function Home() {
 
   return (
     <>
+      {/* Toast Notification */}
+      <AnimatePresence mode="wait">
+        {notification && (
+          <motion.div
+            key="toast"
+            initial={{ opacity: 0, y: -30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.4}
+            onDragEnd={(_, info) => { if (info.offset.y < -40) setNotification(null); }}
+            className="fixed top-3 left-3 right-3 sm:top-5 sm:left-auto sm:right-5 sm:max-w-[420px] z-[9999]"
+          >
+            {/* Mobile drag handle */}
+            <div className="flex justify-center pt-2 pb-1 sm:hidden">
+              <div className="w-10 h-1 rounded-full bg-[#3e4e3b]/20" />
+            </div>
+
+            <div className={`
+              relative overflow-hidden
+              mx-0 sm:mx-0
+              rounded-2xl
+              shadow-[0_8px_32px_rgba(0,0,0,0.12)] sm:shadow-2xl
+              border sm:border-2
+              backdrop-blur-xl
+              ${notification.type === 'error'
+                ? 'bg-white/95 border-red-200 sm:bg-white/98'
+                : 'bg-white/95 border-[#3e4e3b]/20 sm:bg-white/98'
+              }
+            `}>
+              {/* Colored accent bar — top on mobile, left on desktop */}
+              <div className={`
+                absolute top-0 left-0 right-0 h-1 sm:h-auto sm:top-0 sm:bottom-0 sm:w-1.5 sm:right-auto
+                ${notification.type === 'error' ? 'bg-gradient-to-r sm:bg-gradient-to-b from-red-400 to-rose-500' : ''}
+                ${notification.type !== 'error' ? 'bg-gradient-to-r sm:bg-gradient-to-b from-[#4a5d47] to-[#3e4e3b]' : ''}
+              `} />
+
+              <div className="flex items-start gap-3 px-4 py-4 sm:pl-6 sm:pr-4 sm:py-5">
+                {/* Icon with colored background circle */}
+                <div className={`
+                  flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center
+                  ${notification.type === 'error' ? 'bg-red-100 text-red-600' : ''}
+                  ${notification.type !== 'error' ? 'bg-[#3e4e3b]/10 text-[#3e4e3b]' : ''}
+                `}>
+                  {notification.type === 'success' && (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  {notification.type === 'error' && (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                  )}
+                  {notification.type === 'info' && (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )}
+                </div>
+
+                {/* Title + Message */}
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <p className={`
+                    text-sm sm:text-[15px] font-bold tracking-tight
+                    ${notification.type === 'error' ? 'text-red-800' : 'text-[#3e4e3b]'}
+                  `}>
+                    {notification.title}
+                  </p>
+                  <p className="mt-0.5 text-xs sm:text-sm text-[#3e4e3b]/70 leading-snug break-words">
+                    {notification.message}
+                  </p>
+                  {/* Swipe hint on mobile */}
+                  <p className="mt-1.5 text-[10px] text-[#3e4e3b]/40 sm:hidden">Swipe up to dismiss</p>
+                </div>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setNotification(null)}
+                  className="flex-shrink-0 p-1.5 -mt-1 -mr-1 rounded-full hover:bg-[#3e4e3b]/5 active:bg-[#3e4e3b]/10 transition-colors"
+                  aria-label="Close notification"
+                >
+                  <svg className="w-4 h-4 text-[#3e4e3b]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Animated progress bar */}
+              <div className="h-0.5 w-full bg-[#3e4e3b]/5">
+                <motion.div
+                  initial={{ width: '100%' }}
+                  animate={{ width: '0%' }}
+                  transition={{ duration: 5, ease: 'linear' }}
+                  className={`h-full ${
+                    notification.type === 'error' ? 'bg-red-400' : 'bg-[#3e4e3b]/60'
+                  }`}
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       <RevealLoader
         text="VAGDEVI VIDYA MANDIR"
         bgColors={["#4a5d47", "#3e4e3b", "#5a6d57"]}

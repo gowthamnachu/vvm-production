@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         { email: OWNER_EMAIL, name: "VVM School Admin" },
       ],
       replyTo: { email: email, name: name },
-      subject: `New Contact Form: ${subject || "General Inquiry"}`,
+      subject: `📧 Contact: ${name} - ${subject || "General Inquiry"}`,
       htmlContent: `
         <html>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
