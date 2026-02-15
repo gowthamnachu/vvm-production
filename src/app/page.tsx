@@ -187,6 +187,88 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroSectionRef = useRef(null);
+
+  // Contact form state
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setContactForm((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  const sendViaWhatsApp = (formData: typeof contactForm) => {
+    const lines = [
+      `*New Contact Form Submission*`,
+      ``,
+      `*Name:* ${formData.name}`,
+      formData.phone ? `*Phone:* ${formData.phone}` : "",
+      formData.email ? `*Email:* ${formData.email}` : "",
+      formData.subject ? `*Subject:* ${formData.subject}` : "",
+      formData.message ? `*Message:* ${formData.message}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const encoded = encodeURIComponent(lines);
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=919490670461&text=${encoded}`;
+    window.location.href = whatsappUrl;
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { name, phone, email, subject, message } = contactForm;
+
+    // Validation
+    if (!name || !phone || !email) {
+      alert("Please fill in your name, phone number, and email address.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Try to send via email first
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, phone, email, subject, message }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Email sent successfully
+        alert("✅ Thank you! Your message has been sent successfully. We'll get back to you soon.");
+        setContactForm({
+          name: "",
+          phone: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } else if (data.fallbackToWhatsApp) {
+        // Fallback to WhatsApp (daily limit reached or service unavailable)
+        alert("📧 Email service temporarily unavailable. Redirecting to WhatsApp...");
+        setTimeout(() => sendViaWhatsApp(contactForm), 1500);
+      } else {
+        throw new Error("Failed to send message");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Fallback to WhatsApp on any error
+      alert("📧 Switching to WhatsApp for your convenience...");
+      setTimeout(() => sendViaWhatsApp(contactForm), 1500);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const isHeroInView = useInView(heroSectionRef, { amount: 0.3 });
 
   useEffect(() => {
@@ -1206,12 +1288,14 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <form className="space-y-5">
+                  <form className="space-y-5" onSubmit={handleContactSubmit}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="relative">
                         <input
                           type="text"
                           id="name"
+                          value={contactForm.name}
+                          onChange={handleContactChange}
                           className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all"
                           placeholder="Full Name"
                           suppressHydrationWarning
@@ -1227,6 +1311,8 @@ export default function Home() {
                         <input
                           type="tel"
                           id="phone"
+                          value={contactForm.phone}
+                          onChange={handleContactChange}
                           className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all"
                           placeholder="Phone Number"
                           suppressHydrationWarning
@@ -1244,6 +1330,8 @@ export default function Home() {
                       <input
                         type="email"
                         id="email"
+                        value={contactForm.email}
+                        onChange={handleContactChange}
                         className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all"
                         placeholder="Email Address"
                         suppressHydrationWarning
@@ -1259,7 +1347,8 @@ export default function Home() {
                     <div className="relative">
                       <select
                         id="subject"
-                        defaultValue=""
+                        value={contactForm.subject}
+                        onChange={handleContactChange}
                         className="w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all appearance-none cursor-pointer"
                         suppressHydrationWarning
                       >
@@ -1285,6 +1374,8 @@ export default function Home() {
                       <textarea
                         id="message"
                         rows={4}
+                        value={contactForm.message}
+                        onChange={handleContactChange}
                         className="peer w-full bg-[#f8fafc] border border-[#3e4e3b]/10 rounded-xl px-5 py-3.5 text-[#3e4e3b] text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[#3e4e3b]/15 focus:border-[#3e4e3b]/40 transition-all resize-none"
                         placeholder="Message"
                       />
@@ -1298,13 +1389,29 @@ export default function Home() {
 
                     <button
                       type="submit"
-                      className="w-full bg-[#3e4e3b] text-[#e9e9e9] py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm"
+                      disabled={isSubmitting}
+                      className="w-full bg-[#3e4e3b] text-white py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3e4e3b]"
                       suppressHydrationWarning
                     >
-                      <span>Send Message</span>
-                      <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
+                      {isSubmitting ? (
+                        <>
+                          <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          <span>Send Message</span>
+                          <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </>
+                      )}
                     </button>
 
                     <p className="text-[11px] text-[#3e4e3b]/35 text-center">
