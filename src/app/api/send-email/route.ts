@@ -119,6 +119,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Send email to owner
+    console.log("Attempting to send owner notification to:", OWNER_EMAIL);
     const ownerResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest) {
 
     if (!ownerResponse.ok) {
       const errorData = await ownerResponse.json().catch(() => ({}));
-      console.error("Brevo API Error:", {
+      console.error("Brevo API Error (Owner Email):", {
         status: ownerResponse.status,
         statusText: ownerResponse.statusText,
         error: errorData
@@ -150,8 +151,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const ownerResult = await ownerResponse.json();
+    console.log("Owner email sent successfully:", ownerResult);
+
     // Send confirmation email to user
-    await fetch("https://api.brevo.com/v3/smtp/email", {
+    console.log("Attempting to send confirmation to user:", email);
+    const userResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -159,6 +164,13 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify(userEmailData),
     });
+
+    if (userResponse.ok) {
+      const userResult = await userResponse.json();
+      console.log("User confirmation sent successfully:", userResult);
+    } else {
+      console.error("Failed to send user confirmation, but continuing...");
+    }
 
     return NextResponse.json(
       { success: true, message: "Emails sent successfully" },
