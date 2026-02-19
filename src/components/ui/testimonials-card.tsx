@@ -3,13 +3,14 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
+import { ArrowLeft, ArrowRight, Quote, Award } from "lucide-react";
 
 interface TestimonialItem {
   id: string | number;
   title: string;
   description: string;
   image: string;
+  experience?: string;
 }
 
 interface TestimonialsCardProps {
@@ -70,10 +71,10 @@ export function TestimonialsCard({
       >
         {/* Counter */}
         {showCounter && (
-          <div className="hidden sm:block col-start-2 row-start-1 text-right font-mono text-sm text-[#e9e9e9]/50 tracking-wider">
-            <span className="text-[#e9e9e9] font-semibold text-base">{String(activeIndex + 1).padStart(2, '0')}</span>
-            <span className="mx-1">/</span>
-            <span>{String(items.length).padStart(2, '0')}</span>
+          <div className="hidden sm:block col-start-2 row-start-1 text-right font-[family-name:var(--font-epilogue)] text-sm text-[#e9e9e9]/40 tracking-[0.2em]">
+            <span className="text-[#e9e9e9] font-semibold text-base tabular-nums">{String(activeIndex + 1).padStart(2, '0')}</span>
+            <span className="mx-1.5 text-[#e9e9e9]/25">/</span>
+            <span className="tabular-nums">{String(items.length).padStart(2, '0')}</span>
           </div>
         )}
 
@@ -124,6 +125,34 @@ export function TestimonialsCard({
                     alt={item.title}
                     className="w-full h-full object-cover"
                   />
+                  {/* Experience Ribbon Badge */}
+                  {item.experience && (
+                    <div className="absolute top-0 left-0 z-10 overflow-hidden w-28 h-28 pointer-events-none">
+                      <div
+                        className="absolute -left-8 top-5 w-40 text-center py-1.5 shadow-lg"
+                        style={{
+                          transform: "rotate(-45deg)",
+                          background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%)",
+                          boxShadow: "0 2px 8px rgba(185, 28, 28, 0.5), inset 0 1px 0 rgba(255,255,255,0.15)",
+                        }}
+                      >
+                        <div className="flex items-center justify-center gap-1">
+                          <Award className="w-3 h-3 text-white/90 shrink-0" />
+                          <span className="text-white text-[10px] font-bold tracking-wide uppercase leading-none">
+                            {item.experience}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Ribbon fold shadows */}
+                      <div
+                        className="absolute top-[4.25rem] left-0 w-0 h-0"
+                        style={{
+                          borderTop: "4px solid #7f1d1d",
+                          borderLeft: "4px solid transparent",
+                        }}
+                      />
+                    </div>
+                  )}
                 </motion.div>
               );
             })}
@@ -141,16 +170,16 @@ export function TestimonialsCard({
               transition={{ duration: 0.35 }}
               className="space-y-4"
             >
-              <Quote className="w-8 h-8 text-[#e9e9e9]/30 mb-2" />
-              <p className="text-base sm:text-lg leading-relaxed text-[#e9e9e9]/85 font-light italic">
+              <Quote className="w-7 h-7 text-[#e9e9e9]/20 mb-3" strokeWidth={1.5} />
+              <p className="text-base sm:text-lg leading-[1.8] text-[#e9e9e9]/80 font-light italic font-[family-name:var(--font-epilogue)]">
                 &ldquo;{activeItem.description}&rdquo;
               </p>
-              <div className="pt-4 border-t border-[#e9e9e9]/15">
-                <h3 className="text-lg sm:text-xl font-bold text-[#e9e9e9] tracking-wide">
+              <div className="pt-5 border-t border-[#e9e9e9]/10 mt-1">
+                <h3 className="text-lg sm:text-xl font-bold text-[#e9e9e9] tracking-[0.25em] font-[family-name:var(--font-epilogue)] leading-tight" style={{ wordSpacing: "0.15em" }}>
                   {activeItem.title.split("—")[0]?.trim()}
                 </h3>
                 {activeItem.title.includes("—") && (
-                  <p className="text-sm text-[#e9e9e9]/60 font-medium tracking-wider uppercase mt-1">
+                  <p className="text-xs text-[#e9e9e9]/50 font-semibold tracking-[0.25em] uppercase mt-3 font-[family-name:var(--font-epilogue)]">
                     {activeItem.title.split("—")[1]?.trim()}
                   </p>
                 )}

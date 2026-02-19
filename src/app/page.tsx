@@ -197,6 +197,7 @@ export default function Home() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sendMethod, setSendMethod] = useState<'email' | 'whatsapp'>('email');
   const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info'; title: string; message: string } | null>(null);
   const notificationTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -235,6 +236,11 @@ export default function Home() {
     // Validation
     if (!name || !phone || !email) {
       showNotification('error', 'Please fill in your name, phone number, and email address.');
+      return;
+    }
+
+    if (sendMethod === 'whatsapp') {
+      sendViaWhatsApp(contactForm);
       return;
     }
 
@@ -1028,51 +1034,72 @@ export default function Home() {
                   items={[
                     {
                       id: 1,
-                      title: "Mrs. Ambica — Senior Faculty",
-                      description: "Being part of the Vagdevi family has been an enriching experience. The school's commitment to nurturing both academic brilliance and moral values makes it a truly exceptional institution to teach at.",
-                      image: "/testmonials/Ambica.png",
+                      title: "Pasumarthi Sudha Rani — Director",
+                      description: "Leading Vagdevi Vidya Mandir has been a journey of passion and purpose. Our commitment to nurturing academic brilliance and moral values continues to shape generations of confident, well-rounded individuals.",
+                      image: "/testmonials/Pasumarthi%20Sudha%20Rani.png",
+                      experience: "23 Yrs",
                     },
                     {
                       id: 2,
-                      title: "Mrs. Devi — Mathematics Teacher",
+                      title: "Vijjapu Devi — English Teacher",
                       description: "Teaching at Vagdevi Vidya Mandir has been profoundly rewarding. The supportive environment and focus on holistic development allow us to nurture not just academic excellence but also strong character in our students.",
-                      image: "/testmonials/Devi.png",
+                      image: "/testmonials/VIJJAPU%20%20DEVI.png",
+                      experience: "21 Yrs",
                     },
                     {
                       id: 3,
-                      title: "Mrs. Satya Veni — Science Teacher",
-                      description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
-                      image: "/testmonials/SatyaVeni.png",
+                      title: "Radha Rani Agarwal — Hindi Teacher",
+                      description: "VVM celebrates cultural heritage alongside modern education. Our dedicated approach to Hindi language teaching helps students connect with their roots while building strong communication skills for the future.",
+                      image: "/testmonials/RADHA%20RANI%20AGARWAL.png",
+                      experience: "21 Yrs",
                     },
                     {
                       id: 4,
-                      title: "Mrs. Sharmila — English Teacher",
-                      description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
-                      image: "/testmonials/Sharmila.png",
+                      title: "Kandukuri Satya Veni — Science Teacher",
+                      description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
+                      image: "/testmonials/KANDUKURI%20SATYA%20VENI.png",
+                      experience: "20 Yrs",
                     },
                     {
                       id: 5,
-                      title: "Mrs. Sudha Rani — Telugu Teacher",
-                      description: "VVM celebrates cultural heritage alongside modern education. Our dedicated approach to language teaching helps students connect with their roots while building strong communication skills.",
-                      image: "/testmonials/sudharani.png",
+                      title: "Kotinadham Vasundhara Devi — Higher Maths Teacher",
+                      description: "The progressive curriculum and collaborative environment at VVM empower us as educators. Every day, I see students developing into responsible, compassionate young citizens of tomorrow.",
+                      image: "/testmonials/KOTINADHAM%20VASUNDHARA%20DEVI.png",
+                      experience: "18 Yrs",
                     },
                     {
                       id: 6,
-                      title: "Mrs. Vasundhara — Social Studies Teacher",
-                      description: "The progressive curriculum and collaborative environment at VVM empower us as educators. Every day, I see students developing into responsible, compassionate young citizens of tomorrow.",
-                      image: "/testmonials/Vasundhara.png",
+                      title: "Dalli Sharmila — Mother Teacher",
+                      description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
+                      image: "/testmonials/DALLI%20SHARMILA.png",
+                      experience: "13 Yrs",
                     },
                     {
                       id: 7,
-                      title: "Mrs. Vijaya Sri — Arts & Crafts Teacher",
-                      description: "VVM celebrates creativity and artistic expression. Our dedicated Arts studio provides students with the space and resources to discover their talents and pursue their passions with confidence.",
-                      image: "/testmonials/VijayaSri.png",
+                      title: "Addepalli Krishna Kumari — Pre-Primary Teacher",
+                      description: "Nurturing young minds at VVM is a privilege. Our thoughtful early education approach ensures children develop a strong foundation of curiosity, confidence, and lifelong love for learning.",
+                      image: "/testmonials/ADDEPALLI%20%20%20%20KRISHNA%20%20%20%20KUMARI.png",
+                      experience: "11 Yrs",
                     },
                     {
                       id: 8,
+                      title: "Munagapati Ambica — Higher English Teacher",
+                      description: "Being part of the Vagdevi family has been an enriching experience. The school's commitment to nurturing both academic brilliance and moral values makes it a truly exceptional institution to teach at.",
+                      image: "/testmonials/MUNAGAPATI%20%20%20AMBICA.png",
+                      experience: "10 Yrs",
+                    },
+                    {
+                      id: 9,
+                      title: "Gampala Vijayasree — Telugu Teacher",
+                      description: "VVM celebrates creativity and artistic expression. Our dedicated approach to Telugu language and literature inspires students to embrace their cultural heritage while building strong communication skills.",
+                      image: "/testmonials/GAMPALA%20VIJAYASREE.png",
+                      experience: "9 Yrs",
+                    },
+                    {
+                      id: 10,
                       title: "Yoga Sir — Physical Education & Yoga",
                       description: "The expansive sports facilities and strong emphasis on physical and mental fitness create an ideal environment. Yoga and sports teach discipline, mindfulness, and resilience—values that last a lifetime.",
-                      image: "/testmonials/Yoga%20sir.png",
+                      image: "/testmonials/yoga.png",
                     },
                   ]}
                   width={700}
@@ -1502,10 +1529,48 @@ export default function Home() {
                       </label>
                     </div>
 
+                    {/* Send Method Toggle */}
+                    <div className="flex items-center gap-2 p-1 bg-[#f0f2f0] rounded-xl">
+                      <button
+                        type="button"
+                        onClick={() => setSendMethod('email')}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                          sendMethod === 'email'
+                            ? 'bg-[#3e4e3b] text-white shadow-md shadow-[#3e4e3b]/20'
+                            : 'text-[#3e4e3b]/60 hover:text-[#3e4e3b] hover:bg-white/50'
+                        }`}
+                        suppressHydrationWarning
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Email
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSendMethod('whatsapp')}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                          sendMethod === 'whatsapp'
+                            ? 'bg-[#25D366] text-white shadow-md shadow-[#25D366]/20'
+                            : 'text-[#3e4e3b]/60 hover:text-[#3e4e3b] hover:bg-white/50'
+                        }`}
+                        suppressHydrationWarning
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                        </svg>
+                        WhatsApp
+                      </button>
+                    </div>
+
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-[#3e4e3b] text-white py-4 rounded-xl font-bold tracking-wide hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#3e4e3b]"
+                      className={`w-full py-4 rounded-xl font-bold tracking-wide active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                        sendMethod === 'whatsapp'
+                          ? 'bg-[#25D366] text-white hover:bg-[#20bd5a] hover:shadow-lg hover:shadow-[#25D366]/20 disabled:hover:bg-[#25D366]'
+                          : 'bg-[#3e4e3b] text-white hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 disabled:hover:bg-[#3e4e3b]'
+                      }`}
                       suppressHydrationWarning
                     >
                       {isSubmitting ? (
@@ -1516,12 +1581,22 @@ export default function Home() {
                           </svg>
                           <span>Sending...</span>
                         </>
+                      ) : sendMethod === 'whatsapp' ? (
+                        <>
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                          </svg>
+                          <span>Send via WhatsApp</span>
+                          <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </>
                       ) : (
                         <>
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
-                          <span>Send Message</span>
+                          <span>Send via Email</span>
                           <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
