@@ -45,11 +45,14 @@ const marqueeImagesRow2 = [
 
 // Auto-scrolling Marquee Component - CSS-only animation (no JS per-frame loop)
 const InfiniteMarquee = memo(function InfiniteMarquee({ images, direction = "left" }: { images: string[]; direction?: "left" | "right" }) {
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(marqueeRef, { amount: 0.1 });
+
   return (
-    <div className="overflow-hidden">
+    <div ref={marqueeRef} className="overflow-hidden">
       <div
         className={`flex gap-4 will-change-transform ${direction === "left" ? "animate-marquee-left" : "animate-marquee-right"}`}
-        style={{ width: "max-content" }}
+        style={{ width: "max-content", animationPlayState: isInView ? "running" : "paused" }}
       >
         {/* Double images for seamless infinite loop */}
         {[...images, ...images].map((src, index) => (
@@ -633,7 +636,7 @@ export default function Home() {
       </section>
 
       {/* Foreword Section */}
-      <section id="foreword" className="relative w-full bg-[#f8fafc] pt-0 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
+      <section id="foreword" className="relative w-full bg-[#f8fafc] pt-10 sm:pt-14 lg:pt-16 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
         {/* Green grid pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
