@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useMemo, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Quote, Award } from "lucide-react";
 
@@ -35,15 +35,17 @@ export function TestimonialsCard({
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const activeItem = items[activeIndex];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.3 });
 
   React.useEffect(() => {
-    if (!autoPlay || items.length <= 1) return;
+    if (!autoPlay || items.length <= 1 || !isInView) return;
     const interval = setInterval(() => {
       setDirection(1);
       setActiveIndex((prev) => (prev + 1) % items.length);
     }, autoPlayInterval);
     return () => clearInterval(interval);
-  }, [autoPlay, autoPlayInterval, items.length]);
+  }, [autoPlay, autoPlayInterval, items.length, isInView]);
 
   const handleNext = () => {
     if (activeIndex < items.length - 1) {
@@ -64,7 +66,7 @@ export function TestimonialsCard({
   if (!items || items.length === 0) return null;
 
   return (
-    <div className={cn("flex items-center justify-center p-4 sm:p-8", className)}>
+    <div ref={containerRef} className={cn("flex items-center justify-center p-4 sm:p-8", className)}>
       <div
         className="relative grid grid-cols-1 sm:grid-cols-[1fr_1.2fr] grid-rows-[auto] sm:grid-rows-[auto_auto_auto] gap-x-10 gap-y-6 sm:gap-y-2 w-full"
         style={{ perspective: "1400px", maxWidth: `${width}px` }}

@@ -643,7 +643,7 @@ export default function Home() {
         {/* Floating decorative elements */}
 
         {/* Auto-scrolling Image Marquee at Top */}
-        <div className="relative w-full py-10 sm:py-14 lg:py-16 z-20">
+        <div className="relative w-full z-20">
           <div className="space-y-4">
             {/* First Row - scrolls left (first 10 images) */}
             <div className="opacity-100 transition-opacity">
@@ -658,7 +658,6 @@ export default function Home() {
 
         {/* Subtle Decorative Elements */}
         <div className="absolute top-40 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/[0.015] rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#3e4e3b]/[0.02] rounded-full blur-3xl" />
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-16 sm:pt-20 lg:pt-24">
           <AnimatedSection>
@@ -1752,7 +1751,7 @@ export default function Home() {
               <div className="space-y-1 text-sm text-[#e9e9e9]/40">
                 <p><a href="tel:+917680097953" className="hover:text-[#e9e9e9] transition-colors">+91 76800 97953</a></p>
                 <p><a href="tel:+919490670461" className="hover:text-[#e9e9e9] transition-colors">+91 94906 70461</a></p>
-                <p><a href="mailto:info@vvm.edu" className="hover:text-[#e9e9e9] transition-colors">info@vvm.edu</a></p>
+                <p><a href="mailto:info@vagdevidyamandir.com" className="hover:text-[#e9e9e9] transition-colors">info@vagdevidyamandir.com</a></p>
               </div>
             </div>
           </motion.div>
@@ -1784,7 +1783,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <p className="text-xs text-[#e9e9e9]/25">© {new Date().getFullYear()} Vagdevi Vidya Mandir. All rights reserved.</p>
-            <p className="text-xs text-[#e9e9e9]/15">Designed with care for the future of education</p>
+            <p className="text-xs text-[#e9e9e9]/15">Designed and Crafted by Nachu Gowtham</p>
           </motion.div>
         </div>
       </footer>
