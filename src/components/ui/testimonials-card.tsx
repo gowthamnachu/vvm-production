@@ -93,8 +93,8 @@ export function TestimonialsCard({
                   initial={{
                     x: offset * 15,
                     y: Math.abs(offset) * 6,
-                    z: -150 * Math.abs(offset),
-                    scale: 0.85 - Math.abs(offset) * 0.04,
+                    z: -80 * Math.abs(offset),
+                    scale: 0.92 - Math.abs(offset) * 0.04,
                     rotateZ: rotations[index % 4],
                     opacity: isActive ? 1 : 0.5,
                     zIndex: 10 - Math.abs(offset),
@@ -102,20 +102,20 @@ export function TestimonialsCard({
                   animate={
                     isActive
                       ? {
-                          x: [offset * 15, direction === 1 ? -200 : 200, 0],
+                          x: [offset * 15, direction === 1 ? -80 : 80, 0],
                           y: [Math.abs(offset) * 6, 0, 0],
-                          z: [-200, 150, 250],
-                          scale: [0.85, 1.05, 1],
-                          rotateZ: [rotations[index % 4], -5, 0],
+                          z: 0,
+                          scale: 1,
+                          rotateZ: [rotations[index % 4], -2, 0],
                           opacity: 1,
                           zIndex: 100,
                         }
                       : {
                           x: offset * 15,
                           y: Math.abs(offset) * 6,
-                          z: -150 * Math.abs(offset),
+                          z: -80 * Math.abs(offset),
                           rotateZ: rotations[index % 4],
-                          scale: 0.85 - Math.abs(offset) * 0.04,
+                          scale: 0.92 - Math.abs(offset) * 0.04,
                           opacity: 0.55,
                           zIndex: 10 - Math.abs(offset),
                         }

@@ -6,7 +6,6 @@ import RevealLoader from "@/components/ui/reveal-loader";
 import Header from "@/components/Header";
 import Image from "next/image";
 import { ParallaxBackground } from "@/components/ui/parallax-background";
-import ScrollProgress from "@/components/ui/scroll-progress";
 import ScrollToTop from "@/components/ui/scroll-to-top";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
@@ -454,7 +453,6 @@ export default function Home() {
         textColor="#e9e9e9"
         movementDirection="top-down"
       />
-      <ScrollProgress />
       <ScrollToTop />
       <Header activeSection={activeSection} />
 
@@ -1039,66 +1037,73 @@ export default function Home() {
                       title: "Pasumarthi Sudha Rani — Director",
                       description: "Leading Vagdevi Vidya Mandir has been a journey of passion and purpose. Our commitment to nurturing academic brilliance and moral values continues to shape generations of confident, well-rounded individuals.",
                       image: "/testmonials/Pasumarthi%20Sudha%20Rani.png",
-                      experience: "23 Yrs",
+                      experience: "24 Yrs",
                     },
                     {
                       id: 2,
                       title: "Vijjapu Devi — English Teacher",
                       description: "Teaching at Vagdevi Vidya Mandir has been profoundly rewarding. The supportive environment and focus on holistic development allow us to nurture not just academic excellence but also strong character in our students.",
                       image: "/testmonials/VIJJAPU%20%20DEVI.png",
-                      experience: "21 Yrs",
+                      experience: "22 Yrs",
                     },
                     {
                       id: 3,
-                      title: "Radha Rani Agarwal — Hindi Teacher",
-                      description: "VVM celebrates cultural heritage alongside modern education. Our dedicated approach to Hindi language teaching helps students connect with their roots while building strong communication skills for the future.",
-                      image: "/testmonials/RADHA%20RANI%20AGARWAL.png",
-                      experience: "21 Yrs",
+                      title: "Gampala Bhaskara Rao — Primary Telugu Teacher",
+                      description: "Teaching Telugu at the primary level at VVM has been a deeply fulfilling experience. Instilling a love for the mother tongue in young learners and watching them grow confident in their language skills brings immense joy and purpose to my work.",
+                      image: "/testmonials/GAMPALA%20BHASKARA%20RAO.png",
+                      experience: "16 Yrs",
                     },
                     {
                       id: 4,
-                      title: "Kandukuri Satya Veni — Science Teacher",
-                      description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
-                      image: "/testmonials/KANDUKURI%20SATYA%20VENI.png",
-                      experience: "20 Yrs",
+                      title: "Radha Rani Agarwal — Hindi Teacher",
+                      description: "VVM celebrates cultural heritage alongside modern education. Our dedicated approach to Hindi language teaching helps students connect with their roots while building strong communication skills for the future.",
+                      image: "/testmonials/RADHA%20RANI%20AGARWAL.png",
+                      experience: "22 Yrs",
                     },
                     {
                       id: 5,
-                      title: "Kotinadham Vasundhara Devi — Higher Maths Teacher",
-                      description: "The progressive curriculum and collaborative environment at VVM empower us as educators. Every day, I see students developing into responsible, compassionate young citizens of tomorrow.",
-                      image: "/testmonials/KOTINADHAM%20VASUNDHARA%20DEVI.png",
-                      experience: "18 Yrs",
+                      title: "Kandukuri Satya Veni — Science Teacher",
+                      description: "The state-of-the-art laboratories and innovative teaching methods here enable us to provide hands-on learning experiences. Watching students discover their passion for science is the most fulfilling aspect of my career.",
+                      image: "/testmonials/KANDUKURI%20SATYA%20VENI.png",
+                      experience: "21 Yrs",
                     },
                     {
                       id: 6,
-                      title: "Dalli Sharmila — Mother Teacher",
-                      description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
-                      image: "/testmonials/DALLI%20SHARMILA.png",
-                      experience: "13 Yrs",
+                      title: "Kotinadham Vasundhara Devi — Higher Maths Teacher",
+                      description: "The progressive curriculum and collaborative environment at VVM empower us as educators. Every day, I see students developing into responsible, compassionate young citizens of tomorrow.",
+                      image: "/testmonials/KOTINADHAM%20VASUNDHARA%20DEVI.png",
+                      experience: "19 Yrs",
                     },
                     {
                       id: 7,
-                      title: "Addepalli Krishna Kumari — Pre-Primary Teacher",
-                      description: "Nurturing young minds at VVM is a privilege. Our thoughtful early education approach ensures children develop a strong foundation of curiosity, confidence, and lifelong love for learning.",
-                      image: "/testmonials/ADDEPALLI%20%20%20%20KRISHNA%20%20%20%20KUMARI.png",
-                      experience: "11 Yrs",
+                      title: "Dalli Sharmila — Mother Teacher",
+                      description: "What sets VVM apart is the emphasis on creative expression and critical thinking. Our students don't just learn; they explore, question, and grow into confident communicators and leaders.",
+                      image: "/testmonials/DALLI%20SHARMILA.png",
+                      experience: "14 Yrs",
                     },
                     {
                       id: 8,
-                      title: "Munagapati Ambica — Higher English Teacher",
-                      description: "Being part of the Vagdevi family has been an enriching experience. The school's commitment to nurturing both academic brilliance and moral values makes it a truly exceptional institution to teach at.",
-                      image: "/testmonials/MUNAGAPATI%20%20%20AMBICA.png",
-                      experience: "10 Yrs",
+                      title: "Addepalli Krishna Kumari — Pre-Primary Teacher",
+                      description: "Nurturing young minds at VVM is a privilege. Our thoughtful early education approach ensures children develop a strong foundation of curiosity, confidence, and lifelong love for learning.",
+                      image: "/testmonials/ADDEPALLI%20%20%20%20KRISHNA%20%20%20%20KUMARI.png",
+                      experience: "12 Yrs",
                     },
                     {
                       id: 9,
-                      title: "Gampala Vijayasree — Telugu Teacher",
-                      description: "VVM celebrates creativity and artistic expression. Our dedicated approach to Telugu language and literature inspires students to embrace their cultural heritage while building strong communication skills.",
-                      image: "/testmonials/GAMPALA%20VIJAYASREE.png",
-                      experience: "9 Yrs",
+                      title: "Munagapati Ambica — Higher English Teacher",
+                      description: "Being part of the Vagdevi family has been an enriching experience. The school's commitment to nurturing both academic brilliance and moral values makes it a truly exceptional institution to teach at.",
+                      image: "/testmonials/MUNAGAPATI%20%20%20AMBICA.png",
+                      experience: "11 Yrs",
                     },
                     {
                       id: 10,
+                      title: "Gampala Vijayasree — Telugu Teacher",
+                      description: "VVM celebrates creativity and artistic expression. Our dedicated approach to Telugu language and literature inspires students to embrace their cultural heritage while building strong communication skills.",
+                      image: "/testmonials/GAMPALA%20VIJAYASREE.png",
+                      experience: "10 Yrs",
+                    },
+                    {
+                      id: 11,
                       title: "Yoga Sir — Physical Education & Yoga",
                       description: "The expansive sports facilities and strong emphasis on physical and mental fitness create an ideal environment. Yoga and sports teach discipline, mindfulness, and resilience—values that last a lifetime.",
                       image: "/testmonials/yoga.png",
