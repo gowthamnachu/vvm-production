@@ -289,8 +289,24 @@ export default function Home() {
   };
   const isHeroInView = useInView(heroSectionRef, { amount: 0.3 });
 
+  // Scroll to section on initial load if URL has a slug (e.g. /foreword, /gallery)
+  useEffect(() => {
+    const sections = ["home", "foreword", "features", "admissions", "testimonials", "gallery", "about", "contact"];
+    const path = window.location.pathname.replace(/^\//, "");
+    if (path && sections.includes(path)) {
+      // Small delay to let the page render first
+      setTimeout(() => {
+        const el = document.getElementById(path);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    }
+  }, []);
+
   useEffect(() => {
     let ticking = false;
+    let lastSlug = "";
 
     const handleScroll = () => {
       if (!ticking) {
@@ -306,6 +322,13 @@ export default function Home() {
 
               if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
                 setActiveSection(section);
+
+                // Update URL slug without page reload
+                const newSlug = section === "home" ? "/" : `/${section}`;
+                if (lastSlug !== newSlug) {
+                  lastSlug = newSlug;
+                  window.history.replaceState(null, "", newSlug);
+                }
                 break;
               }
             }
@@ -461,8 +484,11 @@ export default function Home() {
       <section
         ref={heroSectionRef}
         id="home"
+        aria-label="Welcome to Vagdevi Vidya Mandir — Best School in Visakhapatnam"
         className="relative min-h-screen w-full bg-slate-950 overflow-hidden"
       >
+        {/* SEO: Hidden keyword-rich heading for crawlers */}
+        <h1 className="sr-only">Vagdevi Vidya Mandir — Best School in Visakhapatnam with Skating, Karate, Boxing, Dance &amp; Sports | AP Govt Recognized School in Anandapuram, Vizag Since 2002</h1>
         {/* Video Background */}
         {/* Video Background with Parallax */}
         <ParallaxBackground className="z-0" speed={0.2}>
@@ -473,6 +499,7 @@ export default function Home() {
             playsInline
             preload="auto"
             poster="/videos/hero-poster.jpg"
+            title="Vagdevi Vidya Mandir campus and activities video — Best school in Visakhapatnam"
             className="absolute inset-0 w-full h-full object-cover"
           >
             <source src="/videos/hero.webm" type="video/webm" />
@@ -573,7 +600,8 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
                 <a
-                  href="#admissions"
+                  href="/admissions"
+                  onClick={(e) => { e.preventDefault(); document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' }); }}
                   className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-full hover:shadow-[0_0_40px_rgba(233,233,233,0.25)] active:scale-95 transition-all text-sm border border-[#e9e9e9]/20"
                 >
                   Apply Now
@@ -582,7 +610,8 @@ export default function Home() {
                   </svg>
                 </a>
                 <a
-                  href="#foreword"
+                  href="/foreword"
+                  onClick={(e) => { e.preventDefault(); document.getElementById('foreword')?.scrollIntoView({ behavior: 'smooth' }); }}
                   className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 border border-amber-200/20 text-amber-50 font-medium rounded-full hover:bg-amber-100/10 hover:border-amber-200/40 active:scale-95 transition-all text-sm backdrop-blur-sm"
                 >
                   Explore Our Legacy
@@ -635,7 +664,7 @@ export default function Home() {
       </section>
 
       {/* Foreword Section */}
-      <section id="foreword" className="relative w-full bg-[#f8fafc] pt-10 sm:pt-14 lg:pt-16 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
+      <section id="foreword" aria-label="Foreword — Message from Correspondent Ramineni Radha Krishna" className="relative w-full bg-[#f8fafc] pt-10 sm:pt-14 lg:pt-16 pb-16 sm:pb-20 lg:pb-32 overflow-hidden">
         {/* Green grid pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
@@ -704,7 +733,7 @@ export default function Home() {
                       <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-slate-200/60 bg-white card-lift">
                         <img
                           src="/aboutus.png"
-                          alt="Ramineni Radha Krishna - Correspondent"
+                          alt="Ramineni Radha Krishna - Correspondent of Vagdevi Vidya Mandir School Visakhapatnam"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
@@ -785,8 +814,20 @@ export default function Home() {
                   </h3>
                 </div>
 
+                {/* SEO-friendly hidden content for Why Choose Us */}
+                <div className="sr-only">
+                  <h4>Why Choose Vagdevi Vidya Mandir — Key Differentiators</h4>
+                  <ul>
+                    <li><strong>25+ Years Legacy</strong> — Over two decades of trust, excellence, and proven results in holistic education since 2002. Vagdevi Vidya Mandir has shaped 5000+ alumni with strong academic foundations and moral values.</li>
+                    <li><strong>SSC Curriculum</strong> — Recognized by AP Government with a structured, state-board academic framework from Pre-Primary to Class 10. Quality education with experienced faculty of up to 24 years in teaching.</li>
+                    <li><strong>Green Campus</strong> — Lush green environment surrounded by nature with expansive playgrounds for physical and mental well-being. Located in Gambheeram village, Anandapuram, away from city pollution.</li>
+                    <li><strong>Holistic Growth</strong> — Equal focus on academics, sports, arts, and character building for well-rounded development. Facilities include skating, karate, boxing, dance, yoga, smart classrooms, science labs, and more.</li>
+                  </ul>
+                  <p>Vagdevi Vidya Mandir stands apart as the best school in Visakhapatnam by combining world-class extracurricular facilities with rigorous academics. Our green campus in Anandapuram provides a safe, nurturing environment where children develop confidence, discipline, and a love for learning. Choose VVM for a transformative educational experience in Vizag.</p>
+                </div>
+
                 <div className="flex justify-center">
-                  <img src="/whychooseus.gif" alt="Why Choose Vagdevi Vidya Mandir" className="w-full max-w-4xl" />
+                  <img src="/whychooseus.gif" alt="Why Choose Vagdevi Vidya Mandir — 25+ years legacy, SSC curriculum, green campus, and holistic growth for students in Visakhapatnam" className="w-full max-w-4xl" />
                 </div>
               </motion.div>
             </div>
@@ -794,8 +835,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="relative w-full bg-[#3e4e3b] py-20 sm:py-24 lg:py-36 overflow-hidden">
+      {/* Features / Facilities Section */}
+      <section id="features" aria-label="School Facilities — Skating, Karate, Boxing, Dance, Sports, Smart Classrooms, Labs" className="relative w-full bg-[#3e4e3b] py-20 sm:py-24 lg:py-36 overflow-hidden">
+        {/* SEO: Hidden text for facility indexing */}
+        <div className="sr-only">
+          <h2>World-Class Facilities at Vagdevi Vidya Mandir, Visakhapatnam</h2>
+          <p>Our school offers skating rink and roller skating training, karate and boxing martial arts training, classical and contemporary dance programs, expansive sports grounds for cricket, athletics and outdoor games, science laboratories, computer labs, smart classrooms with digital learning, library, yoga and meditation hall, green campus with large playgrounds, and school transport service covering Visakhapatnam, Anandapuram, Gambheeram, and surrounding areas.</p>
+          <ul>
+            <li>School with skating facility in Visakhapatnam</li>
+            <li>School with karate training in Vizag</li>
+            <li>School with boxing training near Anandapuram</li>
+            <li>School with dance classes in Visakhapatnam</li>
+            <li>School with sports ground and playground</li>
+            <li>School with smart classrooms and science labs</li>
+            <li>School with yoga and meditation in Vizag</li>
+            <li>Green campus school in Visakhapatnam</li>
+            <li>Best school with extracurricular activities Vizag</li>
+            <li>School with transport facility Anandapuram</li>
+          </ul>
+        </div>
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-[0.04]">
           <div className="absolute inset-0" style={{
@@ -870,7 +928,7 @@ export default function Home() {
       </section>
 
       {/* Admissions Section */}
-      <section id="admissions" className="relative w-full bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
+      <section id="admissions" aria-label="Admissions Open 2026-27 — Vagdevi Vidya Mandir Visakhapatnam" className="relative w-full bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3e4e3b]/3 rounded-full blur-3xl animate-morph" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3e4e3b]/5 rounded-full blur-3xl animate-morph" style={{ animationDelay: '-4s' }} />
@@ -935,7 +993,7 @@ export default function Home() {
                   <div className="relative aspect-[2/3]">
                     <Image
                       src="/children.png"
-                      alt="Students at Vagdevi Vidya Mandir"
+                      alt="Happy students at Vagdevi Vidya Mandir school Visakhapatnam - Admissions Open"
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                       sizes="(min-width: 1024px) 400px, (min-width: 768px) 380px, 100vw"
@@ -953,7 +1011,8 @@ export default function Home() {
                       </p>
 
                       <a
-                        href="#contact"
+                        href="/contact"
+                        onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
                         className="inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 bg-gradient-to-r from-amber-50 to-[#e9e9e9] text-[#3e4e3b] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(233,233,233,0.2)] active:scale-[0.97] transition-all text-sm group/btn border border-[#e9e9e9]/20"
                       >
                         Start Application
@@ -985,7 +1044,12 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative w-full py-24 sm:py-28 lg:py-36 overflow-hidden">
+      <section id="testimonials" aria-label="Teacher, Parent and Alumni Testimonials — What They Say About VVM" className="relative w-full py-24 sm:py-28 lg:py-36 overflow-hidden">
+        {/* SEO: Hidden text for teacher testimonials indexing */}
+        <div className="sr-only">
+          <h2>Teacher Testimonials at Vagdevi Vidya Mandir</h2>
+          <p>Hear from our dedicated educators at Vagdevi Vidya Mandir, Visakhapatnam with up to 24 years of teaching experience. Our experienced faculty includes Director, English teachers, Telugu teachers, Hindi teachers, Science teachers, Mathematics teachers, Pre-Primary teachers, Physical Education and Yoga instructors. Parents and alumni praise the holistic education, discipline, moral values, and academic excellence at VVM school.</p>
+        </div>
         {/* Background Image with Parallax */}
         <ParallaxBackground
           image="/testmonials_background.JPG"
@@ -1194,7 +1258,12 @@ export default function Home() {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="relative w-full bg-gradient-to-br from-slate-50 via-white to-[#3e4e3b]/5 py-20 sm:py-24 lg:py-36 overflow-hidden">
+      <section id="gallery" aria-label="Photo Gallery — Dance, Karate, Boxing, Skating, Sports Activities at VVM" className="relative w-full bg-gradient-to-br from-slate-50 via-white to-[#3e4e3b]/5 py-20 sm:py-24 lg:py-36 overflow-hidden">
+        {/* SEO: Hidden text for gallery indexing */}
+        <div className="sr-only">
+          <h2>Campus Life Photo Gallery — Vagdevi Vidya Mandir Visakhapatnam</h2>
+          <p>Browse photos of dance performances, karate and boxing training sessions, roller skating, outdoor sports, athletics, and campus activities at Vagdevi Vidya Mandir school near Anandapuram, Visakhapatnam. Our students excel in extracurricular activities including martial arts, skating, dance, and sports.</p>
+        </div>
         {/* Green grid pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
@@ -1243,62 +1312,62 @@ export default function Home() {
                       label: "Dance",
                       value: "dance",
                       images: [
-                        { imageLink: "/gallery/dance/MSP02529.JPG" },
-                        { imageLink: "/gallery/dance/MSP02534.JPG" },
-                        { imageLink: "/gallery/dance/MSP02537.JPG" },
-                        { imageLink: "/gallery/dance/MSP02542.JPG" },
-                        { imageLink: "/gallery/dance/MSP02564.JPG" },
-                        { imageLink: "/gallery/dance/MSP02826.JPG" },
-                        { imageLink: "/gallery/dance/MSP02836.JPG" },
-                        { imageLink: "/gallery/dance/MSP02842.JPG" },
+                        { imageLink: "/gallery/dance/MSP02529.JPG", altText: "Dance performance by students at Vagdevi Vidya Mandir Visakhapatnam" },
+                        { imageLink: "/gallery/dance/MSP02534.JPG", altText: "Classical dance training at VVM school Vizag" },
+                        { imageLink: "/gallery/dance/MSP02537.JPG", altText: "Students performing dance at Vagdevi Vidya Mandir annual day" },
+                        { imageLink: "/gallery/dance/MSP02542.JPG", altText: "Dance program at VVM school Anandapuram" },
+                        { imageLink: "/gallery/dance/MSP02564.JPG", altText: "Cultural dance performance Vagdevi Vidya Mandir" },
+                        { imageLink: "/gallery/dance/MSP02826.JPG", altText: "Group dance performance at VVM Visakhapatnam" },
+                        { imageLink: "/gallery/dance/MSP02836.JPG", altText: "Dance class at Vagdevi Vidya Mandir school" },
+                        { imageLink: "/gallery/dance/MSP02842.JPG", altText: "Dance activity at VVM school campus" },
                       ],
                     },
                     {
                       label: "Karate & Boxing",
                       value: "karate",
                       images: [
-                        { imageLink: "/gallery/karate&Boxing/MSP02277.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02287.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02300.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02303.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02312.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02324.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02354.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02359.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02363.JPG" },
-                        { imageLink: "/gallery/karate&Boxing/MSP02366.JPG" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02277.JPG", altText: "Karate training at Vagdevi Vidya Mandir school Visakhapatnam" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02287.JPG", altText: "Boxing practice at VVM school Vizag" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02300.JPG", altText: "Martial arts training at Vagdevi Vidya Mandir" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02303.JPG", altText: "Karate class for students at VVM Anandapuram" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02312.JPG", altText: "Self-defense training at Vagdevi school" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02324.JPG", altText: "Boxing training at VVM school campus" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02354.JPG", altText: "Karate demonstration at Vagdevi Vidya Mandir" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02359.JPG", altText: "Martial arts program at VVM Visakhapatnam" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02363.JPG", altText: "Students practicing karate at VVM school" },
+                        { imageLink: "/gallery/karate&Boxing/MSP02366.JPG", altText: "Karate and boxing facility at Vagdevi school Vizag" },
                       ],
                     },
                     {
                       label: "Skating",
                       value: "skating",
                       images: [
-                        { imageLink: "/gallery/skating/MSP02452.JPG" },
-                        { imageLink: "/gallery/skating/MSP02461.JPG" },
-                        { imageLink: "/gallery/skating/MSP02479.JPG" },
-                        { imageLink: "/gallery/skating/MSP02510.JPG" },
-                        { imageLink: "/gallery/skating/MSP02515.JPG" },
-                        { imageLink: "/gallery/skating/MSP02522.JPG" },
-                        { imageLink: "/gallery/skating/MSP02796.JPG" },
-                        { imageLink: "/gallery/skating/MSP02801.JPG" },
-                        { imageLink: "/gallery/skating/MSP02804.JPG" },
-                        { imageLink: "/gallery/skating/MSP02805.JPG" },
-                        { imageLink: "/gallery/skating/MSP02823.JPG" },
+                        { imageLink: "/gallery/skating/MSP02452.JPG", altText: "Roller skating at Vagdevi Vidya Mandir school Visakhapatnam" },
+                        { imageLink: "/gallery/skating/MSP02461.JPG", altText: "Skating training for students at VVM Vizag" },
+                        { imageLink: "/gallery/skating/MSP02479.JPG", altText: "Students learning skating at Vagdevi school" },
+                        { imageLink: "/gallery/skating/MSP02510.JPG", altText: "Skating facility at VVM school Anandapuram" },
+                        { imageLink: "/gallery/skating/MSP02515.JPG", altText: "Skating class at Vagdevi Vidya Mandir" },
+                        { imageLink: "/gallery/skating/MSP02522.JPG", altText: "School with skating facility in Visakhapatnam" },
+                        { imageLink: "/gallery/skating/MSP02796.JPG", altText: "Skating rink at VVM school campus" },
+                        { imageLink: "/gallery/skating/MSP02801.JPG", altText: "Students skating at VVM school Vizag" },
+                        { imageLink: "/gallery/skating/MSP02804.JPG", altText: "Skating activity at Vagdevi Vidya Mandir" },
+                        { imageLink: "/gallery/skating/MSP02805.JPG", altText: "Roller skating training at VVM" },
+                        { imageLink: "/gallery/skating/MSP02823.JPG", altText: "Skating program at Vagdevi school Visakhapatnam" },
                       ],
                     },
                     {
                       label: "Sports",
                       value: "sports",
                       images: [
-                        { imageLink: "/gallery/sports/MSP02383.JPG" },
-                        { imageLink: "/gallery/sports/MSP02384.JPG" },
-                        { imageLink: "/gallery/sports/MSP02409.JPG" },
-                        { imageLink: "/gallery/sports/MSP02417.JPG" },
-                        { imageLink: "/gallery/sports/MSP02884.JPG" },
-                        { imageLink: "/gallery/sports/MSP02906.JPG" },
-                        { imageLink: "/gallery/sports/MSP02927.JPG" },
-                        { imageLink: "/gallery/sports/MSP03067.JPG" },
-                        { imageLink: "/gallery/sports/MSP03072.JPG" },
+                        { imageLink: "/gallery/sports/MSP02383.JPG", altText: "Sports activities at Vagdevi Vidya Mandir Visakhapatnam" },
+                        { imageLink: "/gallery/sports/MSP02384.JPG", altText: "Athletics at VVM school campus" },
+                        { imageLink: "/gallery/sports/MSP02409.JPG", altText: "Outdoor sports at Vagdevi school Vizag" },
+                        { imageLink: "/gallery/sports/MSP02417.JPG", altText: "Sports ground at VVM Anandapuram" },
+                        { imageLink: "/gallery/sports/MSP02884.JPG", altText: "Students playing sports at Vagdevi Vidya Mandir" },
+                        { imageLink: "/gallery/sports/MSP02906.JPG", altText: "Sports day at VVM school Visakhapatnam" },
+                        { imageLink: "/gallery/sports/MSP02927.JPG", altText: "Physical education at Vagdevi school" },
+                        { imageLink: "/gallery/sports/MSP03067.JPG", altText: "Sports facility at VVM school" },
+                        { imageLink: "/gallery/sports/MSP03072.JPG", altText: "Playground activities at Vagdevi Vidya Mandir" },
                       ],
                     },
                   ]}
@@ -1310,7 +1379,7 @@ export default function Home() {
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="relative w-full py-20 sm:py-28 lg:py-36 overflow-hidden">
+      <section id="about" aria-label="About Vagdevi Vidya Mandir — 25 Years of Excellence in Education, Visakhapatnam" className="relative w-full py-20 sm:py-28 lg:py-36 overflow-hidden">
         {/* Background Image with Parallax */}
         <ParallaxBackground
           image="/aboutusbackground.JPG"
@@ -1452,8 +1521,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      {/* Contact Section */}
-      <section id="contact" className="relative w-full bg-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
+      <section id="contact" aria-label="Contact Vagdevi Vidya Mandir — Phone, Email, WhatsApp, Campus Visit" className="relative w-full bg-[#f8fafc] py-20 sm:py-24 lg:py-36 overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0">
           <img src="/gallery/treecontact.png" alt="" className="w-full h-full object-cover" />
@@ -1765,7 +1833,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full relative overflow-hidden">
+      <footer className="w-full relative overflow-hidden" role="contentinfo" aria-label="Vagdevi Vidya Mandir — Campus Address, Quick Links & Contact Information">
         <ParallaxBackground
           image="/footerimage.JPG"
           imageAlt="Footer background"
@@ -1821,7 +1889,7 @@ export default function Home() {
               <h4 className="text-xs font-bold tracking-[0.15em] uppercase text-[#e9e9e9]/50 mb-2">Quick Links</h4>
               <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
                 {["Home", "About", "Admissions", "Gallery", "Contact"].map((link, i) => (
-                  <a key={i} href={`#${link.toLowerCase()}`} className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] transition-colors text-underline-animated">
+                  <a key={i} href={`/${link.toLowerCase()}`} onClick={(e) => { e.preventDefault(); document.getElementById(link.toLowerCase())?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm text-[#e9e9e9]/40 hover:text-[#e9e9e9] transition-colors text-underline-animated">
                     {link}
                   </a>
                 ))}

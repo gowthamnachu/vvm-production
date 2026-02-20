@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   images: {
     remotePatterns: [
@@ -10,6 +9,21 @@ const nextConfig: NextConfig = {
         hostname: 'picsum.photos',
       },
     ],
+  },
+  // Rewrite clean section URLs to the single-page app
+  // So /home, /foreword, /features, etc. all serve the same page
+  async rewrites() {
+    return [
+      { source: "/home", destination: "/" },
+      { source: "/foreword", destination: "/" },
+      { source: "/features", destination: "/" },
+      { source: "/facilities", destination: "/" },
+      { source: "/admissions", destination: "/" },
+      { source: "/testimonials", destination: "/" },
+      { source: "/gallery", destination: "/" },
+      { source: "/about", destination: "/" },
+      { source: "/contact", destination: "/" },
+    ];
   },
 };
 

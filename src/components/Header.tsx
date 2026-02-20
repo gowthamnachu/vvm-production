@@ -36,14 +36,14 @@ const epilogue = localFont({
 });
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "Foreword", href: "#foreword" },
-  { label: "Facilities", href: "#features" },
-  { label: "Admissions", href: "#admissions" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "About Us", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/home", sectionId: "home" },
+  { label: "Foreword", href: "/foreword", sectionId: "foreword" },
+  { label: "Facilities", href: "/features", sectionId: "features" },
+  { label: "Admissions", href: "/admissions", sectionId: "admissions" },
+  { label: "Testimonials", href: "/testimonials", sectionId: "testimonials" },
+  { label: "Gallery", href: "/gallery", sectionId: "gallery" },
+  { label: "About Us", href: "/about", sectionId: "about" },
+  { label: "Contact", href: "/contact", sectionId: "contact" },
 ];
 
 interface HeaderProps {
@@ -81,6 +81,14 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleNavClick = (e: React.MouseEvent, sectionId: string) => {
+    e.preventDefault();
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const drawer = (
     <Box
       sx={{
@@ -107,7 +115,10 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
             <ListItemButton
               component="a"
               href={item.href}
-              onClick={handleDrawerToggle}
+              onClick={(e: React.MouseEvent) => {
+                handleNavClick(e, item.sectionId);
+                handleDrawerToggle();
+              }}
               sx={{
                 py: 2,
                 "&:hover": {
@@ -193,6 +204,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
                 <Button
                   key={item.label}
                   href={item.href}
+                  onClick={(e: React.MouseEvent) => handleNavClick(e, item.sectionId)}
                   sx={{
                     color: textColor,
                     fontWeight: 500,

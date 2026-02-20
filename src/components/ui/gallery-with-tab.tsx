@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 interface GalleryImage {
   imageLink: string;
   alt?: string;
+  altText?: string;
 }
 
 interface GalleryTab {
@@ -67,7 +68,7 @@ export function GalleryWithTab({ data, className }: GalleryWithTabProps) {
           transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="columns-2 md:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4"
         >
-          {activeData?.images.map(({ imageLink, alt }, index) => (
+          {activeData?.images.map(({ imageLink, alt, altText }, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -84,7 +85,7 @@ export function GalleryWithTab({ data, className }: GalleryWithTabProps) {
               <motion.img
                 className="w-full object-cover object-center"
                 src={imageLink}
-                alt={alt || `Gallery image ${index + 1}`}
+                alt={altText || alt || `Gallery image ${index + 1}`}
                 loading="lazy"
                 animate={{
                   scale: hoveredIndex === index ? 1.08 : 1,
