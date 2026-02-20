@@ -852,12 +852,13 @@ export default function Home() {
                     transition={{ type: "spring", stiffness: 200 }}
                   >
                       <Image
-                        src="/facilities/god_image.png"
+                        src="/facilities/god.gif"
                         alt="Divine blessings"
                         width={400}
                         height={500}
                         className="w-full h-auto object-contain drop-shadow-2xl"
                         priority={false}
+                        unoptimized
                       />
                   </motion.div>
                 </div>
