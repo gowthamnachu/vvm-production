@@ -68,7 +68,7 @@ export function TestimonialsCard({
   return (
     <div ref={containerRef} className={cn("flex items-center justify-center p-4 sm:p-8", className)}>
       <div
-        className="relative grid grid-cols-1 sm:grid-cols-[1fr_1.2fr] grid-rows-[auto] sm:grid-rows-[auto_auto_auto] gap-x-10 gap-y-6 sm:gap-y-2 w-full"
+        className="relative grid grid-cols-1 sm:grid-cols-[1fr_1.2fr] grid-rows-[auto] sm:grid-rows-[auto_auto_auto] gap-x-24 gap-y-6 sm:gap-y-2 w-full"
         style={{ perspective: "1400px", maxWidth: `${width}px` }}
       >
         {/* Counter */}
@@ -192,7 +192,7 @@ export function TestimonialsCard({
 
         {/* Navigation */}
         {showNavigation && items.length > 1 && (
-          <div className="sm:col-start-2 sm:row-start-3 flex items-center gap-3 mt-2 sm:mt-4">
+          <div className="sm:col-start-2 sm:row-start-3 flex items-center gap-3 mt-6 sm:mt-10">
             <button
               disabled={activeIndex === 0}
               onClick={handlePrev}
