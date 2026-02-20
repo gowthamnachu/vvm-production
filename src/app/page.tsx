@@ -11,6 +11,7 @@ import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 // Lazy load heavy components
 const TestimonialsCard = lazy(() => import("@/components/ui/testimonials-card").then(mod => ({ default: mod.TestimonialsCard })));
+const ScrollingTestimonials = lazy(() => import("@/components/ui/scrolling-testimonials").then(mod => ({ default: mod.ScrollingTestimonials })));
 const GalleryWithTab = lazy(() => import("@/components/ui/gallery-with-tab").then(mod => ({ default: mod.GalleryWithTab })));
 const FacilitiesCarousel = lazy(() => import("@/components/FacilitiesCarousel"));
 
@@ -1116,6 +1117,78 @@ export default function Home() {
               </Suspense>
             </div>
           </AnimatedSection>
+
+          {/* Parent & Alumni Scrolling Testimonials */}
+          <div className="mt-20 sm:mt-28">
+            <Suspense fallback={null}>
+              <ScrollingTestimonials
+                parentTestimonials={[
+                  {
+                    name: "Srinivas Reddy",
+                    role: "Parent — Class X",
+                    message: "VVM has been instrumental in shaping my child's academic journey. The teachers go above and beyond to ensure every student reaches their potential.",
+                  },
+                  {
+                    name: "Lakshmi Devi",
+                    role: "Parent — Class VII",
+                    message: "The holistic approach to education at VVM is remarkable. My daughter has grown not just academically but also in confidence and character.",
+                  },
+                  {
+                    name: "Ramesh Kumar",
+                    role: "Parent — Class V",
+                    message: "What impresses me most is the individual attention each child receives. The school truly cares about nurturing every student's unique talents.",
+                  },
+                  {
+                    name: "Padma Kumari",
+                    role: "Parent — Class VIII",
+                    message: "The discipline, values, and quality education at VVM have made a lasting impact on my son. We are grateful for the wonderful learning environment.",
+                  },
+                  {
+                    name: "Venkat Rao",
+                    role: "Parent — Class III",
+                    message: "From day one, VVM has felt like a second home for our child. The warmth of the teachers and the structured curriculum are truly commendable.",
+                  },
+                  {
+                    name: "Anitha Sharma",
+                    role: "Parent — Class IX",
+                    message: "VVM's focus on both academics and extracurriculars has helped my child become a well-rounded individual. The school events and competitions are fantastic.",
+                  },
+                ]}
+                alumniTestimonials={[
+                  {
+                    name: "Priya Reddy",
+                    role: "Alumni — Batch 2018",
+                    message: "The foundation VVM gave me was invaluable. The discipline and values I learned here continue to guide me in my engineering career.",
+                  },
+                  {
+                    name: "Karthik Naidu",
+                    role: "Alumni — Batch 2015",
+                    message: "VVM shaped who I am today. The teachers believed in us and pushed us to achieve more than we thought possible. Forever grateful.",
+                  },
+                  {
+                    name: "Sneha Rao",
+                    role: "Alumni — Batch 2020",
+                    message: "The memories and friendships I made at VVM are priceless. The school prepared me exceptionally well for competitive exams and beyond.",
+                  },
+                  {
+                    name: "Arun Kumar",
+                    role: "Alumni — Batch 2016",
+                    message: "VVM was more than a school—it was a family. The moral values and academic excellence instilled in us set a strong foundation for life.",
+                  },
+                  {
+                    name: "Divya Sri",
+                    role: "Alumni — Batch 2019",
+                    message: "I credit my success in medicine to the rigorous preparation and loving guidance I received at VVM. The science labs were outstanding.",
+                  },
+                  {
+                    name: "Rahul Varma",
+                    role: "Alumni — Batch 2017",
+                    message: "Every teacher at VVM left a lasting impression. Their dedication to our growth—both personal and academic—is something I carry with me always.",
+                  },
+                ]}
+              />
+            </Suspense>
+          </div>
         </div>
       </section>
 
