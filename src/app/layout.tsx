@@ -116,21 +116,14 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: BASE_URL,
     siteName: "Vagdevi Vidya Mandir",
-    title: "Vagdevi Vidya Mandir | Best School in Visakhapatnam — Skating, Karate, Dance & Sports",
+    title: "Vagdevi Vidya Mandir — Best School in Visakhapatnam",
     description:
-      "AP Govt recognized school in Visakhapatnam with 25+ years of excellence. World-class facilities: skating, karate, boxing, dance, sports, yoga, smart classrooms. Admissions open for Pre-Primary to Class 10.",
+      "AP Govt recognized school in Visakhapatnam with skating, karate, boxing, dance, sports, yoga, smart classrooms & green campus. 25+ years of excellence.",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Vagdevi Vidya Mandir — A Place Where Knowledge Meets Excellence",
-        type: "image/jpeg",
-      },
-      {
         url: "/vvvm_logo.jpg",
-        width: 500,
-        height: 500,
+        width: 1200,
+        height: 1200,
         alt: "Vagdevi Vidya Mandir Logo",
       },
     ],
@@ -138,10 +131,10 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Vagdevi Vidya Mandir | Best School in Visakhapatnam",
+    title: "Vagdevi Vidya Mandir — Visakhapatnam",
     description:
-      "AP Govt recognized school with skating, karate, boxing, dance, sports & green campus. 25+ years of excellence. Admissions open!",
-    images: ["/og-image.jpg"],
+      "AP Govt recognized school with skating, karate, boxing, dance, sports & green campus. 25+ years of excellence.",
+    images: ["/vvvm_logo.jpg"],
     creator: "@vagdevividya",
   },
 

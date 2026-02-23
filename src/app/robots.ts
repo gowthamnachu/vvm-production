@@ -15,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "Googlebot-Image",
-        allow: ["/gallery/", "/scrolling/", "/testmonials/", "/facilities/"],
+        allow: ["/gallery/", "/scrolling/", "/testimonials/", "/facilities/"],
       },
       // Block AI scrapers from training on content
       {
