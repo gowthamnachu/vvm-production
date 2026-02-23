@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import { SchoolStructuredData } from "@/components/StructuredData";
 import "./globals.css";
 
-const BASE_URL = "https://vagdevividyamandir.com";
+const BASE_URL = "https://vagdevidyamandir.com";
 
 const inter = Inter({
   variable: "--font-inter",

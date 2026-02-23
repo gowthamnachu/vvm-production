@@ -2,7 +2,7 @@
 // Covers: School, LocalBusiness, FAQPage, Facilities, Testimonials, Breadcrumbs, Events
 
 export function SchoolStructuredData() {
-  const baseUrl = "https://vagdevividyamandir.com";
+  const baseUrl = "https://vagdevidyamandir.com";
 
   // 1. Main School / EducationalOrganization schema
   const schoolSchema = {
