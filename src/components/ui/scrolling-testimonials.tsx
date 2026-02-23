@@ -134,7 +134,7 @@ export function ScrollingTestimonials({
           </span>
           <div className="w-10 h-[1px] bg-gradient-to-l from-transparent to-[#c9a96e]/30" />
         </div>
-        <ScrollingRow items={parentTestimonials} direction="left" speed={28} />
+        <ScrollingRow items={parentTestimonials} direction="left" speed={12} />
       </div>
 
       {/* Alumni Section */}
@@ -146,7 +146,7 @@ export function ScrollingTestimonials({
           </span>
           <div className="w-10 h-[1px] bg-gradient-to-l from-transparent to-[#c9a96e]/30" />
         </div>
-        <ScrollingRow items={alumniTestimonials} direction="right" speed={32} />
+        <ScrollingRow items={alumniTestimonials} direction="right" speed={14} />
       </div>
     </div>
   );

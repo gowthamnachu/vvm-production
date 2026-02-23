@@ -287,7 +287,6 @@ export default function Home() {
       setIsSubmitting(false);
     }
   };
-  const isHeroInView = useInView(heroSectionRef, { amount: 0.3 });
 
   // Scroll to section on initial load if URL has a slug (e.g. /foreword, /gallery)
   useEffect(() => {
@@ -345,19 +344,15 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Play/pause video based on hero section visibility
+  // Ensure video keeps playing (never pause on scroll)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isHeroInView) {
-      video.play().catch(() => {
-        // Ignore play errors (e.g., if autoplay is blocked)
-      });
-    } else {
-      video.pause();
-    }
-  }, [isHeroInView]);
+    video.play().catch(() => {
+      // Ignore play errors (e.g., if autoplay is blocked)
+    });
+  }, []);
 
   return (
     <>
@@ -1174,6 +1169,20 @@ export default function Home() {
                       description: "The expansive sports facilities and strong emphasis on physical and mental fitness create an ideal environment. Yoga and sports teach discipline, mindfulness, and resilience—values that last a lifetime.",
                       image: "/testmonials/yoga.png",
                     },
+                    {
+                      id: 12,
+                      title: "Peethala Asha — Mother Teacher",
+                      description: "Being a Mother Teacher at VVM is both a privilege and a joy. Guiding young children through their formative years with care and patience, I witness their growth every day into bright, confident learners ready for the world.",
+                      image: "/testmonials/Peethala%20Asha.png",
+                      experience: "6 Yrs",
+                    },
+                    {
+                      id: 13,
+                      title: "Kuchipudi Pushpa Madhuri — Pre-Primary Teacher",
+                      description: "Teaching at the pre-primary level at VVM is a heartwarming experience. Every day I nurture curiosity and creativity in our youngest learners, laying the foundation for a lifelong love of learning in a warm and caring environment.",
+                      image: "/testmonials/Kuchipudi%20Pushpa%20Madhuri.png",
+                      experience: "7 Yrs",
+                    },
                   ]}
                   width={700}
                   autoPlay={true}
@@ -1187,68 +1196,13 @@ export default function Home() {
           <div className="mt-20 sm:mt-28">
             <Suspense fallback={null}>
               <ScrollingTestimonials
-                parentTestimonials={[
-                  {
-                    name: "Srinivas Reddy",
-                    role: "Parent — Class X",
-                    message: "VVM has been instrumental in shaping my child's academic journey. The teachers go above and beyond to ensure every student reaches their potential.",
-                  },
-                  {
-                    name: "Lakshmi Devi",
-                    role: "Parent — Class VII",
-                    message: "The holistic approach to education at VVM is remarkable. My daughter has grown not just academically but also in confidence and character.",
-                  },
-                  {
-                    name: "Ramesh Kumar",
-                    role: "Parent — Class V",
-                    message: "What impresses me most is the individual attention each child receives. The school truly cares about nurturing every student's unique talents.",
-                  },
-                  {
-                    name: "Padma Kumari",
-                    role: "Parent — Class VIII",
-                    message: "The discipline, values, and quality education at VVM have made a lasting impact on my son. We are grateful for the wonderful learning environment.",
-                  },
-                  {
-                    name: "Venkat Rao",
-                    role: "Parent — Class III",
-                    message: "From day one, VVM has felt like a second home for our child. The warmth of the teachers and the structured curriculum are truly commendable.",
-                  },
-                  {
-                    name: "Anitha Sharma",
-                    role: "Parent — Class IX",
-                    message: "VVM's focus on both academics and extracurriculars has helped my child become a well-rounded individual. The school events and competitions are fantastic.",
-                  },
-                ]}
+                parentTestimonials={[]}
                 alumniTestimonials={[
                   {
-                    name: "Priya Reddy",
-                    role: "Alumni — Batch 2018",
-                    message: "The foundation VVM gave me was invaluable. The discipline and values I learned here continue to guide me in my engineering career.",
-                  },
-                  {
-                    name: "Karthik Naidu",
-                    role: "Alumni — Batch 2015",
-                    message: "VVM shaped who I am today. The teachers believed in us and pushed us to achieve more than we thought possible. Forever grateful.",
-                  },
-                  {
-                    name: "Sneha Rao",
-                    role: "Alumni — Batch 2020",
-                    message: "The memories and friendships I made at VVM are priceless. The school prepared me exceptionally well for competitive exams and beyond.",
-                  },
-                  {
-                    name: "Arun Kumar",
-                    role: "Alumni — Batch 2016",
-                    message: "VVM was more than a school—it was a family. The moral values and academic excellence instilled in us set a strong foundation for life.",
-                  },
-                  {
-                    name: "Divya Sri",
-                    role: "Alumni — Batch 2019",
-                    message: "I credit my success in medicine to the rigorous preparation and loving guidance I received at VVM. The science labs were outstanding.",
-                  },
-                  {
-                    name: "Rahul Varma",
-                    role: "Alumni — Batch 2017",
-                    message: "Every teacher at VVM left a lasting impression. Their dedication to our growth—both personal and academic—is something I carry with me always.",
+                    name: "Nachu Jashwanth",
+                    role: "Alumni — Batch 2019 | LKG to 10th",
+                    message: "VVM shaped my entire upbringing from LKG to 10th class. The strong foundation I received here paved the way for my career as a ServiceNow Developer at an MNC. Forever grateful to VVM.",
+                    image: "/testmonials/alumni/jashwanth.jpeg",
                   },
                 ]}
               />

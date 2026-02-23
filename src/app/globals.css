@@ -235,10 +235,10 @@ h1, h2, h3, h4, h5, h6 {
   100% { transform: translateX(0); }
 }
 .animate-marquee-left {
-  animation: marquee-left 25s linear infinite;
+  animation: marquee-left 80s linear infinite !important;
 }
 .animate-marquee-right {
-  animation: marquee-right 25s linear infinite;
+  animation: marquee-right 80s linear infinite !important;
 }
 
 /* Scroll indicator dot */
