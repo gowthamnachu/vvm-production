@@ -82,8 +82,8 @@ const easeSmooth: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.7, ease: easeSmooth }
   }
@@ -91,8 +91,8 @@ const fadeInUp = {
 
 const fadeInDown = {
   hidden: { opacity: 0, y: -30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: easeSmooth }
   }
@@ -100,8 +100,8 @@ const fadeInDown = {
 
 const fadeInLeft = {
   hidden: { opacity: 0, x: -50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     transition: { duration: 0.7, ease: easeSmooth }
   }
@@ -109,8 +109,8 @@ const fadeInLeft = {
 
 const fadeInRight = {
   hidden: { opacity: 0, x: 50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     transition: { duration: 0.7, ease: easeSmooth }
   }
@@ -118,8 +118,8 @@ const fadeInRight = {
 
 const scaleIn = {
   hidden: { opacity: 0, scale: 0.85 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     transition: { duration: 0.6, ease: easeSmooth }
   }
@@ -167,7 +167,7 @@ const SectionDivider = memo(function SectionDivider({ variant = "light" }: { var
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-20px" });
   const isDark = variant === "dark";
-  
+
   return (
     <motion.div
       ref={ref}
@@ -259,7 +259,7 @@ export default function Home() {
         body: JSON.stringify({ name, phone, email, subject, message }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
         // Email sent successfully
@@ -272,17 +272,22 @@ export default function Home() {
           message: "",
         });
       } else if (data.fallbackToWhatsApp) {
-        // Fallback to WhatsApp (daily limit reached or service unavailable)
-        showNotification('info', 'Email service temporarily unavailable. Redirecting to WhatsApp...');
-        setTimeout(() => sendViaWhatsApp(contactForm), 1500);
+        // Fallback to WhatsApp with a specific reason if provided
+        const reason = data.error || "Email service unavailable";
+        console.warn("Email failed, falling back to WhatsApp:", reason, data.details);
+
+        showNotification('info', `${reason}. Switching to WhatsApp for a faster response...`);
+        setTimeout(() => sendViaWhatsApp(contactForm), 2000);
       } else {
-        throw new Error("Failed to send message");
+        const errorMsg = data.error || "Failed to send message";
+        throw new Error(errorMsg);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
       // Fallback to WhatsApp on any error
-      showNotification('info', 'Switching to WhatsApp for your convenience...');
-      setTimeout(() => sendViaWhatsApp(contactForm), 1500);
+      const message = error.message || "Something went wrong";
+      showNotification('error', `${message}. We'll try WhatsApp instead.`);
+      setTimeout(() => sendViaWhatsApp(contactForm), 2000);
     } finally {
       setIsSubmitting(false);
     }
@@ -452,16 +457,15 @@ export default function Home() {
                   initial={{ width: '100%' }}
                   animate={{ width: '0%' }}
                   transition={{ duration: 5, ease: 'linear' }}
-                  className={`h-full ${
-                    notification.type === 'error' ? 'bg-red-400' : 'bg-[#3e4e3b]/60'
-                  }`}
+                  className={`h-full ${notification.type === 'error' ? 'bg-red-400' : 'bg-[#3e4e3b]/60'
+                    }`}
                 />
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       <RevealLoader
         text="VAGDEVI VIDYA MANDIR"
         bgColors={["#4a5d47", "#3e4e3b", "#5a6d57"]}
@@ -503,7 +507,7 @@ export default function Home() {
         </ParallaxBackground>
         {/* Green Blur Overlay */}
         <div className="absolute inset-0 bg-[#3e4e3b]/40" />
-        
+
         {/* Animated grain overlay */}
         <div className="absolute inset-0 noise-overlay opacity-30 z-[1]" />
 
@@ -534,7 +538,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <motion.span 
+                <motion.span
                   className="bg-gradient-to-r from-[#e9e9e9] via-amber-100 to-[#e9e9e9] bg-clip-text text-transparent drop-shadow-2xl inline-block"
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -542,7 +546,7 @@ export default function Home() {
                 >
                   Vagdevi
                 </motion.span>
-                <motion.span 
+                <motion.span
                   className="block bg-gradient-to-r from-amber-200/90 via-[#e9e9e9] to-amber-200/70 bg-clip-text text-transparent"
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -559,19 +563,19 @@ export default function Home() {
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <motion.div 
+                <motion.div
                   className="w-12 h-[2px] bg-gradient-to-r from-transparent to-amber-300/40"
                   initial={{ width: 0 }}
                   animate={{ width: 48 }}
                   transition={{ duration: 0.6, delay: 0.7 }}
                 />
-                <motion.div 
+                <motion.div
                   className="w-2 h-2 rounded-full bg-amber-300/40"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.3, delay: 0.8 }}
                 />
-                <motion.div 
+                <motion.div
                   className="w-24 h-[2px] bg-amber-200/25"
                   initial={{ width: 0 }}
                   animate={{ width: 96 }}
@@ -628,8 +632,8 @@ export default function Home() {
                   { value: 5000, suffix: "+", label: "Alumni" },
                   { value: 100, suffix: "%", label: "Results" },
                 ].map((stat, i) => (
-                  <motion.div 
-                    key={i} 
+                  <motion.div
+                    key={i}
                     className="text-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -665,7 +669,7 @@ export default function Home() {
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
-        
+
         {/* Floating decorative elements */}
 
         {/* Auto-scrolling Image Marquee at Top */}
@@ -691,7 +695,7 @@ export default function Home() {
 
               {/* Section Header - Centered */}
               <motion.div variants={fadeInUp} className="col-span-4 md:col-span-8 lg:col-span-12 text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
-                <motion.span 
+                <motion.span
                   className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-[#3e4e3b]/10 via-[#3e4e3b]/5 to-[#3e4e3b]/10 backdrop-blur-sm rounded-full mb-6 border border-[#3e4e3b]/10"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
@@ -862,7 +866,7 @@ export default function Home() {
           <AnimatedSection>
             {/* Centered Section Header */}
             <motion.div variants={fadeInUp} className="text-center max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20">
-              <motion.span 
+              <motion.span
                 className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/10"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -899,20 +903,20 @@ export default function Home() {
               <motion.div variants={fadeInRight} className="lg:col-span-4 flex items-center justify-center lg:sticky lg:top-24">
                 <div className="relative w-full max-w-sm lg:max-w-none flex flex-col items-center">
 
-                  <motion.div 
+                  <motion.div
                     className="relative"
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 200 }}
                   >
-                      <Image
-                        src="/facilities/god.gif"
-                        alt="Divine blessings"
-                        width={400}
-                        height={500}
-                        className="w-full h-auto object-contain drop-shadow-2xl"
-                        priority={false}
-                        unoptimized
-                      />
+                    <Image
+                      src="/facilities/god.gif"
+                      alt="Divine blessings"
+                      width={400}
+                      height={500}
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      priority={false}
+                      unoptimized
+                    />
                   </motion.div>
                 </div>
               </motion.div>
@@ -932,7 +936,7 @@ export default function Home() {
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
-        
+
         {/* Floating elements */}
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
@@ -965,7 +969,7 @@ export default function Home() {
 
               {/* Process Steps - Image */}
               <motion.div variants={fadeInLeft} className="col-span-4 md:col-span-8 lg:col-span-6 relative mb-10 sm:mb-16 lg:mb-0">
-                <motion.div 
+                <motion.div
                   className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden"
                   whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 200 }}
@@ -1055,7 +1059,7 @@ export default function Home() {
         />
         {/* Green Blur Overlay */}
         <div className="absolute inset-0 bg-[#3e4e3b]/85 backdrop-blur-[2px]" />
-        
+
         {/* Floating elements */}
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
@@ -1226,7 +1230,7 @@ export default function Home() {
         {/* Decorative Background */}
         <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-gradient-to-br from-[#3e4e3b]/8 to-transparent rounded-full blur-3xl animate-morph" />
         <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-gradient-to-tl from-[#3e4e3b]/6 to-transparent rounded-full blur-3xl animate-morph" style={{ animationDelay: '-5s' }} />
-        
+
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
             {/* Header */}
@@ -1349,7 +1353,7 @@ export default function Home() {
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
-        
+
         {/* Floating elements */}
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12">
@@ -1448,8 +1452,8 @@ export default function Home() {
                     { title: "Green Campus", desc: "Lush green environment with expansive playgrounds for physical well-being" },
                     { title: "Value-Based Learning", desc: "Instilling knowledge, discipline, and strong moral values in every student" },
                   ].map((item, i) => (
-                    <motion.div 
-                      key={i} 
+                    <motion.div
+                      key={i}
                       className="flex gap-4 p-4 rounded-xl hover:bg-[#e9e9e9]/[0.04] transition-all duration-300 group"
                       initial={{ opacity: 0, x: 30 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -1486,7 +1490,7 @@ export default function Home() {
           backgroundImage: `linear-gradient(to right, #3e4e3b 1px, transparent 1px), linear-gradient(to bottom, #3e4e3b 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
-        
+
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12">
           <AnimatedSection>
             {/* Header */}
@@ -1637,11 +1641,10 @@ export default function Home() {
                       <button
                         type="button"
                         onClick={() => setSendMethod('email')}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                          sendMethod === 'email'
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${sendMethod === 'email'
                             ? 'bg-[#3e4e3b] text-white shadow-md shadow-[#3e4e3b]/20'
                             : 'text-[#3e4e3b]/60 hover:text-[#3e4e3b] hover:bg-white/50'
-                        }`}
+                          }`}
                         suppressHydrationWarning
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1652,11 +1655,10 @@ export default function Home() {
                       <button
                         type="button"
                         onClick={() => setSendMethod('whatsapp')}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                          sendMethod === 'whatsapp'
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${sendMethod === 'whatsapp'
                             ? 'bg-[#25D366] text-white shadow-md shadow-[#25D366]/20'
                             : 'text-[#3e4e3b]/60 hover:text-[#3e4e3b] hover:bg-white/50'
-                        }`}
+                          }`}
                         suppressHydrationWarning
                       >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -1669,11 +1671,10 @@ export default function Home() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`w-full py-4 rounded-xl font-bold tracking-wide active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-                        sendMethod === 'whatsapp'
+                      className={`w-full py-4 rounded-xl font-bold tracking-wide active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group/btn text-sm disabled:opacity-50 disabled:cursor-not-allowed ${sendMethod === 'whatsapp'
                           ? 'bg-[#25D366] text-white hover:bg-[#20bd5a] hover:shadow-lg hover:shadow-[#25D366]/20 disabled:hover:bg-[#25D366]'
                           : 'bg-[#3e4e3b] text-white hover:bg-[#4a5d47] hover:shadow-lg hover:shadow-[#3e4e3b]/20 disabled:hover:bg-[#3e4e3b]'
-                      }`}
+                        }`}
                       suppressHydrationWarning
                     >
                       {isSubmitting ? (
@@ -1795,13 +1796,13 @@ export default function Home() {
           className="z-0"
         />
         <div className="absolute inset-0 bg-[#3e4e3b]/85" />
-        
+
         {/* Floating elements */}
 
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-14">
 
           {/* Top: Brand centered */}
-          <motion.div 
+          <motion.div
             className="text-center mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1809,7 +1810,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center justify-center gap-3 mb-3">
-              <motion.div 
+              <motion.div
                 className="w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-1 ring-[#e9e9e9]/10"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 200 }}
@@ -1822,7 +1823,7 @@ export default function Home() {
           </motion.div>
 
           {/* Middle: 3 columns — Address | Links | Contact */}
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1861,7 +1862,7 @@ export default function Home() {
           </motion.div>
 
           {/* Social Icons */}
-          <motion.div 
+          <motion.div
             className="flex justify-center gap-2.5 mb-8"
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1879,7 +1880,7 @@ export default function Home() {
           </motion.div>
 
           {/* Bottom bar */}
-          <motion.div 
+          <motion.div
             className="pt-5 border-t border-[#e9e9e9]/[0.06] flex flex-col sm:flex-row justify-between items-center gap-2"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

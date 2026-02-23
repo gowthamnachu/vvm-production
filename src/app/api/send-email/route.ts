@@ -19,14 +19,26 @@ export async function POST(request: NextRequest) {
     const WEBSITE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000";
     const LOGO_URL = `${WEBSITE_URL}/vvvm_logo.jpg`;
 
-    console.log("Email API called with:", { name, email, subject });
-    console.log("Sender (Brevo):", BREVO_SENDER_EMAIL);
-    console.log("Recipient (Owner):", OWNER_EMAIL);
-    console.log("API key exists:", !!BREVO_API_KEY);
+    console.log("--- Email API Execution Block ---");
+    console.log("Timestamp:", new Date().toISOString());
+    console.log("Metadata:", {
+      name,
+      email,
+      subject,
+      hasApiKey: !!BREVO_API_KEY,
+      sender: BREVO_SENDER_EMAIL,
+      recipient: OWNER_EMAIL,
+      env: process.env.NODE_ENV
+    });
 
     if (!BREVO_API_KEY) {
+      console.error("FATAL: BREVO_API_KEY is missing from environment variables.");
       return NextResponse.json(
-        { error: "Email service not configured", fallbackToWhatsApp: true },
+        {
+          error: "Email service not configured",
+          details: "API key is missing in production environment variables",
+          fallbackToWhatsApp: true
+        },
         { status: 503 }
       );
     }
@@ -119,7 +131,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Send email to owner
-    console.log("Attempting to send owner notification to:", OWNER_EMAIL);
+    console.log("Brevo API Call: Sending owner notification...");
     const ownerResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -131,31 +143,33 @@ export async function POST(request: NextRequest) {
 
     if (!ownerResponse.ok) {
       const errorData = await ownerResponse.json().catch(() => ({}));
-      console.error("Brevo API Error (Owner Email):", {
+      console.error("Brevo API Error Details:", {
         status: ownerResponse.status,
         statusText: ownerResponse.statusText,
         error: errorData
       });
-      
-      // Check if it's a daily limit error
-      if (ownerResponse.status === 429 || errorData.code === "daily_limit_reached") {
-        return NextResponse.json(
-          { error: "Daily email limit reached", fallbackToWhatsApp: true },
-          { status: 429 }
-        );
-      }
-      
+
+      let errorMessage = "Failed to send email via service";
+      if (ownerResponse.status === 401) errorMessage = "Invalid Brevo API Key";
+      if (ownerResponse.status === 403) errorMessage = "Brevo account restricted or sender not verified";
+      if (ownerResponse.status === 429 || errorData.code === "daily_limit_reached") errorMessage = "Daily email limit reached";
+
       return NextResponse.json(
-        { error: "Failed to send email", details: errorData, fallbackToWhatsApp: true },
-        { status: 500 }
+        {
+          error: errorMessage,
+          details: errorData,
+          brevoStatus: ownerResponse.status,
+          fallbackToWhatsApp: true
+        },
+        { status: ownerResponse.status >= 400 && ownerResponse.status < 500 ? ownerResponse.status : 500 }
       );
     }
 
     const ownerResult = await ownerResponse.json();
-    console.log("Owner email sent successfully:", ownerResult);
+    console.log("Owner notification success:", ownerResult);
 
     // Send confirmation email to user
-    console.log("Attempting to send confirmation to user:", email);
+    console.log("Brevo API Call: Sending user confirmation...");
     const userResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -166,20 +180,24 @@ export async function POST(request: NextRequest) {
     });
 
     if (userResponse.ok) {
-      const userResult = await userResponse.json();
-      console.log("User confirmation sent successfully:", userResult);
+      console.log("User confirmation success.");
     } else {
-      console.error("Failed to send user confirmation, but continuing...");
+      const userError = await userResponse.json().catch(() => ({}));
+      console.warn("User confirmation failed (non-critical):", userError);
     }
 
     return NextResponse.json(
       { success: true, message: "Emails sent successfully" },
       { status: 200 }
     );
-  } catch (error) {
-    console.error("Error sending email:", error);
+  } catch (error: any) {
+    console.error("Unexpected Error in Email API:", error);
     return NextResponse.json(
-      { error: "Internal server error", fallbackToWhatsApp: true },
+      {
+        error: "Internal server error",
+        details: error.message || "Unknown error",
+        fallbackToWhatsApp: true
+      },
       { status: 500 }
     );
   }
