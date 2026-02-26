@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const BREVO_API_KEY = process.env.BREVO_API_KEY;
     const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || "noreply@vagdevidyamandir.com";
     const OWNER_EMAIL = process.env.OWNER_EMAIL || "info@vagdevidyamandir.com";
-    const WEBSITE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000";
+    const WEBSITE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || "https://localhost:3000";
     const LOGO_URL = `${WEBSITE_URL}/vvvm_logo.jpg`;
 
     console.log("--- Email API Execution Block ---");
