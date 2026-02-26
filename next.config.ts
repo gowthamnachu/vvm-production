@@ -8,7 +8,21 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'picsum.photos',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.vagdevidyamandir.com" }],
+        destination: "https://vagdevidyamandir.com/:path*",
+        permanent: true,
+      },
+    ];
   },
   // Rewrite clean section URLs to the single-page app
   // So /home, /foreword, /features, etc. all serve the same page

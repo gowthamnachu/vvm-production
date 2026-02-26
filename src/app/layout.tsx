@@ -139,10 +139,9 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: BASE_URL,
     languages: {
-      "en-IN": BASE_URL,
-      "te-IN": BASE_URL,
+      "en-IN": "/",
+      "te-IN": "/",
     },
   },
 

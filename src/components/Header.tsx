@@ -38,6 +38,7 @@ const epilogue = localFont({
 const navItems = [
   { label: "Home", href: "/home", sectionId: "home" },
   { label: "Foreword", href: "/foreword", sectionId: "foreword" },
+  { label: "Updates", href: "/updates", sectionId: "updates" },
   { label: "Facilities", href: "/features", sectionId: "features" },
   { label: "Admissions", href: "/admissions", sectionId: "admissions" },
   { label: "Testimonials", href: "/testimonials", sectionId: "testimonials" },
@@ -53,6 +54,7 @@ interface HeaderProps {
 const sectionColors: Record<string, { bg: string; text: string; altBg: string; altText: string }> = {
   home: { bg: "#3e4e3b", text: "#e9e9e9", altBg: "#e9e9e9", altText: "#3e4e3b" },
   foreword: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
+  updates: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
   features: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
   admissions: { bg: "#e9e9e9", text: "#3e4e3b", altBg: "#3e4e3b", altText: "#e9e9e9" },
   testimonials: { bg: "#3e4e3b", text: "#e9e9e9", altBg: "#e9e9e9", altText: "#3e4e3b" },
@@ -71,8 +73,8 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
   const isDarkSection = current.text === "#e9e9e9";
   const headerBgColor = isHome
     ? "transparent"
-    : isDarkSection 
-      ? "rgba(62, 78, 59, 0.7)" 
+    : isDarkSection
+      ? "rgba(62, 78, 59, 0.7)"
       : "rgba(255, 255, 255, 0.7)";
   const textColor = current.text;
   const logoTextColor = current.text;
@@ -82,9 +84,9 @@ const Header: React.FC<HeaderProps> = ({ activeSection = "home" }) => {
   };
 
   const handleNavClick = (e: React.MouseEvent, sectionId: string) => {
-    e.preventDefault();
     const el = document.getElementById(sectionId);
     if (el) {
+      e.preventDefault();
       el.scrollIntoView({ behavior: "smooth" });
     }
   };
