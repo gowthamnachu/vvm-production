@@ -1888,7 +1888,18 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <p className="text-xs text-[#e9e9e9]/25">© {new Date().getFullYear()} Vagdevi Vidya Mandir. All rights reserved.</p>
-            <p className="text-xs text-[#e9e9e9]/15">Designed and Crafted by Nachu Gowtham</p>
+            <div className="flex items-center gap-2 text-[#e9e9e9]/25">
+              <p className="text-[9px] sm:text-[10px] font-medium tracking-[0.1em]">DESIGNED & CRAFTED BY ORVYN TECHNOLOGIES</p>
+              <div className="relative w-3.5 h-3.5 sm:w-4 sm:h-4">
+                <Image
+                  src="/orvyniconlogo.svg"
+                  alt="Orvyn Technologies Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+
           </motion.div>
         </div>
       </footer>
