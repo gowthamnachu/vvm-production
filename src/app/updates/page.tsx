@@ -16,12 +16,12 @@ export const metadata: Metadata = {
         "vvm school updates"
     ],
     alternates: {
-        canonical: "https://www.vagdevividyamandir.com/updates",
+        canonical: "https://vagdevidyamandir.com/updates",
     },
     openGraph: {
         title: "Vagdevi Vidya Mandir 10th Class Results 2026",
         description: "Explore the historic AP 10th class result 2026 for Vagdevi Vidya Mandir. 4 students scored 570+ (out of 600) and multiple subjects reached perfect 100s. View our proud achievers!",
-        url: "https://www.vagdevividyamandir.com/updates",
+        url: "https://vagdevidyamandir.com/updates",
         siteName: "Vagdevi Vidya Mandir",
         images: [
             {

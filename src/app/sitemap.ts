@@ -13,12 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1.0,
     },
-    // Actual separate pages
+    // Actual separate pages - Boosted priority for Board Results
     {
       url: `${BASE_URL}/updates`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
+      changeFrequency: "daily",
+      priority: 1.0,
     },
   ];
 }
